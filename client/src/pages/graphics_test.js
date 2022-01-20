@@ -4,8 +4,11 @@ import * as THREE from 'three';
 
 class GraphicsTest extends Component {
     componentDidMount() {
+        this.sceneSetup = this.sceneSetup.bind(this);
+        this.renderLoop = this.renderLoop.bind(this);
+
         this.sceneSetup();
-        this.startAnimationLoop();
+        this.renderLoop();
     }
 
     componentWillUnmount() {
@@ -13,8 +16,8 @@ class GraphicsTest extends Component {
     }
 
     sceneSetup(){
-        const width = 720;
-        const height = 480;
+        const height = 720;
+        const width = height * 16/9;
 
         this.scene = new THREE.Scene();
         this.camera = new THREE.OrthographicCamera();
@@ -23,21 +26,37 @@ class GraphicsTest extends Component {
         this.renderer.setSize( width, height );
         this.mount.appendChild( this.renderer.domElement );
 
-        const planeGeometry = new THREE.PlaneGeometry(2,2)
-        const planeMaterial = new THREE.RawShaderMaterial({
-            uniforms:{},
+        this.clock = new THREE.Clock(true);
+
+        let planeGeometry = new THREE.PlaneGeometry(2,2)
+        let planeMaterial = new THREE.RawShaderMaterial({
+            uniforms:{
+                iTime: {value: 0.0},
+                iDeltaTime: {value: 0.0},
+                iFrame: {value: 0},
+            },
             vertexShader: this.getVertexShader(),
             fragmentShader: this.getFragmentShader(),
         });
 
-        this.scene.add(new THREE.Mesh(planeGeometry, planeMaterial));
+        this.quad = new THREE.Mesh(planeGeometry, planeMaterial);
+
+        this.scene.add(this.quad);
     };
 
-    startAnimationLoop(){
+    renderLoop(){
         this.renderer.render( this.scene, this.camera );
 
-        this.requestID = window.requestAnimationFrame(this.startAnimationLoop);
+        this.updateUniforms();
+
+        this.requestID = window.requestAnimationFrame(this.renderLoop);
     };
+
+    updateUniforms(){
+        this.quad.material.uniforms.iDeltaTime.value = this.clock.getDelta();
+        this.quad.material.uniforms.iTime.value = this.clock.getElapsedTime();
+        this.quad.material.uniforms.iFrame.value += 1;
+    }
 
     getVertexShader(){
         return `
@@ -47,16 +66,34 @@ class GraphicsTest extends Component {
                 gl_Position = vec4(position, 1.0);
             }
         
-        `
+        `;
+    }
+
+    getFragShaderCustomCode(){
+        return `
+
+        void mainImage(out vec4 FragColor, in vec4 FragCoord)
+        {
+            FragColor = vec4(iTime, 0.0, 1.0, 1.0);
+        }
+
+        `;
     }
 
     getFragmentShader(){
         return `
-            void main(){
-                gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);
-            }
-        
-        `
+        precision mediump float;
+
+        uniform float iTime;
+        uniform float iDeltaTime;
+
+        ` + this.getFragShaderCustomCode() + `
+
+        void main(){
+            mainImage(gl_FragColor, gl_FragCoord);
+        }
+    
+    `;
     }
 
     render() {
