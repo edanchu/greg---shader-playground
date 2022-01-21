@@ -48,7 +48,7 @@ class TestScene extends Component {
     // Code below is taken from Three.js BoxGeometry example
     // https://threejs.org/docs/#api/en/geometries/BoxGeometry
     addCustomSceneObjects = () => {
-        const geometry = new THREE.BoxGeometry(2, 2, 2);
+        const geometry = new THREE.BoxGeometry(3, 3, 3);
         const material = new THREE.MeshPhongMaterial( {
             color: 0x156289,
             emissive: 0x072534,
