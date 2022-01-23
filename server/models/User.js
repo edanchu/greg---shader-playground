@@ -11,7 +11,7 @@ const UserSchema = new mongoose.Schema({
       partialFilterExpression: { email: { $type: 'string' } },
     },
   },
-  name: { type: String, trim: true },
+  username: { type: String, trim: true, index: { unique: true } },
   password: { type: String, trim: true },
   googleId: {
     type: String,

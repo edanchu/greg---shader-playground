@@ -10,13 +10,13 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 app.use(cookieParser());
 app.use(express.json());
-app.use(
-  cors({
-    credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    origin: ['https://workout-builder.netlify.app'],
-  })
-);
+//app.use(
+//cors({
+//credentials: true,
+//allowedHeaders: ['Content-Type', 'Authorization'],
+//origin: ['https://workout-builder.netlify.app'],
+//})
+//);
 
 var url = process.env.MONGO_URI;
 
@@ -32,6 +32,9 @@ mongoose.connect(
 );
 
 const PORT = process.env.PORT || 5000;
+
+const userRouter = require('./routes/User');
+app.use('/user', userRouter);
 
 app.listen(PORT, function () {
   console.log(`Server started on port ${PORT}`);
