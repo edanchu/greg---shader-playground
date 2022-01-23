@@ -62,4 +62,22 @@ userRouter.post(
   }
 );
 
+userRouter.post(
+  '/logout',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    res.clearCookie('access_token');
+    res.json({ user: { email: '', name: '' }, success: true });
+  }
+);
+
+userRouter.get(
+  '/authenticated',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const { email, username } = req.user;
+    res.status(200).json({ isAuthenticated: true, user: { email, username } });
+  }
+);
+
 module.exports = userRouter;
