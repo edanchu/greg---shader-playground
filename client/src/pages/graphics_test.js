@@ -30,6 +30,7 @@ class GraphicsTest extends Component {
 
         this.createRenderBuffers();
 
+
         this.planeGeometry = new THREE.PlaneGeometry(2, 2)
         this.createMaterials();
 
