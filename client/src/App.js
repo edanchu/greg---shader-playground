@@ -3,8 +3,12 @@ import Example from './pages/page_test'
 import './App.css';
 
 function App() {
+  let displayHeight = 480;
   return (
-    <Example />
+    <div>
+      <GraphicsTest height={displayHeight}  />
+      <Example />
+    </div>
   );
 }
 

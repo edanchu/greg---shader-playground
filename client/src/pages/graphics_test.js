@@ -1,11 +1,17 @@
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
+//import ReactDOM from "react-dom";
 import * as THREE from 'three';
 
 class GraphicsTest extends Component {
     componentDidMount() {
         this.sceneSetup = this.sceneSetup.bind(this);
         this.renderLoop = this.renderLoop.bind(this);
+
+        this.mouse = new THREE.Vector4(0, 0, -1, -1);
+        this.height = this.props.height;
+        this.width = this.height * 16 / 9;
+        this.clock = new THREE.Clock(true);
+        
 
         this.sceneSetup();
         this.renderLoop();
@@ -15,10 +21,22 @@ class GraphicsTest extends Component {
         window.cancelAnimationFrame(this.requestID);
     }
 
-    sceneSetup() {
-        this.height = this.mount.clientHeight;
-        this.width = this.height * 16 / 9;
+    mouseMoveCallback(e){
+        this.mouse.y = Math.min((this.height - e.clientY - e.target.offsetTop), this.height);
+        this.mouse.x = Math.min((e.clientX - e.target.offsetLeft), this.width);
+    }
 
+    mouseDownCallback(e){
+        this.mouse.w = Math.min((this.height - e.clientY - e.target.offsetTop), this.height);
+        this.mouse.z = Math.min((e.clientX - e.target.offsetLeft), this.width);
+    }
+
+    mouseUpCallback(e){
+        this.mouse.w = -1;
+        this.mouse.z = -1;
+    }
+
+    sceneSetup() {
         this.scene = new THREE.Scene();
         this.camera = new THREE.OrthographicCamera();
         this.camera.position.z = 1;
@@ -26,11 +44,8 @@ class GraphicsTest extends Component {
         this.renderer.setSize(this.width, this.height);
         this.mount.appendChild(this.renderer.domElement);
 
-        this.clock = new THREE.Clock(true);
-
         this.createRenderBuffers();
-
-
+        
         this.planeGeometry = new THREE.PlaneGeometry(2, 2)
         this.createMaterials();
 
@@ -117,6 +132,7 @@ class GraphicsTest extends Component {
                 iDeltaTime: { value: 0.0 },
                 iFrame: { value: 0 },
                 iResolution: { value: new THREE.Vector2(this.width, this.height) },
+                iMouse: {value: this.mouse},
                 iBufferTexture1: { value: this.renderTarget1.texture },
                 iBufferTexture2: { value: this.renderTarget2.texture },
                 iBufferTexture3: { value: this.renderTarget3.texture },
@@ -130,6 +146,7 @@ class GraphicsTest extends Component {
                 iDeltaTime: { value: 0.0 },
                 iFrame: { value: 0 },
                 iResolution: { value: new THREE.Vector2(this.width, this.height) },
+                iMouse: {value: this.mouse},
             }, vertexShader: this.getVertexShader(), fragmentShader: this.getBuffer1FragShader()
         });
 
@@ -139,6 +156,7 @@ class GraphicsTest extends Component {
                 iDeltaTime: { value: 0.0 },
                 iFrame: { value: 0 },
                 iResolution: { value: new THREE.Vector2(this.width, this.height) },
+                iMouse: {value: this.mouse},
                 iBufferTexture1: { value: this.renderTarget1.texture },
             }, vertexShader: this.getVertexShader(), fragmentShader: this.getBuffer2FragShader()
         });
@@ -149,6 +167,7 @@ class GraphicsTest extends Component {
                 iDeltaTime: { value: 0.0 },
                 iFrame: { value: 0 },
                 iResolution: { value: new THREE.Vector2(this.width, this.height) },
+                iMouse: {value: this.mouse},
                 iBufferTexture1: { value: this.renderTarget1.texture },
                 iBufferTexture2: { value: this.renderTarget2.texture },
             }, vertexShader: this.getVertexShader(), fragmentShader: this.getBuffer3FragShader()
@@ -160,6 +179,7 @@ class GraphicsTest extends Component {
                 iDeltaTime: { value: 0.0 },
                 iFrame: { value: 0 },
                 iResolution: { value: new THREE.Vector2(this.width, this.height) },
+                iMouse: {value: this.mouse},
                 iBufferTexture1: { value: this.renderTarget1.texture },
                 iBufferTexture2: { value: this.renderTarget2.texture },
                 iBufferTexture3: { value: this.renderTarget3.texture },
@@ -189,113 +209,146 @@ class GraphicsTest extends Component {
     getFinalFragShaderCustomCode() {
         return `
 
-        float det=.001,t, boxhit;
-        vec3 adv, boxp;
+        #define PI 3.14159
+        #define inf 999999.0
 
-        float hash(vec2 p)
+        vec2 rotate(vec2 point, float angle)
         {
-	        vec3 p3  = fract(vec3(p.xyx) * .1031);
-         p3 += dot(p3, p3.yzx + 33.33);
-          return fract((p3.x + p3.y) * p3.z);
+            float x = point.x; float y = point.y;
+            point.x = x * cos(angle) - y * sin(angle);
+            point.y = y * cos(angle) + x * sin(angle);
+            return point;
         }
 
-
-        mat2 rot(float a)
+        bool box2d(vec2 pos, vec2 uv, vec2 pivot, float angle, float w, float h)
         {
-            float s=sin(a), c=cos(a);
-            return mat2(c,s,-s,c);
+            uv -= pos;
+            uv = rotate(uv, angle) + pivot;
+            
+            bool x = (w - uv.x) > 0.0 && (-w - uv.x) < 0.0;
+            bool y = (h - uv.y) > 0.0 && (-h - uv.y) < 0.0;
+            
+            return x && y;
         }
 
-        vec3 path(float t)
-            {
-            vec3 p=vec3(vec2(sin(t*.1),cos(t*.05))*10.,t);
-            p.x+=smoothstep(.0,.5,abs(.5-fract(t*.02)))*10.;
-            return p;
+        vec2 angletovec(float angle)
+        {
+            float xn = cos(angle);
+            float yn = sin(angle);
+            return vec2(xn, yn);
         }
 
-        float fractal(vec2 p)
+        struct Joint
         {
-            p=abs(5.-mod(p*.2,10.))-5.;
-            float ot=1000.;
-            for (int i=0; i<7; i++)
-            {
-                p=abs(p)/clamp(p.x*p.y,.25,2.)-1.;
-                if(i>0)ot=min(ot,abs(p.x)+.7*fract(abs(p.y)*.05+t*.05+float(i)*.3));
-                
-            }
-            ot=exp(-10.*ot);
-            return ot;
+            vec2 pos;
+            float w;
+            float h;
+            float angle;
+        };
+
+        vec2 endPoint(in Joint j)
+        {
+            return j.pos + vec2(cos(-j.angle), sin(-j.angle)) * j.w * 2.0;
+        }
+            
+        bool drawJoint(in Joint j, vec2 uv)
+        {
+            return box2d(j.pos, uv, vec2(-j.w, 0.0), j.angle, j.w, j.h);
         }
 
-        float box(vec3 p, vec3 l)
-        {
-            vec3 c=abs(p)-l;
-            return length(max(vec3(0.),c))+min(0.,max(c.x,max(c.y,c.z)));
-        }
-
-        float de(vec3 p)
-        {
-            boxhit=0.;
-            vec3 p2=p-adv;
-            p2.xz*=rot(t*.2);
-            p2.xy*=rot(t*.1);
-            p2.yz*=rot(t*.15);
-            float b=box(p2,vec3(1.));
-            p.xy-=path(p.z).xy;
-            float s=sign(p.y);
-            p.y=-abs(p.y)-3.;
-            p.z=mod(p.z,20.)-10.;
-            for (int i=0; i<5; i++)
-            {
-                p=abs(p)-1.;
-                p.xz*=rot(radians(s*-45.));
-                p.yz*=rot(radians(90.));
-            }
-            float f=-box(p,vec3(5.,5.,10.));
-            float d=min(f,b);
-            if (d==b) boxp=p2, boxhit=1.;
-            return d*.7;
-        }
-
-
-        vec3 march(vec3 from, vec3 dir)
-        {
-            vec3 p,n,g=vec3(0.);
-            float d, td=0.;
-            for (int i=0; i<80; i++)
-            {
-                p=from+td*dir;
-                d=de(p)*(1.-hash(gl_FragCoord.xy+t)*.3);
-                if (d<det && boxhit<.5) break;
-                td+=max(det,abs(d));
-                float f=fractal(p.xy)+fractal(p.xz)+fractal(p.yz);
-                //boxp*=.5;
-                float b=fractal(boxp.xy)+fractal(boxp.xz)+fractal(boxp.yz);
-                vec3 colf=vec3(f*f,f,f*f*f);
-                vec3 colb=vec3(b+.1,b*b+.05,0.);
-                g+=colf/(3.+d*d*2.)*exp(-.0015*td*td)*step(5.,td)/2.*(1.-boxhit);
-                g+=colb/(10.+d*d*20.)*boxhit*.5;
-            }
-            return g;
-        }
-
-        mat3 lookat(vec3 dir, vec3 up) 
-        {
-            dir=normalize(dir);vec3 rt=normalize(cross(dir,normalize(up)));
-            return mat3(rt,cross(rt,dir),dir);
+        void rotateJoint(inout Joint j1, in vec2 target, float amount)
+        {	
+            vec2 ep = j1.pos;
+            vec2 targetv = normalize(target - ep);
+            targetv.y *= -1.0;
+            // which way to turn?
+            // construct a vector normal to direction and check sign of dot product
+            float an = (j1.angle) + PI * 0.5;
+            vec2 norm = angletovec(an);
+            float turn = dot(norm, targetv);
+            float dir = turn > 0.0 ? 1.0 : -1.0;
+            
+            // turn
+            vec2 fwd = angletovec(j1.angle);
+            float d = clamp(dot(fwd, targetv), -1.0, 1.0);
+            float turnangle = acos(d);
+            
+            j1.angle += turnangle * dir * amount;
         }
 
 
         void mainImage( out vec4 fragColor, in vec2 fragCoord )
         {
-            vec2 uv = (fragCoord-iResolution.xy*.5)/iResolution.y;
-            t=iTime*7.;
-            vec3 from=path(t);
-            adv=path(t+6.+sin(t*.1)*3.);
-            vec3 dir=normalize(vec3(uv,.7));
-            dir=lookat(adv-from,vec3(0.,1.,0.))*dir;
-            vec3 col=march(from, dir);
-            fragColor=vec4(col,1.0);
+            
+            
+            fragColor = vec4(0.0);
+            vec2 uv = fragCoord.xy / iResolution.xy;
+            uv -= vec2(0.5);
+            float aspect = iResolution.x / iResolution.y;
+            uv.y /= aspect;
+            
+            float mx = iMouse.x / iResolution.x;
+            float my = iMouse.y / iResolution.y;
+            vec2 target = vec2(mx, my);
+            target -= vec2(0.5);
+            target.y /= aspect;
+
+            if(iMouse.wz == vec2(-1.0, -1.0))
+            {
+                target = vec2(sin(iTime) * 0.45, 0.1 + cos(iTime) * 0.15);
+            }
+            
+            const int JOINTS = 7;
+            Joint j[JOINTS];
+            
+            j[0].pos = vec2(-0.0, -0.3);
+            j[0].w = 0.05;
+            j[0].h = 0.02;
+            j[0].angle = -PI * 0.5;
+            float fj = float(JOINTS);
+            
+            for (int i = 1; i < JOINTS; ++i)
+            {
+                j[i].pos = endPoint(j[i - 1]);
+                float r = (fj - float(i)) / fj;
+                j[i].w = 0.03;
+                j[i].h = 0.01 * r;
+                j[i].angle = -PI * 0.5;    
+            }
+            const int iter = 5;
+            const float weight = 0.35;
+            
+            for (int x = 0; x < iter; ++x)
+            {	
+                for (int i = JOINTS - 1; i >= 1; --i)
+                {
+                    j[i].pos = endPoint(j[i - 1]);
+                    rotateJoint(j[i], target, weight * (float(i) / float(iter)));
+                }
+            }
+            
+            for (int i = 1; i < JOINTS; ++i)
+            {
+            j[i].pos = endPoint(j[i - 1]);
+            }
+
+            bool b = false;
+            for (int i = 0; i < JOINTS; ++i)
+            {
+                b = b || drawJoint(j[i], uv);
+            }
+            
+            fragColor = vec4(0.7, 0.1, uv.y + 0.3, 0.0);
+            fragColor -= vec4(b ? 1.0 : 0.0);
+            fragColor = max(fragColor, 0.0);
+            if(sin(uv.x * 17.0) * 0.01 - uv.y > 0.20)
+            {
+                fragColor = vec4(0.0);
+            }
+            
+            // target "light";
+            fragColor += 1.0 - smoothstep(length(uv - target), 0.0, 0.01);;
+            
         }
 
         `;
@@ -313,6 +366,7 @@ class GraphicsTest extends Component {
         uniform sampler2D iBufferTexture3;
         uniform sampler2D iBufferTexture4;
         uniform vec2 iResolution;
+        uniform vec4 iMouse;
 
         ` + this.getCommonFragCode() + this.getFinalFragShaderCustomCode() + `
 
@@ -331,6 +385,7 @@ class GraphicsTest extends Component {
         uniform float iDeltaTime;
         uniform int iFrame;
         uniform vec2 iResolution;
+        uniform vec4 iMouse;
         
         ` + this.getCommonFragCode() + this.getBuffer1FragShaderCustomCode() + `
 
@@ -349,6 +404,7 @@ class GraphicsTest extends Component {
         uniform float iDeltaTime;
         uniform int iFrame;
         uniform vec2 iResolution;
+        uniform vec4 iMouse;
         uniform sampler2D iBufferTexture1;
 
         ` + this.getCommonFragCode() + this.getBuffer2FragShaderCustomCode() + `
@@ -368,6 +424,7 @@ class GraphicsTest extends Component {
         uniform float iDeltaTime;
         uniform int iFrame;
         uniform vec2 iResolution;
+        uniform vec4 iMouse;
         uniform sampler2D iBufferTexture1;
         uniform sampler2D iBufferTexture2;
 
@@ -388,6 +445,7 @@ class GraphicsTest extends Component {
         uniform float iDeltaTime;
         uniform int iFrame;
         uniform vec2 iResolution;
+        uniform vec4 iMouse;
         uniform sampler2D iBufferTexture1;
         uniform sampler2D iBufferTexture2;
         uniform sampler2D iBufferTexture3;
@@ -447,7 +505,12 @@ class GraphicsTest extends Component {
 
 
     render() {
-        return <div style={{ height: 720 }} ref={ref => (this.mount = ref)} />;
+        return <div 
+            onMouseMove={(e) => this.mouseMoveCallback(e)} 
+            onMouseDown={(e) => this.mouseDownCallback(e)} 
+            onMouseUp={(e) => this.mouseUpCallback(e)} 
+            ref={ref => (this.mount = ref)} 
+        />;
     }
 }
 
