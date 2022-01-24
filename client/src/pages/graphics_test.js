@@ -31,10 +31,6 @@ class GraphicsTest extends Component {
         this.mouse.z = Math.min((e.clientX - e.target.offsetLeft), this.width);
     }
 
-    mouseUpCallback(e){
-        this.mouse.w = -1;
-        this.mouse.z = -1;
-    }
 
     sceneSetup() {
         this.scene = new THREE.Scene();
@@ -92,25 +88,12 @@ class GraphicsTest extends Component {
     }
 
     createRenderBuffers() {
-        this.renderTarget1 = new THREE.WebGLRenderTarget(this.width, this.height);
-        this.renderTarget2 = new THREE.WebGLRenderTarget(this.width, this.height);
-        this.renderTarget3 = new THREE.WebGLRenderTarget(this.width, this.height);
-        this.renderTarget4 = new THREE.WebGLRenderTarget(this.width, this.height);
+        const renderBufferSettings = {wrapS: THREE.RepeatWrapping, wrapT: THREE.RepeatWrapping, minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, depthBuffer: false};
 
-        this.renderTarget1.texture.wrapS = this.renderTarget1.texture.wrapT = THREE.RepeatWrapping;
-        this.renderTarget2.texture.wrapS = this.renderTarget2.texture.wrapT = THREE.RepeatWrapping;
-        this.renderTarget3.texture.wrapS = this.renderTarget3.texture.wrapT = THREE.RepeatWrapping;
-        this.renderTarget4.texture.wrapS = this.renderTarget4.texture.wrapT = THREE.RepeatWrapping;
-
-        this.renderTarget1.texture.magFilter = this.renderTarget1.texture.minFilter = THREE.NearestFilter;
-        this.renderTarget2.texture.magFilter = this.renderTarget2.texture.minFilter = THREE.NearestFilter;
-        this.renderTarget3.texture.magFilter = this.renderTarget3.texture.minFilter = THREE.NearestFilter;
-        this.renderTarget4.texture.magFilter = this.renderTarget4.texture.minFilter = THREE.NearestFilter;
-
-        this.renderTarget1.texture.depthBuffer = false;
-        this.renderTarget2.texture.depthBuffer = false;
-        this.renderTarget3.texture.depthBuffer = false;
-        this.renderTarget4.texture.depthBuffer = false;
+        this.renderTarget1 = new THREE.WebGLRenderTarget(this.width, this.height, renderBufferSettings);
+        this.renderTarget2 = new THREE.WebGLRenderTarget(this.width, this.height, renderBufferSettings);
+        this.renderTarget3 = new THREE.WebGLRenderTarget(this.width, this.height, renderBufferSettings);
+        this.renderTarget4 = new THREE.WebGLRenderTarget(this.width, this.height, renderBufferSettings);
     }
 
     updateFinalUniforms() {
@@ -137,7 +120,8 @@ class GraphicsTest extends Component {
                 iBufferTexture2: { value: this.renderTarget2.texture },
                 iBufferTexture3: { value: this.renderTarget3.texture },
                 iBufferTexture4: { value: this.renderTarget4.texture },
-            }, vertexShader: this.getVertexShader(), fragmentShader: this.getFinalFragmentShader()
+            }, vertexShader: this.getVertexShader(), fragmentShader: this.getFinalFragmentShader(),
+            glslVersion: THREE.GLSL3,
         });
 
         this.bufferMat1 = new THREE.RawShaderMaterial({
@@ -147,7 +131,8 @@ class GraphicsTest extends Component {
                 iFrame: { value: 0 },
                 iResolution: { value: new THREE.Vector2(this.width, this.height) },
                 iMouse: {value: this.mouse},
-            }, vertexShader: this.getVertexShader(), fragmentShader: this.getBuffer1FragShader()
+            }, vertexShader: this.getVertexShader(), fragmentShader: this.getBuffer1FragShader(),
+            glslVersion: THREE.GLSL3,
         });
 
         this.bufferMat2 = new THREE.RawShaderMaterial({
@@ -158,7 +143,8 @@ class GraphicsTest extends Component {
                 iResolution: { value: new THREE.Vector2(this.width, this.height) },
                 iMouse: {value: this.mouse},
                 iBufferTexture1: { value: this.renderTarget1.texture },
-            }, vertexShader: this.getVertexShader(), fragmentShader: this.getBuffer2FragShader()
+            }, vertexShader: this.getVertexShader(), fragmentShader: this.getBuffer2FragShader(),
+            glslVersion: THREE.GLSL3,
         });
 
         this.bufferMat3 = new THREE.RawShaderMaterial({
@@ -170,7 +156,8 @@ class GraphicsTest extends Component {
                 iMouse: {value: this.mouse},
                 iBufferTexture1: { value: this.renderTarget1.texture },
                 iBufferTexture2: { value: this.renderTarget2.texture },
-            }, vertexShader: this.getVertexShader(), fragmentShader: this.getBuffer3FragShader()
+            }, vertexShader: this.getVertexShader(), fragmentShader: this.getBuffer3FragShader(),
+            glslVersion: THREE.GLSL3,
         });
 
         this.bufferMat4 = new THREE.RawShaderMaterial({
@@ -183,14 +170,14 @@ class GraphicsTest extends Component {
                 iBufferTexture1: { value: this.renderTarget1.texture },
                 iBufferTexture2: { value: this.renderTarget2.texture },
                 iBufferTexture3: { value: this.renderTarget3.texture },
-            }, vertexShader: this.getVertexShader(), fragmentShader: this.getBuffer4FragShader()
+            }, vertexShader: this.getVertexShader(), fragmentShader: this.getBuffer4FragShader(),
+            glslVersion: THREE.GLSL3,
         });
     }
 
-
     getVertexShader() {
         return `
-            attribute vec3 position;
+            in vec3 position;
 
             void main(){
                 gl_Position = vec4(position, 1.0);
@@ -207,6 +194,132 @@ class GraphicsTest extends Component {
     }
 
     getFinalFragShaderCustomCode() {
+        return `
+
+        void mainImage(out vec4 FragColor, in vec4 FragCoord){
+            vec4 buff1 = texture(iBufferTexture1, gl_FragCoord.xy * 2.0 / iResolution);
+            FragColor = buff1;
+        }
+
+        `;
+    }
+
+    getFinalFragmentShader() {
+        return `
+        precision highp float;
+
+        uniform float iTime;
+        uniform float iDeltaTime;
+        uniform int iFrame;
+        uniform sampler2D iBufferTexture1;
+        uniform sampler2D iBufferTexture2;
+        uniform sampler2D iBufferTexture3;
+        uniform sampler2D iBufferTexture4;
+        uniform vec2 iResolution;
+        uniform vec4 iMouse;
+
+        out vec4 FragColor;
+
+        ` + this.getCommonFragCode() + this.getFinalFragShaderCustomCode() + `
+
+        void main(){
+            mainImage(FragColor, gl_FragCoord);
+        }
+    
+    `;
+    }
+
+    getBuffer1FragShader() {
+        return `
+        precision highp float;
+
+        uniform float iTime;
+        uniform float iDeltaTime;
+        uniform int iFrame;
+        uniform vec2 iResolution;
+        uniform vec4 iMouse;
+
+        out vec4 FragColor;
+        
+        ` + this.getCommonFragCode() + this.getBuffer1FragShaderCustomCode() + `
+
+        void main(){
+            mainImage(FragColor, gl_FragCoord);
+        }
+    
+    `;
+    }
+
+    getBuffer2FragShader() {
+        return `
+        precision highp float;
+
+        uniform float iTime;
+        uniform float iDeltaTime;
+        uniform int iFrame;
+        uniform vec2 iResolution;
+        uniform vec4 iMouse;
+        uniform sampler2D iBufferTexture1;
+
+        out vec4 FragColor;
+
+        ` + this.getCommonFragCode() + this.getBuffer2FragShaderCustomCode() + `
+
+        void main(){
+            mainImage(FragColor, gl_FragCoord);
+        }
+    
+    `;
+    }
+
+    getBuffer3FragShader() {
+        return `
+        precision highp float;
+
+        uniform float iTime;
+        uniform float iDeltaTime;
+        uniform int iFrame;
+        uniform vec2 iResolution;
+        uniform vec4 iMouse;
+        uniform sampler2D iBufferTexture1;
+        uniform sampler2D iBufferTexture2;
+
+        out vec4 FragColor;
+
+        ` + this.getCommonFragCode() + this.getBuffer3FragShaderCustomCode() + `
+
+        void main(){
+            mainImage(FragColor, gl_FragCoord);
+        }
+    
+    `;
+    }
+
+    getBuffer4FragShader() {
+        return `
+        precision highp float;
+
+        uniform float iTime;
+        uniform float iDeltaTime;
+        uniform int iFrame;
+        uniform vec2 iResolution;
+        uniform vec4 iMouse;
+        uniform sampler2D iBufferTexture1;
+        uniform sampler2D iBufferTexture2;
+        uniform sampler2D iBufferTexture3;
+
+        out vec4 FragColor;
+
+        ` + this.getCommonFragCode() + this.getBuffer4FragShaderCustomCode() + `
+
+        void main(){
+            mainImage(FragColor, gl_FragCoord);
+        }
+    
+    `;
+    }
+
+    getBuffer1FragShaderCustomCode() {
         return `
 
         #define PI 3.14159
@@ -277,7 +390,7 @@ class GraphicsTest extends Component {
         }
 
 
-        void mainImage( out vec4 fragColor, in vec2 fragCoord )
+        void mainImage( out vec4 fragColor, in vec4 fragCoord )
         {
             
             
@@ -354,127 +467,10 @@ class GraphicsTest extends Component {
         `;
     }
 
-    getFinalFragmentShader() {
-        return `
-        precision mediump float;
-
-        uniform float iTime;
-        uniform float iDeltaTime;
-        uniform int iFrame;
-        uniform sampler2D iBufferTexture1;
-        uniform sampler2D iBufferTexture2;
-        uniform sampler2D iBufferTexture3;
-        uniform sampler2D iBufferTexture4;
-        uniform vec2 iResolution;
-        uniform vec4 iMouse;
-
-        ` + this.getCommonFragCode() + this.getFinalFragShaderCustomCode() + `
-
-        void main(){
-            mainImage(gl_FragColor, vec2(gl_FragCoord.xy));
-        }
-    
-    `;
-    }
-
-    getBuffer1FragShader() {
-        return `
-        precision mediump float;
-
-        uniform float iTime;
-        uniform float iDeltaTime;
-        uniform int iFrame;
-        uniform vec2 iResolution;
-        uniform vec4 iMouse;
-        
-        ` + this.getCommonFragCode() + this.getBuffer1FragShaderCustomCode() + `
-
-        void main(){
-            mainImage(gl_FragColor, gl_FragCoord);
-        }
-    
-    `;
-    }
-
-    getBuffer2FragShader() {
-        return `
-        precision mediump float;
-
-        uniform float iTime;
-        uniform float iDeltaTime;
-        uniform int iFrame;
-        uniform vec2 iResolution;
-        uniform vec4 iMouse;
-        uniform sampler2D iBufferTexture1;
-
-        ` + this.getCommonFragCode() + this.getBuffer2FragShaderCustomCode() + `
-
-        void main(){
-            mainImage(gl_FragColor, gl_FragCoord);
-        }
-    
-    `;
-    }
-
-    getBuffer3FragShader() {
-        return `
-        precision mediump float;
-
-        uniform float iTime;
-        uniform float iDeltaTime;
-        uniform int iFrame;
-        uniform vec2 iResolution;
-        uniform vec4 iMouse;
-        uniform sampler2D iBufferTexture1;
-        uniform sampler2D iBufferTexture2;
-
-        ` + this.getCommonFragCode() + this.getBuffer3FragShaderCustomCode() + `
-
-        void main(){
-            mainImage(gl_FragColor, gl_FragCoord);
-        }
-    
-    `;
-    }
-
-    getBuffer4FragShader() {
-        return `
-        precision mediump float;
-
-        uniform float iTime;
-        uniform float iDeltaTime;
-        uniform int iFrame;
-        uniform vec2 iResolution;
-        uniform vec4 iMouse;
-        uniform sampler2D iBufferTexture1;
-        uniform sampler2D iBufferTexture2;
-        uniform sampler2D iBufferTexture3;
-
-        ` + this.getCommonFragCode() + this.getBuffer4FragShaderCustomCode() + `
-
-        void main(){
-            mainImage(gl_FragColor, gl_FragCoord);
-        }
-    
-    `;
-    }
-
-    getBuffer1FragShaderCustomCode() {
-        return `
-
-        void mainImage(out vec4 FragColor, in vec4 FragCoord)
-        {
-            FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-        }
-
-        `;
-    }
-
     getBuffer2FragShaderCustomCode() {
         return `
 
-        void mainImage(out vec4 FragColor, in vec4 FragCoord)
-        {
+        void mainImage(out vec4 FragColor, in vec4 FragCoord){
             FragColor = vec4(0.0, 1.0, 0.0, 1.0);
         }
 
@@ -508,7 +504,6 @@ class GraphicsTest extends Component {
         return <div 
             onMouseMove={(e) => this.mouseMoveCallback(e)} 
             onMouseDown={(e) => this.mouseDownCallback(e)} 
-            onMouseUp={(e) => this.mouseUpCallback(e)} 
             ref={ref => (this.mount = ref)} 
         />;
     }
