@@ -4,10 +4,11 @@ import './App.css';
 
 function App() {
   const displayHeight = 480;
+  const isPaused = false;
+  const playOnMouseOver = false;
   return (
     <div>
-      <GraphicsComponent height={displayHeight}  />
-      <Example />
+      <GraphicsComponent height={displayHeight} pause={isPaused} playOnMouseOver={playOnMouseOver}/>
     </div>
   );
 }
