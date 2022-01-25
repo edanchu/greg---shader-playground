@@ -11,7 +11,11 @@ class GraphicsTest extends Component {
         this.height = this.props.height;
         this.width = this.height * 16 / 9;
         this.clock = new THREE.Clock(true);
-        
+        this.keyboard = new THREE.DataTexture(new Uint8Array(4 * 256), 256, 1, THREE.RGBAFormat);
+        this.frameNumber = 0;
+
+        document.addEventListener('keydown', this.keyDownCallback);
+        document.addEventListener('keyup', this.keyUpCallback);
 
         this.sceneSetup();
         this.renderLoop();
@@ -31,6 +35,19 @@ class GraphicsTest extends Component {
         this.mouse.z = Math.min((e.clientX - e.target.offsetLeft), this.width);
     }
 
+    keyDownCallback = (e) =>{
+        if (e.keyCode > 255) return;
+        this.keyboard.image.data[e.keyCode * 4] = 255;
+        this.keyboard.image.data[(e.keyCode * 4) + 1] = this.keyboard.image.data[(e.keyCode * 4) + 1] == 255 ? 0 : 255;
+        this.keyboard.image.data[(e.keyCode * 4) + 2] = this.frameNumber % 256;
+        this.keyboard.needsUpdate = true;
+    }
+
+    keyUpCallback = (e) => {
+        if (e.keyCode > 255) return;
+        this.keyboard.image.data[e.keyCode * 4] = 0;
+        this.keyboard.needsUpdate = true;
+    }
 
     sceneSetup() {
         this.scene = new THREE.Scene();
@@ -99,13 +116,12 @@ class GraphicsTest extends Component {
     updateFinalUniforms() {
         this.finalMat.uniforms.iDeltaTime.value = this.bufferMat1.uniforms.iDeltaTime.value;
         this.finalMat.uniforms.iTime.value = this.bufferMat1.uniforms.iTime.value;
-        this.finalMat.uniforms.iFrame.value += 1;
     }
 
     updateBufferUniforms() {
         this.bufferMat1.uniforms.iDeltaTime.value = this.bufferMat2.uniforms.iDeltaTime.value = this.bufferMat3.uniforms.iDeltaTime.value = this.bufferMat4.uniforms.iDeltaTime.value = this.clock.getDelta();
         this.bufferMat1.uniforms.iTime.value = this.bufferMat2.uniforms.iTime.value = this.bufferMat3.uniforms.iTime.value = this.bufferMat4.uniforms.iTime.value = this.clock.getElapsedTime();
-        this.bufferMat1.uniforms.iFrame.value = this.bufferMat2.uniforms.iFrame.value = this.bufferMat3.uniforms.iFrame.value = this.bufferMat4.uniforms.iFrame.value += 1;
+        this.frameNumber++;
     }
 
     createMaterials() {
@@ -113,9 +129,10 @@ class GraphicsTest extends Component {
             uniforms: {
                 iTime: { value: 0.0 },
                 iDeltaTime: { value: 0.0 },
-                iFrame: { value: 0 },
+                iFrame: { value: this.frameNumber },
                 iResolution: { value: new THREE.Vector2(this.width, this.height) },
                 iMouse: {value: this.mouse},
+                iKeyboard: {value: this.keyboard},
                 iBufferTexture1: { value: this.renderTarget1.texture },
                 iBufferTexture2: { value: this.renderTarget2.texture },
                 iBufferTexture3: { value: this.renderTarget3.texture },
@@ -128,9 +145,10 @@ class GraphicsTest extends Component {
             uniforms: {
                 iTime: { value: 0.0 },
                 iDeltaTime: { value: 0.0 },
-                iFrame: { value: 0 },
-                iResolution: { value: new THREE.Vector2(this.width, this.height) },
+                iFrame: { value: this.frameNumber },
                 iMouse: {value: this.mouse},
+                iKeyboard: {value: this.keyboard},
+                iResolution: { value: new THREE.Vector2(this.width, this.height) },
             }, vertexShader: this.getVertexShader(), fragmentShader: this.getBuffer1FragShader(),
             glslVersion: THREE.GLSL3,
         });
@@ -139,9 +157,10 @@ class GraphicsTest extends Component {
             uniforms: {
                 iTime: { value: 0.0 },
                 iDeltaTime: { value: 0.0 },
-                iFrame: { value: 0 },
+                iFrame: { value: this.frameNumber },
                 iResolution: { value: new THREE.Vector2(this.width, this.height) },
                 iMouse: {value: this.mouse},
+                iKeyboard: {value: this.keyboard},
                 iBufferTexture1: { value: this.renderTarget1.texture },
             }, vertexShader: this.getVertexShader(), fragmentShader: this.getBuffer2FragShader(),
             glslVersion: THREE.GLSL3,
@@ -151,9 +170,10 @@ class GraphicsTest extends Component {
             uniforms: {
                 iTime: { value: 0.0 },
                 iDeltaTime: { value: 0.0 },
-                iFrame: { value: 0 },
+                iFrame: { value: this.frameNumber },
                 iResolution: { value: new THREE.Vector2(this.width, this.height) },
                 iMouse: {value: this.mouse},
+                iKeyboard: {value: this.keyboard},
                 iBufferTexture1: { value: this.renderTarget1.texture },
                 iBufferTexture2: { value: this.renderTarget2.texture },
             }, vertexShader: this.getVertexShader(), fragmentShader: this.getBuffer3FragShader(),
@@ -164,9 +184,10 @@ class GraphicsTest extends Component {
             uniforms: {
                 iTime: { value: 0.0 },
                 iDeltaTime: { value: 0.0 },
-                iFrame: { value: 0 },
+                iFrame: { value: this.frameNumber },
                 iResolution: { value: new THREE.Vector2(this.width, this.height) },
                 iMouse: {value: this.mouse},
+                iKeyboard: {value: this.keyboard},
                 iBufferTexture1: { value: this.renderTarget1.texture },
                 iBufferTexture2: { value: this.renderTarget2.texture },
                 iBufferTexture3: { value: this.renderTarget3.texture },
@@ -193,11 +214,22 @@ class GraphicsTest extends Component {
         `
     }
 
+    getCommonUniforms(){
+        return `
+        uniform float iTime;
+        uniform float iDeltaTime;
+        uniform int iFrame;
+        uniform vec2 iResolution;
+        uniform vec4 iMouse;
+        uniform sampler2D iKeyboard;
+        `
+    }
+
     getFinalFragShaderCustomCode() {
         return `
 
         void mainImage(out vec4 FragColor, in vec4 FragCoord){
-            vec4 buff1 = texture(iBufferTexture1, gl_FragCoord.xy * 2.0 / iResolution);
+            vec4 buff1 = texture(iBufferTexture1, FragCoord.xy/iResolution.xy);
             FragColor = buff1;
         }
 
@@ -208,15 +240,12 @@ class GraphicsTest extends Component {
         return `
         precision highp float;
 
-        uniform float iTime;
-        uniform float iDeltaTime;
-        uniform int iFrame;
+        ` + this.getCommonUniforms() + `
+
         uniform sampler2D iBufferTexture1;
         uniform sampler2D iBufferTexture2;
         uniform sampler2D iBufferTexture3;
         uniform sampler2D iBufferTexture4;
-        uniform vec2 iResolution;
-        uniform vec4 iMouse;
 
         out vec4 FragColor;
 
@@ -233,11 +262,7 @@ class GraphicsTest extends Component {
         return `
         precision highp float;
 
-        uniform float iTime;
-        uniform float iDeltaTime;
-        uniform int iFrame;
-        uniform vec2 iResolution;
-        uniform vec4 iMouse;
+        ` + this.getCommonUniforms() + `
 
         out vec4 FragColor;
         
@@ -254,11 +279,8 @@ class GraphicsTest extends Component {
         return `
         precision highp float;
 
-        uniform float iTime;
-        uniform float iDeltaTime;
-        uniform int iFrame;
-        uniform vec2 iResolution;
-        uniform vec4 iMouse;
+        ` + this.getCommonUniforms() + `
+
         uniform sampler2D iBufferTexture1;
 
         out vec4 FragColor;
@@ -276,11 +298,8 @@ class GraphicsTest extends Component {
         return `
         precision highp float;
 
-        uniform float iTime;
-        uniform float iDeltaTime;
-        uniform int iFrame;
-        uniform vec2 iResolution;
-        uniform vec4 iMouse;
+        ` + this.getCommonUniforms() + `
+        
         uniform sampler2D iBufferTexture1;
         uniform sampler2D iBufferTexture2;
 
@@ -299,11 +318,8 @@ class GraphicsTest extends Component {
         return `
         precision highp float;
 
-        uniform float iTime;
-        uniform float iDeltaTime;
-        uniform int iFrame;
-        uniform vec2 iResolution;
-        uniform vec4 iMouse;
+        ` + this.getCommonUniforms() + `
+        
         uniform sampler2D iBufferTexture1;
         uniform sampler2D iBufferTexture2;
         uniform sampler2D iBufferTexture3;
