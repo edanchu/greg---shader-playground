@@ -2,7 +2,7 @@ import React, { Component } from "react";
 //import ReactDOM from "react-dom";
 import * as THREE from 'three';
 
-class GraphicsTest extends Component {
+class GraphicsComponent extends Component {
     componentDidMount() {
         this.sceneSetup = this.sceneSetup.bind(this);
         this.renderLoop = this.renderLoop.bind(this);
@@ -13,6 +13,9 @@ class GraphicsTest extends Component {
         this.clock = new THREE.Clock(true);
         this.keyboard = new THREE.DataTexture(new Uint8Array(4 * 256), 256, 1, THREE.RGBAFormat);
         this.frameNumber = 0;
+        this.pause = false;
+        this.pauseStartTime = 0;
+        this.pauseEndTime = 0;
 
         document.addEventListener('keydown', this.keyDownCallback);
         document.addEventListener('keyup', this.keyUpCallback);
@@ -48,6 +51,17 @@ class GraphicsTest extends Component {
         this.keyboard.image.data[e.keyCode * 4] = 0;
         this.keyboard.needsUpdate = true;
     }
+
+    pauseStartCallback(){
+        this.pauseStartTime = this.clock.getElapsedTime();
+        this.pause = true;
+    }
+
+    pauseEndCallback(){
+        this.pauseEndTime = this.clock.getElapsedTime();
+        this.pause = false;
+    }
+
 
     sceneSetup() {
         this.scene = new THREE.Scene();
@@ -119,9 +133,11 @@ class GraphicsTest extends Component {
     }
 
     updateBufferUniforms() {
-        this.bufferMat1.uniforms.iDeltaTime.value = this.bufferMat2.uniforms.iDeltaTime.value = this.bufferMat3.uniforms.iDeltaTime.value = this.bufferMat4.uniforms.iDeltaTime.value = this.clock.getDelta();
-        this.bufferMat1.uniforms.iTime.value = this.bufferMat2.uniforms.iTime.value = this.bufferMat3.uniforms.iTime.value = this.bufferMat4.uniforms.iTime.value = this.clock.getElapsedTime();
-        this.frameNumber++;
+        if (!this.pause){
+            this.bufferMat1.uniforms.iDeltaTime.value = this.bufferMat2.uniforms.iDeltaTime.value = this.bufferMat3.uniforms.iDeltaTime.value = this.bufferMat4.uniforms.iDeltaTime.value = this.clock.getDelta();
+            this.bufferMat1.uniforms.iTime.value = this.bufferMat2.uniforms.iTime.value = this.bufferMat3.uniforms.iTime.value = this.bufferMat4.uniforms.iTime.value = this.clock.getElapsedTime() - (this.pauseEndTime - this.pauseStartTime);
+            this.frameNumber++;
+        }
     }
 
     createMaterials() {
@@ -517,12 +533,12 @@ class GraphicsTest extends Component {
 
 
     render() {
-        return <div 
+        return<div 
             onMouseMove={(e) => this.mouseMoveCallback(e)} 
             onMouseDown={(e) => this.mouseDownCallback(e)} 
             ref={ref => (this.mount = ref)} 
-        />;
+            />;
     }
 }
 
-export default GraphicsTest
+export default GraphicsComponent

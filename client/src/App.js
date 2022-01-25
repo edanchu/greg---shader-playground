@@ -1,12 +1,12 @@
-import GraphicsTest from './pages/graphics_test'
+import GraphicsComponent from './pages/graphics_test'
 import Example from './pages/page_test'
 import './App.css';
 
 function App() {
-  let displayHeight = 480;
+  const displayHeight = 480;
   return (
     <div>
-      <GraphicsTest height={displayHeight}  />
+      <GraphicsComponent height={displayHeight}  />
       <Example />
     </div>
   );
