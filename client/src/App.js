@@ -1,22 +1,19 @@
-import GraphicsComponent from './components/graphics_component'
+import React from 'react';
+import Navbar from './components/Navbar';
 import './App.css';
-import Home from './pages/home';
-import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import Home from './pages/Home';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 function App() {
-  const displayHeight = 480;
   return (
-    /*<><div>
-      <GraphicsComponent height={displayHeight} />
-    </div><>*/
     <>
-        <Router>
-          <Home />
-          <Routes>
-            <Route path='/' exact />
-          </Routes>
-        </Router>
-      </>
+      <Router>
+        <Navbar />
+        <Routes>
+          <Route path='/' element={<Home/>}/>
+        </Routes>
+      </Router>
+    </>
   );
 }
 
