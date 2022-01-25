@@ -5,9 +5,11 @@ import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 
 function App() {
   const displayHeight = 480;
+  const isPaused = false;
+  const playOnMouseOver = false;
   return (
     /*<><div>
-      <GraphicsComponent height={displayHeight} />
+      <GraphicsComponent height={displayHeight} pause={isPaused} playOnMouseOver={playOnMouseOver}/>
     </div><>*/
     <>
         <Router>

@@ -7,15 +7,15 @@ class GraphicsComponent extends Component {
         this.sceneSetup = this.sceneSetup.bind(this);
         this.renderLoop = this.renderLoop.bind(this);
 
+        this.pause = this.props.pause;
         this.mouse = new THREE.Vector4(0, 0, -1, -1);
         this.height = this.props.height;
         this.width = this.height * 16 / 9;
-        this.clock = new THREE.Clock(true);
+        this.clock = new THREE.Clock();
         this.keyboard = new THREE.DataTexture(new Uint8Array(4 * 256), 256, 1, THREE.RGBAFormat);
         this.frameNumber = 0;
-        this.pause = false;
         this.pauseStartTime = 0;
-        this.pauseEndTime = 0;
+        this.timePaused = 0;
 
         document.addEventListener('keydown', this.keyDownCallback);
         document.addEventListener('keyup', this.keyUpCallback);
@@ -41,7 +41,7 @@ class GraphicsComponent extends Component {
     keyDownCallback = (e) => {
         if (e.keyCode > 255) return;
         this.keyboard.image.data[e.keyCode * 4] = 255;
-        this.keyboard.image.data[(e.keyCode * 4) + 1] = this.keyboard.image.data[(e.keyCode * 4) + 1] == 255 ? 0 : 255;
+        this.keyboard.image.data[(e.keyCode * 4) + 1] = this.keyboard.image.data[(e.keyCode * 4) + 1] === 255 ? 0 : 255;
         this.keyboard.image.data[(e.keyCode * 4) + 2] = this.frameNumber % 256;
         this.keyboard.needsUpdate = true;
     }
@@ -58,7 +58,7 @@ class GraphicsComponent extends Component {
     }
 
     pauseEndCallback(){
-        this.pauseEndTime = this.clock.getElapsedTime();
+        this.timePaused = this.clock.getElapsedTime() - this.pauseStartTime + this.timePaused;
         this.pause = false;
     }
 
@@ -135,7 +135,7 @@ class GraphicsComponent extends Component {
     updateBufferUniforms() {
         if (!this.pause){
             this.bufferMat1.uniforms.iDeltaTime.value = this.bufferMat2.uniforms.iDeltaTime.value = this.bufferMat3.uniforms.iDeltaTime.value = this.bufferMat4.uniforms.iDeltaTime.value = this.clock.getDelta();
-            this.bufferMat1.uniforms.iTime.value = this.bufferMat2.uniforms.iTime.value = this.bufferMat3.uniforms.iTime.value = this.bufferMat4.uniforms.iTime.value = this.clock.getElapsedTime() - (this.pauseEndTime - this.pauseStartTime);
+            this.bufferMat1.uniforms.iTime.value = this.bufferMat2.uniforms.iTime.value = this.bufferMat3.uniforms.iTime.value = this.bufferMat4.uniforms.iTime.value = this.clock.getElapsedTime() - this.timePaused;
             this.frameNumber++;
         }
     }
@@ -531,11 +531,15 @@ class GraphicsComponent extends Component {
         `;
     }
 
+    nullFunction(){;};
 
     render() {
         return<div 
+            style={{height: this.height, width: this.width}}
             onMouseMove={(e) => this.mouseMoveCallback(e)} 
-            onMouseDown={(e) => this.mouseDownCallback(e)} 
+            onMouseDown={(e) => this.mouseDownCallback(e)}
+            onMouseEnter={(e) => {this.props.playOnMouseOver ? this.pauseEndCallback(e) : this.nullFunction()}}
+            onMouseLeave={(e) => {this.props.playOnMouseOver ? this.pauseStartCallback(e) : this.nullFunction()}}
             ref={ref => (this.mount = ref)} 
             />;
     }
