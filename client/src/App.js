@@ -1,4 +1,4 @@
-import GraphicsComponent from './pages/graphics_test'
+import GraphicsComponent from './components/graphics_component'
 import Example from './pages/page_test'
 import './App.css';
 

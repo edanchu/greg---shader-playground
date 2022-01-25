@@ -38,7 +38,7 @@ class GraphicsComponent extends Component {
         this.mouse.z = Math.min((e.clientX - e.target.offsetLeft), this.width);
     }
 
-    keyDownCallback = (e) =>{
+    keyDownCallback = (e) => {
         if (e.keyCode > 255) return;
         this.keyboard.image.data[e.keyCode * 4] = 255;
         this.keyboard.image.data[(e.keyCode * 4) + 1] = this.keyboard.image.data[(e.keyCode * 4) + 1] == 255 ? 0 : 255;
@@ -245,7 +245,7 @@ class GraphicsComponent extends Component {
         return `
 
         void mainImage(out vec4 FragColor, in vec4 FragCoord){
-            vec4 buff1 = texture(iBufferTexture1, FragCoord.xy/iResolution.xy);
+            vec4 buff1 = texture(iBufferTexture1, FragCoord.xy/iResolution);
             FragColor = buff1;
         }
 
