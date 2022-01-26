@@ -1,10 +1,9 @@
-
 import React, {useState, useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import {Button} from './button.js';
-import './home.css';
+import './browse.css';
 
-function Home() {
+function Browse() {
   const [click, setClick] = useState(false);
   const [button, setButton] = useState(true);
 
@@ -24,10 +23,10 @@ function Home() {
 
   return (
     <>
-      <nav className='home'>
-        <div className='home-container'>
+      <nav className='browse'>
+        <div className='browse-container'>
           <Link to='/' className='home-logo'>
-            TRVL <i className='fab fa-typo3' />
+            Greg <i className='fab fa-typo3' />
           </Link>
           <div className='menu-icon' onClick={handleClick}>
             <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
@@ -39,11 +38,12 @@ function Home() {
               </Link>
             </li>
             <li className='item'>
+                
               <Link to='/Browse' className='links' onClick={closeMenu}>
                 Browse
               </Link>
             </li>
-            <li className='item'>
+            <li className='item-name'>
               <Link to='/Settings' className='links' onClick={closeMenu}>
                 Settings
               </Link>
@@ -57,10 +57,9 @@ function Home() {
           {button && <Button buttonStyle='btn--outline'>SIGN IN</Button>}
         </div>
       </nav>
-      
+
     </>
   );
 }
 
-export default Home;
-
+export default Browse;
