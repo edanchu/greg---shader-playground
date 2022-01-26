@@ -1,9 +1,11 @@
-import GraphicsTest from './pages/graphics_test'
-import Example from './pages/page_test'
+import React from 'react';
+import Navbar from './components/Navbar';
 import './App.css';
 import Home from './pages/home';
 import Browse from './pages/browse';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
+
+
 
 function App() {
   return (

@@ -9,7 +9,7 @@
     top: 0;
     z-index: 999;
   }
-  
+
   .home-container {
     display: flex;
     justify-content: center;
@@ -17,7 +17,7 @@
     height: 80px;
     max-width: 1500px;
   }
-  
+
   .home-logo {
     color: #fff;
     justify-self: start;
@@ -28,15 +28,17 @@
     display: flex;
     align-items: center;
   }
-  
+
   .fa-typo3 {
     margin-left: 0.5rem;
     font-size: 1.8rem;
   }
+
   
   .menu {
     display: grid;
     grid-template-columns: repeat(4, auto);
+
     grid-gap: 10px;
     list-style: none;
     text-align: center;
@@ -44,11 +46,13 @@
     justify-content: end;
     margin-right: 2rem;
   }
+
   
   .item {
     height: 80px;
   }
   
+
   .links {
     color: #fff;
     display: flex;
@@ -57,11 +61,12 @@
     padding: 0.5rem 1rem;
     height: 100%;
   }
-  
+
   .links:hover {
     border-bottom: 4px solid #fff;
     transition: all 0.2s ease-out;
   }
+
   
   .fa-bars {
     color: #fff;
@@ -74,12 +79,12 @@
   .menu-icon {
     display: none;
   }
-  
+
   @media screen and (max-width: 960px) {
     .HomeItems {
       position: relative;
     }
-  
+
     .menu {
       display: flex;
       flex-direction: column;
@@ -91,7 +96,7 @@
       opacity: 1;
       transition: all 0.5s ease;
     }
-  
+
     .menu.active {
       background: #242222;
       left: 0;
@@ -99,27 +104,27 @@
       transition: all 0.5s ease;
       z-index: 1;
     }
-  
+
     .links {
       text-align: center;
       padding: 2rem;
       width: 100%;
       display: table;
     }
-  
+
     .links:hover {
       background-color: #fff;
       color: #242424;
       border-radius: 0;
     }
-  
+
     .home-logo {
       position: absolute;
       top: 0;
       left: 0;
       transform: translate(25%, 50%);
     }
-  
+
     .menu-icon {
       display: block;
       position: absolute;
@@ -129,12 +134,12 @@
       font-size: 1.8rem;
       cursor: pointer;
     }
-  
+
     .fa-times {
       color: #fff;
       font-size: 2rem;
     }
-  
+
     .links-mobile {
       display: block;
       text-align: center;
@@ -149,10 +154,12 @@
       border: 1px solid #fff;
       transition: all 0.3s ease-out;
     }
-  
+
     .links-mobile:hover {
       background: #fff;
       color: #242424;
       transition: 250ms;
     }
+
   }
+
