@@ -8,17 +8,9 @@ function App() {
   const isPaused = false;
   const playOnMouseOver = false;
   return (
-    /*<><div>
+    <div>
       <GraphicsComponent height={displayHeight} pause={isPaused} playOnMouseOver={playOnMouseOver}/>
-    </div><>*/
-    <>
-        <Router>
-          <Home />
-          <Routes>
-            <Route path='/' exact />
-          </Routes>
-        </Router>
-      </>
+    </div>
   );
 }
 
