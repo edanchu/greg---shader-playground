@@ -54,13 +54,22 @@ class GraphicsComponent extends Component {
         this.keyboard.needsUpdate = true;
     }
 
-    pauseStartCallback = (e) =>{
+    pauseStartCallback = (e) => {
         this.pauseStartTime = this.clock.getElapsedTime();
         this.pause = true;
     }
 
-    pauseEndCallback = (e) =>{
+    pauseEndCallback = (e) => {
         this.timePaused = this.clock.getElapsedTime() - this.pauseStartTime + this.timePaused;
+        this.pause = false;
+    }
+
+    restartCallback = (e) => {
+        this.clock.stop();
+        this.clock.start();
+        this.frameNumber = 0;
+        this.pauseStartTime = 0;
+        this.timePaused = 0;
         this.pause = false;
     }
 
@@ -76,7 +85,7 @@ class GraphicsComponent extends Component {
         this.mount.appendChild(this.renderer.domElement);
 
         this.createRenderBuffers();
-        
+
         this.planeGeometry = new THREE.PlaneGeometry(2, 2)
         this.createMaterials();
 
@@ -123,7 +132,7 @@ class GraphicsComponent extends Component {
     }
 
     createRenderBuffers() {
-        const renderBufferSettings = {wrapS: THREE.RepeatWrapping, wrapT: THREE.RepeatWrapping, minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, depthBuffer: false};
+        const renderBufferSettings = { wrapS: THREE.RepeatWrapping, wrapT: THREE.RepeatWrapping, minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, depthBuffer: false };
 
         this.renderTarget1 = new THREE.WebGLRenderTarget(this.width, this.height, renderBufferSettings);
         this.renderTarget2 = new THREE.WebGLRenderTarget(this.width, this.height, renderBufferSettings);
@@ -137,7 +146,7 @@ class GraphicsComponent extends Component {
     }
 
     updateBufferUniforms() {
-        if (!this.pause){
+        if (!this.pause) {
             this.bufferMat1.uniforms.iDeltaTime.value = this.bufferMat2.uniforms.iDeltaTime.value = this.bufferMat3.uniforms.iDeltaTime.value = this.bufferMat4.uniforms.iDeltaTime.value = this.clock.getDelta();
             this.bufferMat1.uniforms.iTime.value = this.bufferMat2.uniforms.iTime.value = this.bufferMat3.uniforms.iTime.value = this.bufferMat4.uniforms.iTime.value = this.clock.getElapsedTime() - this.timePaused;
             this.frameNumber++;
@@ -145,7 +154,7 @@ class GraphicsComponent extends Component {
             this.date.x = tempDate.getFullYear();
             this.date.y = tempDate.getMonth();
             this.date.z = tempDate.getDay();
-            this.date.w =  (tempDate.getHours() * 3600) + (tempDate.getMinutes() * 60) + tempDate.getSeconds() + (tempDate.getMilliseconds / 1000);
+            this.date.w = (tempDate.getHours() * 3600) + (tempDate.getMinutes() * 60) + tempDate.getSeconds() + (tempDate.getMilliseconds / 1000);
         }
     }
 
@@ -156,9 +165,9 @@ class GraphicsComponent extends Component {
                 iDeltaTime: { value: 0.0 },
                 iFrame: { value: this.frameNumber },
                 iResolution: { value: new THREE.Vector2(this.width, this.height) },
-                iMouse: {value: this.mouse},
-                iKeyboard: {value: this.keyboard},
-                iDate: {value: this.date},
+                iMouse: { value: this.mouse },
+                iKeyboard: { value: this.keyboard },
+                iDate: { value: this.date },
                 iBufferTexture1: { value: this.renderTarget1.texture },
                 iBufferTexture2: { value: this.renderTarget2.texture },
                 iBufferTexture3: { value: this.renderTarget3.texture },
@@ -173,9 +182,9 @@ class GraphicsComponent extends Component {
                 iDeltaTime: { value: 0.0 },
                 iFrame: { value: this.frameNumber },
                 iResolution: { value: new THREE.Vector2(this.width, this.height) },
-                iMouse: {value: this.mouse},
-                iKeyboard: {value: this.keyboard},
-                iDate: {value: this.date},
+                iMouse: { value: this.mouse },
+                iKeyboard: { value: this.keyboard },
+                iDate: { value: this.date },
             }, vertexShader: this.getVertexShader(), fragmentShader: this.getBuffer1FragShader(),
             glslVersion: THREE.GLSL3,
         });
@@ -186,9 +195,9 @@ class GraphicsComponent extends Component {
                 iDeltaTime: { value: 0.0 },
                 iFrame: { value: this.frameNumber },
                 iResolution: { value: new THREE.Vector2(this.width, this.height) },
-                iMouse: {value: this.mouse},
-                iKeyboard: {value: this.keyboard},
-                iDate: {value: this.date},
+                iMouse: { value: this.mouse },
+                iKeyboard: { value: this.keyboard },
+                iDate: { value: this.date },
                 iBufferTexture1: { value: this.renderTarget1.texture },
             }, vertexShader: this.getVertexShader(), fragmentShader: this.getBuffer2FragShader(),
             glslVersion: THREE.GLSL3,
@@ -200,9 +209,9 @@ class GraphicsComponent extends Component {
                 iDeltaTime: { value: 0.0 },
                 iFrame: { value: this.frameNumber },
                 iResolution: { value: new THREE.Vector2(this.width, this.height) },
-                iMouse: {value: this.mouse},
-                iKeyboard: {value: this.keyboard},
-                iDate: {value: this.date},
+                iMouse: { value: this.mouse },
+                iKeyboard: { value: this.keyboard },
+                iDate: { value: this.date },
                 iBufferTexture1: { value: this.renderTarget1.texture },
                 iBufferTexture2: { value: this.renderTarget2.texture },
             }, vertexShader: this.getVertexShader(), fragmentShader: this.getBuffer3FragShader(),
@@ -215,9 +224,9 @@ class GraphicsComponent extends Component {
                 iDeltaTime: { value: 0.0 },
                 iFrame: { value: this.frameNumber },
                 iResolution: { value: new THREE.Vector2(this.width, this.height) },
-                iMouse: {value: this.mouse},
-                iKeyboard: {value: this.keyboard},
-                iDate: {value: this.date},
+                iMouse: { value: this.mouse },
+                iKeyboard: { value: this.keyboard },
+                iDate: { value: this.date },
                 iBufferTexture1: { value: this.renderTarget1.texture },
                 iBufferTexture2: { value: this.renderTarget2.texture },
                 iBufferTexture3: { value: this.renderTarget3.texture },
@@ -244,7 +253,7 @@ class GraphicsComponent extends Component {
         `
     }
 
-    getCommonUniforms(){
+    getCommonUniforms() {
         return `
         uniform float iTime;
         uniform float iDeltaTime;
@@ -799,17 +808,22 @@ class GraphicsComponent extends Component {
         `;
     }
 
-    nullFunction(){;};
+    nullFunction() { ; };
 
     render() {
-        return<div 
-            style={{height: this.height, width: this.width}}
-            onMouseMove={(e) => this.mouseMoveCallback(e)} 
-            onMouseDown={(e) => this.mouseDownCallback(e)}
-            onMouseEnter={(e) => {this.props.playOnMouseOver ? this.pauseEndCallback(e) : this.nullFunction()}}
-            onMouseLeave={(e) => {this.props.playOnMouseOver ? this.pauseStartCallback(e) : this.nullFunction()}}
-            ref={ref => (this.mount = ref)} 
-            />;
+
+        return (<div>
+            <div
+                style={{ height: this.height, width: this.width }}
+                onMouseMove={(e) => this.mouseMoveCallback(e)}
+                onMouseDown={(e) => this.mouseDownCallback(e)}
+                onMouseEnter={(e) => { this.props.playOnMouseOver ? this.pauseEndCallback(e) : this.nullFunction() }}
+                onMouseLeave={(e) => { this.props.playOnMouseOver ? this.pauseStartCallback(e) : this.nullFunction() }}
+                ref={ref => (this.mount = ref)}
+            />
+            {(this.props.showButtons ? <button onClick={(e) => this.restartCallback(e)}>Restart</button> : <></>)}
+            {(this.props.showButtons ? <button onClick={(e) => !this.pause ? this.pauseStartCallback(e) : this.pauseEndCallback(e)}>Pause/Play</button> : <></>)}
+        </div>);
     }
 }
 
