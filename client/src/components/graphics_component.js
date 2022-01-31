@@ -19,6 +19,7 @@ class GraphicsComponent extends Component {
         let tempDate = new Date();
         this.date = new THREE.Vector4(tempDate.getFullYear(), tempDate.getMonth(), tempDate.getDate(), (tempDate.getHours() * 3600) + (tempDate.getMinutes() * 60) + tempDate.getSeconds() + (tempDate.getMilliseconds / 1000));
 
+
         document.addEventListener('keydown', this.keyDownCallback);
         document.addEventListener('keyup', this.keyUpCallback);
 
@@ -808,21 +809,22 @@ class GraphicsComponent extends Component {
         `;
     }
 
-    nullFunction() { ; };
-
     render() {
-
-        return (<div>
+        const style = {
+            float: "left",
+            backgroundColor: "gray"
+        }
+        return (<div style={style}>
             <div
-                style={{ height: this.height, width: this.width }}
+
                 onMouseMove={(e) => this.mouseMoveCallback(e)}
                 onMouseDown={(e) => this.mouseDownCallback(e)}
-                onMouseEnter={(e) => { this.props.playOnMouseOver ? this.pauseEndCallback(e) : this.nullFunction() }}
-                onMouseLeave={(e) => { this.props.playOnMouseOver ? this.pauseStartCallback(e) : this.nullFunction() }}
+                onMouseEnter={(e) => { this.props.playOnMouseOver ? this.pauseEndCallback(e) : <></> }}
+                onMouseLeave={(e) => { this.props.playOnMouseOver ? this.pauseStartCallback(e) : <></> }}
                 ref={ref => (this.mount = ref)}
             />
-            {(this.props.showButtons ? <button onClick={(e) => this.restartCallback(e)}>Restart</button> : <></>)}
-            {(this.props.showButtons ? <button onClick={(e) => !this.pause ? this.pauseStartCallback(e) : this.pauseEndCallback(e)}>Pause/Play</button> : <></>)}
+            {(this.props.showButtons ? <button onClick={(e) => this.restartCallback(e)}>{'\u23ee'}</button> : <></>)}
+            {(this.props.showButtons ? <button onClick={(e) => !this.pause ? this.pauseStartCallback(e) : this.pauseEndCallback(e)}>{"\u23ef"}</button> : <></>)}
         </div>);
     }
 }
