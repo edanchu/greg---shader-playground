@@ -1,7 +1,8 @@
 import React from 'react';
 import '../App.css';
-import { Button } from './Button';
+import { ButtonLogin } from './ButtonLogin';
 import './HeroSection.css';
+import { ButtonBrowse } from './ButtonBrowse';
 
 function HeroSection() {
   return (
@@ -10,20 +11,20 @@ function HeroSection() {
       <h1>SHADERS AWAIT!!!</h1>
       <p></p>
       <div className='hero-btns'>
-        <Button
+        <ButtonLogin
           className='btns'
           buttonStyle='btn--outline'
           buttonSize='btn--large'
         >
           GET STARTED
-        </Button>
-        <Button
+        </ButtonLogin>
+        <ButtonBrowse
           className='btns'
           buttonStyle='btn--primary'
           buttonSize='btn--large'
         >
           BROWSE SHADERS <i className='far fa-play-circle' />
-        </Button>
+        </ButtonBrowse>
       </div>
     </div>
   );
