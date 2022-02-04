@@ -1,13 +1,22 @@
 import React from 'react';
-import HeroSection from '../components/HeroSection.js';
 import '../App.css';
-import Cards from '../components/Cards.js';
+import { ButtonSignUp } from '../components/ButtonSignUp.js';
+import { ButtonBrowse } from '../components/ButtonBrowse.js';
 function Login() {
   return (
-      <>
-      <HeroSection />
-      <Cards />
-      </>
+    <>
+    <h1>Login</h1>
+    <p></p>
+    <div className='hero-btns'>
+      <ButtonSignUp
+        className='btns'
+        buttonStyle='btn--outline'
+        buttonSize='btn--large'
+      >
+        Create an Account
+      </ButtonSignUp>
+    </div>
+    </>
   );
 
 }

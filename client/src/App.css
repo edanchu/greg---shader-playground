@@ -8,7 +8,8 @@
 .home,
 .services,
 .products,
-.sign-up {
+.sign-up
+.login {
   display: flex;
   height: 90vh;
   align-items: center;
@@ -36,6 +37,14 @@
 
 .sign-up {
   
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: #fff;
+  font-size: 100px;
+}
+
+.login {
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
