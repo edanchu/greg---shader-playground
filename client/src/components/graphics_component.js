@@ -28,12 +28,12 @@ class GraphicsComponent extends Component {
         window.cancelAnimationFrame(this.requestID);
     }
 
-    mouseMoveCallback(e){
+    mouseMoveCallback(e) {
         this.mouse.y = Math.min((this.height - e.clientY - e.target.offsetTop), this.height);
         this.mouse.x = Math.min((e.clientX - e.target.offsetLeft), this.width);
     }
 
-    mouseDownCallback(e){
+    mouseDownCallback(e) {
         this.mouse.w = Math.min((this.height - e.clientY - e.target.offsetTop), this.height);
         this.mouse.z = Math.min((e.clientX - e.target.offsetLeft), this.width);
     }
@@ -52,12 +52,12 @@ class GraphicsComponent extends Component {
         this.keyboard.needsUpdate = true;
     }
 
-    pauseStartCallback(){
+    pauseStartCallback() {
         this.pauseStartTime = this.clock.getElapsedTime();
         this.pause = true;
     }
 
-    pauseEndCallback(){
+    pauseEndCallback() {
         this.timePaused = this.clock.getElapsedTime() - this.pauseStartTime + this.timePaused;
         this.pause = false;
     }
@@ -72,7 +72,7 @@ class GraphicsComponent extends Component {
         this.mount.appendChild(this.renderer.domElement);
 
         this.createRenderBuffers();
-        
+
         this.planeGeometry = new THREE.PlaneGeometry(2, 2)
         this.createMaterials();
 
@@ -119,7 +119,7 @@ class GraphicsComponent extends Component {
     }
 
     createRenderBuffers() {
-        const renderBufferSettings = {wrapS: THREE.RepeatWrapping, wrapT: THREE.RepeatWrapping, minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, depthBuffer: false};
+        const renderBufferSettings = { wrapS: THREE.RepeatWrapping, wrapT: THREE.RepeatWrapping, minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, depthBuffer: false };
 
         this.renderTarget1 = new THREE.WebGLRenderTarget(this.width, this.height, renderBufferSettings);
         this.renderTarget2 = new THREE.WebGLRenderTarget(this.width, this.height, renderBufferSettings);
@@ -133,7 +133,7 @@ class GraphicsComponent extends Component {
     }
 
     updateBufferUniforms() {
-        if (!this.pause){
+        if (!this.pause) {
             this.bufferMat1.uniforms.iDeltaTime.value = this.bufferMat2.uniforms.iDeltaTime.value = this.bufferMat3.uniforms.iDeltaTime.value = this.bufferMat4.uniforms.iDeltaTime.value = this.clock.getDelta();
             this.bufferMat1.uniforms.iTime.value = this.bufferMat2.uniforms.iTime.value = this.bufferMat3.uniforms.iTime.value = this.bufferMat4.uniforms.iTime.value = this.clock.getElapsedTime() - this.timePaused;
             this.frameNumber++;
@@ -147,8 +147,8 @@ class GraphicsComponent extends Component {
                 iDeltaTime: { value: 0.0 },
                 iFrame: { value: this.frameNumber },
                 iResolution: { value: new THREE.Vector2(this.width, this.height) },
-                iMouse: {value: this.mouse},
-                iKeyboard: {value: this.keyboard},
+                iMouse: { value: this.mouse },
+                iKeyboard: { value: this.keyboard },
                 iBufferTexture1: { value: this.renderTarget1.texture },
                 iBufferTexture2: { value: this.renderTarget2.texture },
                 iBufferTexture3: { value: this.renderTarget3.texture },
@@ -162,8 +162,8 @@ class GraphicsComponent extends Component {
                 iTime: { value: 0.0 },
                 iDeltaTime: { value: 0.0 },
                 iFrame: { value: this.frameNumber },
-                iMouse: {value: this.mouse},
-                iKeyboard: {value: this.keyboard},
+                iMouse: { value: this.mouse },
+                iKeyboard: { value: this.keyboard },
                 iResolution: { value: new THREE.Vector2(this.width, this.height) },
             }, vertexShader: this.getVertexShader(), fragmentShader: this.getBuffer1FragShader(),
             glslVersion: THREE.GLSL3,
@@ -175,8 +175,8 @@ class GraphicsComponent extends Component {
                 iDeltaTime: { value: 0.0 },
                 iFrame: { value: this.frameNumber },
                 iResolution: { value: new THREE.Vector2(this.width, this.height) },
-                iMouse: {value: this.mouse},
-                iKeyboard: {value: this.keyboard},
+                iMouse: { value: this.mouse },
+                iKeyboard: { value: this.keyboard },
                 iBufferTexture1: { value: this.renderTarget1.texture },
             }, vertexShader: this.getVertexShader(), fragmentShader: this.getBuffer2FragShader(),
             glslVersion: THREE.GLSL3,
@@ -188,8 +188,8 @@ class GraphicsComponent extends Component {
                 iDeltaTime: { value: 0.0 },
                 iFrame: { value: this.frameNumber },
                 iResolution: { value: new THREE.Vector2(this.width, this.height) },
-                iMouse: {value: this.mouse},
-                iKeyboard: {value: this.keyboard},
+                iMouse: { value: this.mouse },
+                iKeyboard: { value: this.keyboard },
                 iBufferTexture1: { value: this.renderTarget1.texture },
                 iBufferTexture2: { value: this.renderTarget2.texture },
             }, vertexShader: this.getVertexShader(), fragmentShader: this.getBuffer3FragShader(),
@@ -202,8 +202,8 @@ class GraphicsComponent extends Component {
                 iDeltaTime: { value: 0.0 },
                 iFrame: { value: this.frameNumber },
                 iResolution: { value: new THREE.Vector2(this.width, this.height) },
-                iMouse: {value: this.mouse},
-                iKeyboard: {value: this.keyboard},
+                iMouse: { value: this.mouse },
+                iKeyboard: { value: this.keyboard },
                 iBufferTexture1: { value: this.renderTarget1.texture },
                 iBufferTexture2: { value: this.renderTarget2.texture },
                 iBufferTexture3: { value: this.renderTarget3.texture },
@@ -230,7 +230,7 @@ class GraphicsComponent extends Component {
         `
     }
 
-    getCommonUniforms(){
+    getCommonUniforms() {
         return `
         uniform float iTime;
         uniform float iDeltaTime;
@@ -531,17 +531,17 @@ class GraphicsComponent extends Component {
         `;
     }
 
-    nullFunction(){;};
+    nullFunction() { ; };
 
     render() {
-        return<div 
-            style={{height: this.height, width: this.width}}
-            onMouseMove={(e) => this.mouseMoveCallback(e)} 
+        return <div
+            style={{ height: this.height, width: this.width }}
+            onMouseMove={(e) => this.mouseMoveCallback(e)}
             onMouseDown={(e) => this.mouseDownCallback(e)}
-            onMouseEnter={(e) => {this.props.playOnMouseOver ? this.pauseEndCallback(e) : this.nullFunction()}}
-            onMouseLeave={(e) => {this.props.playOnMouseOver ? this.pauseStartCallback(e) : this.nullFunction()}}
-            ref={ref => (this.mount = ref)} 
-            />;
+            onMouseEnter={(e) => { this.props.playOnMouseOver ? this.pauseEndCallback(e) : this.nullFunction() }}
+            onMouseLeave={(e) => { this.props.playOnMouseOver ? this.pauseStartCallback(e) : this.nullFunction() }}
+            ref={ref => (this.mount = ref)}
+        />;
     }
 }
 
