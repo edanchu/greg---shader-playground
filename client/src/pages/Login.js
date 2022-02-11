@@ -8,7 +8,7 @@ import "../App.css";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [click, setClick] = useState(false);
+  const [click, setClick] = useState("false");
 
   function validateForm() {
     return email.length > 0 && password.length > 0;
@@ -19,7 +19,7 @@ export default function Login() {
   }
 
   function errorMessage() {
-    if (click === true && (email.length === 0 || password.length === 0))
+    if (click === true && !validateForm())
       {
         return "Email and Password must be at least 1 character";
       }
@@ -48,7 +48,7 @@ export default function Login() {
           />
         </Form.Group>
           <Link to='/Account' className='login-link'>
-            <Button className='login-button' type="submit" disabled={!validateForm()} onClick={() => setClick(true)}>
+            <Button className='login-button' type="submit" disabled={!validateForm()} onClick={() => setClick("true")}>
               Login
             </Button>
           </Link> 
@@ -57,7 +57,7 @@ export default function Login() {
               Don't have an account? Sign up! 
             </Button>
           </Link> 
-          <p className='error'> {errorMessage()} </p>
+          <div className='error'> {errorMessage()} </div>
       </Form>
     </div>
   );

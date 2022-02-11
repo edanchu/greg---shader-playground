@@ -8,10 +8,11 @@ import "../App.css";
 export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [click, setClick] = useState(false);
 
   function validateForm() {
-    return email.length > 0 && password.length > 0;
+    return email.length > 0 && password.length > 0 && password===confirmPassword;
   }
 
   function handleSubmit(event) {
@@ -19,9 +20,9 @@ export default function SignUp() {
   }
 
   function errorMessage() {
-    if (click === true && (email.length === 0 || password.length === 0))
+    if (click === true && !validateForm())
       {
-        return "Email and Password must be at least 1 character";
+        return "Email and Password must be at least 1 character, Passwords must match";
       }
   }
 
@@ -52,18 +53,18 @@ export default function SignUp() {
           <Form.Control
             className="input-box2"
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </Form.Group>
           <Link to='/Account' className='login-link'>
             <Button className='login-button' type="submit" disabled={!validateForm()} onClick={() => setClick(true)}>
-              Login
+              Create Account
             </Button>
           </Link> 
-          <Link to='/Sign-Up' className='login-link'>
+          <Link to='/Login' className='login-link'>
             <Button className='SignUp-button' type="submit">
-              Don't have an account? Sign up! 
+              Have an account? Sign in! 
             </Button>
           </Link> 
           <p className='error'> {errorMessage()} </p>
