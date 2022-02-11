@@ -5,7 +5,7 @@ const passportConfig = require("../passport");
 const JWT = require("jsonwebtoken");
 const User = require("../models/User");
 const Project = require("../models/Project");
-const { deleteOne } = require("../models/User");
+const { deleteOne, db } = require("../models/User");
 const mongoose = require("mongoose");
 
 const signToken = (userID) => {
@@ -107,11 +107,14 @@ userRouter.post(
       req.user._id,
       { $push: { projects: newProject._id } },
       { safe: true, upsert: true, new: true },
-      function (err, model) {
-        console.log(err);
+      (err, model) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send("database error");
+        }
+        res.send(newProject);
       }
     );
-    res.send(newProject);
   }
 );
 
@@ -154,6 +157,18 @@ userRouter.put(
     );
   }
 );
+
+userRouter.get("/get-projects", async (req, res) => {
+  const cursor = Project.find({ public: true })
+    .sort({ likes: -1 })
+    .exec((err, projects) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send("Database error");
+      }
+      res.send(projects);
+    });
+});
 
 userRouter.delete(
   "/delete-project/:id",
