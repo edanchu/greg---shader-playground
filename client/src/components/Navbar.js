@@ -59,7 +59,15 @@ function Navbar() {
                 Products
               </Link>
             </li>
-
+            <li className='nav-item'>
+              <Link
+                to='/UserPage'
+                className='nav-links'
+                onClick={closeMobileMenu}
+              >
+                My Page
+              </Link>
+            </li>
             <li>
               <Link
                 to='/Login'

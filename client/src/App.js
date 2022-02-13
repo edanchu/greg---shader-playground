@@ -7,6 +7,7 @@ import Cards from './components/Cards.js';
 import Login from './pages/Login';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import SignUp from './pages/Sign-up';
+import UserPage from './pages/UserPage';
 
 
 
@@ -20,6 +21,7 @@ function App() {
           <Route path='/' element={<Cards />} />
           <Route path='/Login' element={<Login />} />
           <Route path='/Sign-up' element={<SignUp />} />
+          <Route path='/UserPage' element={<UserPage />} />
         </Routes>
       </Router>
     </>
