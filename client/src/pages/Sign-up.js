@@ -6,6 +6,7 @@ import "./Sign-Up.css";
 import "../App.css";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
 
 export default function SignUp() {
   const [email, setEmail] = useState("");

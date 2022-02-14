@@ -6,6 +6,7 @@ import "./Login.css";
 import "../App.css";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -15,6 +16,18 @@ export default function Login() {
 
   function handleSubmit(event) {
     event.preventDefault();
+    axios
+      .post('/user/login', {
+        email: email,
+        password: password,
+      })
+      .then((res) => {
+        console.log(`Success: ${res.user.username} logged in`);
+        // REDIRECT to next page here (Account)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   function validateForm() {
@@ -29,23 +42,23 @@ export default function Login() {
   }
 
   return (
-    <div className="Login">
+    <div className='Login'>
       <Form onSubmit={handleSubmit}>
-        <h className="header"> Email </h>
-        <Form.Group controlId="email" className="input-box">
+        <p className='header'> Email </p>
+        <Form.Group controlId='email' className='input-box'>
           <Form.Control
-            className="input-box2"
+            className='input-box2'
             autoFocus
-            type="email"
+            type='email'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </Form.Group>
-        <h className="header"> Password </h>
-        <Form.Group controlId="password" className="input-box">
+        <p className='header'> Password </p>
+        <Form.Group controlId='password' className='input-box'>
           <Form.Control
-            className="input-box2"
-            type="password"
+            className='input-box2'
+            type='password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -63,4 +76,3 @@ export default function Login() {
     </div>
   );
 }
-
