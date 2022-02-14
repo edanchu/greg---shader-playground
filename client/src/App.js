@@ -1,15 +1,13 @@
 import React from 'react';
 import Navbar from './components/Navbar';
 import './App.css';
-import Home from './pages/Home';
+import Home from './pages/home';
 import Browse from './pages/browse';
 import Cards from './components/Cards.js';
 import Login from './pages/Login';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SignUp from './pages/Sign-up';
 import UserPage from './pages/UserPage';
-
-
 
 function App() {
   return (
