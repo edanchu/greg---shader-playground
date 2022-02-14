@@ -96,14 +96,15 @@ class GraphicsComponent extends Component {
     };
 
     renderLoop() {
+        if (!this.pause) {
+            this.updateBufferUniforms();
 
-        this.updateBufferUniforms();
+            this.renderBufferTextures();
 
-        this.renderBufferTextures();
+            this.updateFinalUniforms();
 
-        this.updateFinalUniforms();
-
-        this.renderFinalScene();
+            this.renderFinalScene();
+        }
 
         this.requestID = window.requestAnimationFrame(this.renderLoop);
     };

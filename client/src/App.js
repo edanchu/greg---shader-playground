@@ -4,10 +4,6 @@ import './App.css';
 // import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 function App() {
-  const displayHeight = 480;
-  const isPaused = true;
-  const playOnMouseOver = true;
-  const showButtons = false;
   const finalFragShaderCustomCode = `
 
   void mainImage(out vec4 FragColor, in vec4 FragCoord){
@@ -445,10 +441,10 @@ function App() {
   return (
     <div>
       <GraphicsComponent
-        height={displayHeight}
-        pause={isPaused}
-        playOnMouseOver={playOnMouseOver}
-        showButtons={showButtons}
+        height={480}
+        pause={false}
+        playOnMouseOver={false}
+        showButtons={true}
         commonFragShaderCustomCode={""}
         finalFragShaderCustomCode={finalFragShaderCustomCode}
         buffer1FragShaderCustomCode={buffer1FragShaderCustomCode}
