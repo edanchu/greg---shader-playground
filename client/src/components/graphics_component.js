@@ -183,6 +183,8 @@ class GraphicsComponent extends Component {
                 iTime: { value: 0.0 },
                 iDeltaTime: { value: 0.0 },
                 iFrame: { value: this.frameNumber },
+                iMouse: { value: this.mouse },
+                iKeyboard: { value: this.keyboard },
                 iResolution: { value: new THREE.Vector2(this.width, this.height) },
                 iMouse: { value: this.mouse },
                 iKeyboard: { value: this.keyboard },

@@ -4,6 +4,9 @@ const passport = require('passport');
 const passportConfig = require('../passport');
 const JWT = require('jsonwebtoken');
 const User = require('../models/User');
+const Project = require('../models/Project');
+const { deleteOne, db } = require('../models/User');
+const mongoose = require('mongoose');
 
 const signToken = (userID) => {
   return JWT.sign(
@@ -77,6 +80,126 @@ userRouter.get(
   (req, res) => {
     const { email, username } = req.user;
     res.status(200).json({ isAuthenticated: true, user: { email, username } });
+  }
+);
+
+userRouter.post(
+  '/add-project',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    var newProject = new Project({
+      owner: req.user._id,
+      title: req.body.title,
+      description: req.body.description,
+      public: req.body.public,
+      likes: req.body.likes,
+    });
+
+    newProject.save((err, obj) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send('database error');
+      }
+      console.log('added project');
+    });
+
+    User.findByIdAndUpdate(
+      req.user._id,
+      { $push: { projects: newProject._id } },
+      { safe: true, upsert: true, new: true },
+      (err, model) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send('database error');
+        }
+        res.send(newProject);
+      }
+    );
+  }
+);
+
+userRouter.get(
+  '/get-project/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Project.findById(
+      { _id: new mongoose.Types.ObjectId(req.params.id) },
+      (err, project) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send('database error');
+        }
+        res.send(project);
+      }
+    );
+  }
+);
+
+userRouter.put(
+  '/update-project/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    console.log(req.body);
+    filter = { _id: new mongoose.Types.ObjectId(req.params.id) };
+    update = req.body;
+    Project.findOneAndUpdate(
+      filter,
+      update,
+      { new: true },
+      (err, updatedProject) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send('Database error');
+        }
+        console.log('updated');
+        res.send(updatedProject);
+      }
+    );
+  }
+);
+
+userRouter.get('/get-projects', async (req, res) => {
+  Project.find({ public: true })
+    .sort({ likes: -1 })
+    .exec((err, projects) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send('Database error');
+      }
+      res.send(projects);
+    });
+});
+
+userRouter.delete(
+  '/delete-project/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Project.findOneAndDelete(
+      { _id: new mongoose.Types.ObjectId(req.params.id) },
+      (err, project) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send('Database error');
+        }
+        console.log('succesfully deleted project ' + req.params.id);
+      }
+    );
+
+    User.updateOne(
+      { _id: req.user._id },
+      {
+        $pullAll: {
+          projects: [{ _id: new mongoose.Types.ObjectId(req.params.id) }],
+        },
+      },
+      (err, deletedProject) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send('Database error');
+        }
+        res.send(deletedProject);
+      }
+    );
   }
 );
 
