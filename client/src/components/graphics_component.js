@@ -16,6 +16,9 @@ class GraphicsComponent extends Component {
         this.frameNumber = 0;
         this.pauseStartTime = 0;
         this.timePaused = 0;
+        let tempDate = new Date();
+        this.date = new THREE.Vector4(tempDate.getFullYear(), tempDate.getMonth(), tempDate.getDate(), (tempDate.getHours() * 3600) + (tempDate.getMinutes() * 60) + tempDate.getSeconds() + (tempDate.getMilliseconds / 1000));
+
 
         document.addEventListener('keydown', this.keyDownCallback);
         document.addEventListener('keyup', this.keyUpCallback);
@@ -28,12 +31,12 @@ class GraphicsComponent extends Component {
         window.cancelAnimationFrame(this.requestID);
     }
 
-    mouseMoveCallback(e) {
+    mouseMoveCallback = (e) => {
         this.mouse.y = Math.min((this.height - e.clientY - e.target.offsetTop), this.height);
         this.mouse.x = Math.min((e.clientX - e.target.offsetLeft), this.width);
     }
 
-    mouseDownCallback(e) {
+    mouseDownCallback = (e) => {
         this.mouse.w = Math.min((this.height - e.clientY - e.target.offsetTop), this.height);
         this.mouse.z = Math.min((e.clientX - e.target.offsetLeft), this.width);
     }
@@ -52,15 +55,26 @@ class GraphicsComponent extends Component {
         this.keyboard.needsUpdate = true;
     }
 
-    pauseStartCallback() {
+    pauseStartCallback = (e) => {
         this.pauseStartTime = this.clock.getElapsedTime();
         this.pause = true;
     }
 
-    pauseEndCallback() {
+    pauseEndCallback = (e) => {
         this.timePaused = this.clock.getElapsedTime() - this.pauseStartTime + this.timePaused;
         this.pause = false;
     }
+
+    restartCallback = (e) => {
+        this.clock.stop();
+        this.clock.start();
+        this.frameNumber = 0;
+        this.pauseStartTime = 0;
+        this.timePaused = 0;
+        this.pause = false;
+    }
+
+
 
 
     sceneSetup() {
@@ -82,14 +96,15 @@ class GraphicsComponent extends Component {
     };
 
     renderLoop() {
+        if (!this.pause) {
+            this.updateBufferUniforms();
 
-        this.updateBufferUniforms();
+            this.renderBufferTextures();
 
-        this.renderBufferTextures();
+            this.updateFinalUniforms();
 
-        this.updateFinalUniforms();
-
-        this.renderFinalScene();
+            this.renderFinalScene();
+        }
 
         this.requestID = window.requestAnimationFrame(this.renderLoop);
     };
@@ -137,6 +152,11 @@ class GraphicsComponent extends Component {
             this.bufferMat1.uniforms.iDeltaTime.value = this.bufferMat2.uniforms.iDeltaTime.value = this.bufferMat3.uniforms.iDeltaTime.value = this.bufferMat4.uniforms.iDeltaTime.value = this.clock.getDelta();
             this.bufferMat1.uniforms.iTime.value = this.bufferMat2.uniforms.iTime.value = this.bufferMat3.uniforms.iTime.value = this.bufferMat4.uniforms.iTime.value = this.clock.getElapsedTime() - this.timePaused;
             this.frameNumber++;
+            let tempDate = new Date();
+            this.date.x = tempDate.getFullYear();
+            this.date.y = tempDate.getMonth();
+            this.date.z = tempDate.getDay();
+            this.date.w = (tempDate.getHours() * 3600) + (tempDate.getMinutes() * 60) + tempDate.getSeconds() + (tempDate.getMilliseconds / 1000);
         }
     }
 
@@ -149,6 +169,7 @@ class GraphicsComponent extends Component {
                 iResolution: { value: new THREE.Vector2(this.width, this.height) },
                 iMouse: { value: this.mouse },
                 iKeyboard: { value: this.keyboard },
+                iDate: { value: this.date },
                 iBufferTexture1: { value: this.renderTarget1.texture },
                 iBufferTexture2: { value: this.renderTarget2.texture },
                 iBufferTexture3: { value: this.renderTarget3.texture },
@@ -165,6 +186,9 @@ class GraphicsComponent extends Component {
                 iMouse: { value: this.mouse },
                 iKeyboard: { value: this.keyboard },
                 iResolution: { value: new THREE.Vector2(this.width, this.height) },
+                iMouse: { value: this.mouse },
+                iKeyboard: { value: this.keyboard },
+                iDate: { value: this.date },
             }, vertexShader: this.getVertexShader(), fragmentShader: this.getBuffer1FragShader(),
             glslVersion: THREE.GLSL3,
         });
@@ -177,6 +201,7 @@ class GraphicsComponent extends Component {
                 iResolution: { value: new THREE.Vector2(this.width, this.height) },
                 iMouse: { value: this.mouse },
                 iKeyboard: { value: this.keyboard },
+                iDate: { value: this.date },
                 iBufferTexture1: { value: this.renderTarget1.texture },
             }, vertexShader: this.getVertexShader(), fragmentShader: this.getBuffer2FragShader(),
             glslVersion: THREE.GLSL3,
@@ -190,6 +215,7 @@ class GraphicsComponent extends Component {
                 iResolution: { value: new THREE.Vector2(this.width, this.height) },
                 iMouse: { value: this.mouse },
                 iKeyboard: { value: this.keyboard },
+                iDate: { value: this.date },
                 iBufferTexture1: { value: this.renderTarget1.texture },
                 iBufferTexture2: { value: this.renderTarget2.texture },
             }, vertexShader: this.getVertexShader(), fragmentShader: this.getBuffer3FragShader(),
@@ -204,6 +230,7 @@ class GraphicsComponent extends Component {
                 iResolution: { value: new THREE.Vector2(this.width, this.height) },
                 iMouse: { value: this.mouse },
                 iKeyboard: { value: this.keyboard },
+                iDate: { value: this.date },
                 iBufferTexture1: { value: this.renderTarget1.texture },
                 iBufferTexture2: { value: this.renderTarget2.texture },
                 iBufferTexture3: { value: this.renderTarget3.texture },
@@ -224,10 +251,7 @@ class GraphicsComponent extends Component {
     }
 
     getCommonFragCode() {
-        return `
-        
-        
-        `
+        return this.props.commonFragShaderCustomCode ? this.props.commonFragShaderCustomCode : "";
     }
 
     getCommonUniforms() {
@@ -238,18 +262,12 @@ class GraphicsComponent extends Component {
         uniform vec2 iResolution;
         uniform vec4 iMouse;
         uniform sampler2D iKeyboard;
+        uniform vec4 iDate;
         `
     }
 
     getFinalFragShaderCustomCode() {
-        return `
-
-        void mainImage(out vec4 FragColor, in vec4 FragCoord){
-            vec4 buff1 = texture(iBufferTexture1, FragCoord.xy/iResolution);
-            FragColor = buff1;
-        }
-
-        `;
+        return this.props.finalFragShaderCustomCode ? this.props.finalFragShaderCustomCode : "";
     }
 
     getFinalFragmentShader() {
@@ -352,196 +370,37 @@ class GraphicsComponent extends Component {
     }
 
     getBuffer1FragShaderCustomCode() {
-        return `
-
-        #define PI 3.14159
-        #define inf 999999.0
-
-        vec2 rotate(vec2 point, float angle)
-        {
-            float x = point.x; float y = point.y;
-            point.x = x * cos(angle) - y * sin(angle);
-            point.y = y * cos(angle) + x * sin(angle);
-            return point;
-        }
-
-        bool box2d(vec2 pos, vec2 uv, vec2 pivot, float angle, float w, float h)
-        {
-            uv -= pos;
-            uv = rotate(uv, angle) + pivot;
-            
-            bool x = (w - uv.x) > 0.0 && (-w - uv.x) < 0.0;
-            bool y = (h - uv.y) > 0.0 && (-h - uv.y) < 0.0;
-            
-            return x && y;
-        }
-
-        vec2 angletovec(float angle)
-        {
-            float xn = cos(angle);
-            float yn = sin(angle);
-            return vec2(xn, yn);
-        }
-
-        struct Joint
-        {
-            vec2 pos;
-            float w;
-            float h;
-            float angle;
-        };
-
-        vec2 endPoint(in Joint j)
-        {
-            return j.pos + vec2(cos(-j.angle), sin(-j.angle)) * j.w * 2.0;
-        }
-            
-        bool drawJoint(in Joint j, vec2 uv)
-        {
-            return box2d(j.pos, uv, vec2(-j.w, 0.0), j.angle, j.w, j.h);
-        }
-
-        void rotateJoint(inout Joint j1, in vec2 target, float amount)
-        {	
-            vec2 ep = j1.pos;
-            vec2 targetv = normalize(target - ep);
-            targetv.y *= -1.0;
-            // which way to turn?
-            // construct a vector normal to direction and check sign of dot product
-            float an = (j1.angle) + PI * 0.5;
-            vec2 norm = angletovec(an);
-            float turn = dot(norm, targetv);
-            float dir = turn > 0.0 ? 1.0 : -1.0;
-            
-            // turn
-            vec2 fwd = angletovec(j1.angle);
-            float d = clamp(dot(fwd, targetv), -1.0, 1.0);
-            float turnangle = acos(d);
-            
-            j1.angle += turnangle * dir * amount;
-        }
-
-
-        void mainImage( out vec4 fragColor, in vec4 fragCoord )
-        {
-            
-            
-            fragColor = vec4(0.0);
-            vec2 uv = fragCoord.xy / iResolution.xy;
-            uv -= vec2(0.5);
-            float aspect = iResolution.x / iResolution.y;
-            uv.y /= aspect;
-            
-            float mx = iMouse.x / iResolution.x;
-            float my = iMouse.y / iResolution.y;
-            vec2 target = vec2(mx, my);
-            target -= vec2(0.5);
-            target.y /= aspect;
-
-            if(iMouse.wz == vec2(-1.0, -1.0))
-            {
-                target = vec2(sin(iTime) * 0.45, 0.1 + cos(iTime) * 0.15);
-            }
-            
-            const int JOINTS = 7;
-            Joint j[JOINTS];
-            
-            j[0].pos = vec2(-0.0, -0.3);
-            j[0].w = 0.05;
-            j[0].h = 0.02;
-            j[0].angle = -PI * 0.5;
-            float fj = float(JOINTS);
-            
-            for (int i = 1; i < JOINTS; ++i)
-            {
-                j[i].pos = endPoint(j[i - 1]);
-                float r = (fj - float(i)) / fj;
-                j[i].w = 0.03;
-                j[i].h = 0.01 * r;
-                j[i].angle = -PI * 0.5;    
-            }
-            const int iter = 5;
-            const float weight = 0.35;
-            
-            for (int x = 0; x < iter; ++x)
-            {	
-                for (int i = JOINTS - 1; i >= 1; --i)
-                {
-                    j[i].pos = endPoint(j[i - 1]);
-                    rotateJoint(j[i], target, weight * (float(i) / float(iter)));
-                }
-            }
-            
-            for (int i = 1; i < JOINTS; ++i)
-            {
-            j[i].pos = endPoint(j[i - 1]);
-            }
-
-            bool b = false;
-            for (int i = 0; i < JOINTS; ++i)
-            {
-                b = b || drawJoint(j[i], uv);
-            }
-            
-            fragColor = vec4(0.7, 0.1, uv.y + 0.3, 0.0);
-            fragColor -= vec4(b ? 1.0 : 0.0);
-            fragColor = max(fragColor, 0.0);
-            if(sin(uv.x * 17.0) * 0.01 - uv.y > 0.20)
-            {
-                fragColor = vec4(0.0);
-            }
-            
-            // target "light";
-            fragColor += 1.0 - smoothstep(length(uv - target), 0.0, 0.01);;
-            
-        }
-
-        `;
+        return this.props.buffer1FragShaderCustomCode ? this.props.buffer1FragShaderCustomCode : "";
     }
 
     getBuffer2FragShaderCustomCode() {
-        return `
-
-        void mainImage(out vec4 FragColor, in vec4 FragCoord){
-            FragColor = vec4(0.0, 1.0, 0.0, 1.0);
-        }
-
-        `;
+        return this.props.buffer2FragShaderCustomCode ? this.props.buffer2FragShaderCustomCode : "";
     }
 
     getBuffer3FragShaderCustomCode() {
-        return `
-
-        void mainImage(out vec4 FragColor, in vec4 FragCoord)
-        {
-            FragColor = vec4(0.0, 0.0, 1.0, 1.0);
-        }
-
-        `;
+        return this.props.buffer3FragShaderCustomCode ? this.props.buffer3FragShaderCustomCode : "";
     }
 
     getBuffer4FragShaderCustomCode() {
-        return `
-
-        void mainImage(out vec4 FragColor, in vec4 FragCoord)
-        {
-            FragColor = vec4(1.0, 0.0, 1.0, 1.0);
-        }
-
-        `;
+        return this.props.buffer4FragShaderCustomCode ? this.props.buffer4FragShaderCustomCode : "";
     }
 
-    nullFunction() { ; };
-
     render() {
-        return <div
-            style={{ height: this.height, width: this.width }}
-            onMouseMove={(e) => this.mouseMoveCallback(e)}
-            onMouseDown={(e) => this.mouseDownCallback(e)}
-            onMouseEnter={(e) => { this.props.playOnMouseOver ? this.pauseEndCallback(e) : this.nullFunction() }}
-            onMouseLeave={(e) => { this.props.playOnMouseOver ? this.pauseStartCallback(e) : this.nullFunction() }}
-            ref={ref => (this.mount = ref)}
-        />;
+        const style = {
+            float: "left",
+            backgroundColor: "gray"
+        }
+        return (<div style={style}>
+            <div
+                onMouseMove={(e) => this.mouseMoveCallback(e)}
+                onMouseDown={(e) => this.mouseDownCallback(e)}
+                onMouseEnter={(e) => { this.props.playOnMouseOver ? this.pauseEndCallback(e) : <></> }}
+                onMouseLeave={(e) => { this.props.playOnMouseOver ? this.pauseStartCallback(e) : <></> }}
+                ref={ref => (this.mount = ref)}
+            />
+            {(this.props.showButtons ? <button onClick={(e) => this.restartCallback(e)}>{'\u23ee'}</button> : <></>)}
+            {(this.props.showButtons ? <button onClick={(e) => !this.pause ? this.pauseStartCallback(e) : this.pauseEndCallback(e)}>{"\u23ef"}</button> : <></>)}
+        </div>);
     }
 }
 
