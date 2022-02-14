@@ -1,30 +1,42 @@
 import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import Button from "react-bootstrap/Button";
 import "./Sign-Up.css";
 import "../App.css";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [click, setClick] = useState(false);
+
+  let navigate = useNavigate();
 
   function validateForm() {
-    return email.length > 0 && password.length > 0 && password===confirmPassword;
+    if (email.length <= 0 || password.length <= 0) {
+      toast.error("Email and Password must be at least 1 character");
+    }
+
+    else if (confirmPassword.length <= 0) {
+      toast.error("Please confirm password");
+    }
+    
+    else if (password !== confirmPassword) {
+      toast.error("Passwords must match");
+    }
+
+    else {
+      return navigate("/UserPage");
+    }
   }
 
   function handleSubmit(event) {
     event.preventDefault();
   }
 
-  function errorMessage() {
-    if (click === true && !validateForm())
-      {
-        return "Email and Password must be at least 1 character, Passwords must match";
-      }
-  }
+  
 
   return (
     <div className="SignUp">
@@ -57,17 +69,15 @@ export default function SignUp() {
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </Form.Group>
-          <Link to='/Account' className='login-link'>
-            <Button className='login-button' type="submit" disabled={!validateForm()} onClick={() => setClick(true)}>
+            <Button className='login-button' onClick={() => validateForm()}>
               Create Account
             </Button>
-          </Link> 
+            <ToastContainer/>
           <Link to='/Login' className='login-link'>
             <Button className='SignUp-button' type="submit">
               Have an account? Sign in! 
             </Button>
-          </Link> 
-          <p className='error'> {errorMessage()} </p>
+          </Link>
       </Form>
     </div>
   );

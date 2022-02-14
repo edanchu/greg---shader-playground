@@ -1,28 +1,31 @@
 import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import Button from "react-bootstrap/Button";
 import "./Login.css";
 import "../App.css";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [click, setClick] = useState("false");
 
-  function validateForm() {
-    return email.length > 0 && password.length > 0;
-  }
+  let navigate = useNavigate();
 
   function handleSubmit(event) {
     event.preventDefault();
   }
 
-  function errorMessage() {
-    if (click === true && !validateForm())
-      {
-        return "Email and Password must be at least 1 character";
-      }
+  function validateForm() {
+    if (email.length <= 0 || password.length <= 0) {
+      toast.error("Email and Password must be at least 1 character");
+    }
+
+    else {
+      return navigate("/UserPage");
+    }
+     
   }
 
   return (
@@ -47,17 +50,15 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </Form.Group>
-          <Link to='/Account' className='login-link'>
-            <Button className='login-button' type="submit" disabled={!validateForm()} onClick={() => setClick("true")}>
+            <Button className='login-button' onClick={() => validateForm()}>
               Login
             </Button>
-          </Link> 
+           <ToastContainer/>
           <Link to='/Sign-Up' className='login-link'>
             <Button className='SignUp-button' type="submit">
               Don't have an account? Sign up! 
             </Button>
           </Link> 
-          <div className='error'> {errorMessage()} </div>
       </Form>
     </div>
   );
