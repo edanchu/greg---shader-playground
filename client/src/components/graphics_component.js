@@ -74,9 +74,6 @@ class GraphicsComponent extends Component {
         this.pause = false;
     }
 
-
-
-
     sceneSetup() {
         this.scene = new THREE.Scene();
         this.camera = new THREE.OrthographicCamera();
@@ -161,6 +158,8 @@ class GraphicsComponent extends Component {
     }
 
     createMaterials() {
+        let loader = new THREE.TextureLoader();
+
         this.finalMat = new THREE.RawShaderMaterial({
             uniforms: {
                 iTime: { value: 0.0 },
@@ -174,6 +173,10 @@ class GraphicsComponent extends Component {
                 iBufferTexture2: { value: this.renderTarget2.texture },
                 iBufferTexture3: { value: this.renderTarget3.texture },
                 iBufferTexture4: { value: this.renderTarget4.texture },
+                iChannel0: { value: this.props.channels[0][0] ? loader.load(this.props.channels[0][0].path) : null },
+                iChannel1: { value: this.props.channels[0][1] ? loader.load(this.props.channels[0][1].path) : null },
+                iChannel2: { value: this.props.channels[0][2] ? loader.load(this.props.channels[0][2].path) : null },
+                iChannel3: { value: this.props.channels[0][3] ? loader.load(this.props.channels[0][3].path) : null },
             }, vertexShader: this.getVertexShader(), fragmentShader: this.getFinalFragmentShader(),
             glslVersion: THREE.GLSL3,
         });
@@ -186,9 +189,11 @@ class GraphicsComponent extends Component {
                 iMouse: { value: this.mouse },
                 iKeyboard: { value: this.keyboard },
                 iResolution: { value: new THREE.Vector2(this.width, this.height) },
-                iMouse: { value: this.mouse },
-                iKeyboard: { value: this.keyboard },
                 iDate: { value: this.date },
+                iChannel0: { value: this.props.channels[1][0] ? loader.load(this.props.channels[1][0].path) : null },
+                iChannel1: { value: this.props.channels[1][1] ? loader.load(this.props.channels[1][1].path) : null },
+                iChannel2: { value: this.props.channels[1][2] ? loader.load(this.props.channels[1][2].path) : null },
+                iChannel3: { value: this.props.channels[1][3] ? loader.load(this.props.channels[1][3].path) : null },
             }, vertexShader: this.getVertexShader(), fragmentShader: this.getBuffer1FragShader(),
             glslVersion: THREE.GLSL3,
         });
@@ -203,6 +208,10 @@ class GraphicsComponent extends Component {
                 iKeyboard: { value: this.keyboard },
                 iDate: { value: this.date },
                 iBufferTexture1: { value: this.renderTarget1.texture },
+                iChannel0: { value: this.props.channels[2][0] ? loader.load(this.props.channels[2][0].path) : null },
+                iChannel1: { value: this.props.channels[2][1] ? loader.load(this.props.channels[2][1].path) : null },
+                iChannel2: { value: this.props.channels[2][2] ? loader.load(this.props.channels[2][2].path) : null },
+                iChannel3: { value: this.props.channels[2][3] ? loader.load(this.props.channels[2][3].path) : null },
             }, vertexShader: this.getVertexShader(), fragmentShader: this.getBuffer2FragShader(),
             glslVersion: THREE.GLSL3,
         });
@@ -218,6 +227,10 @@ class GraphicsComponent extends Component {
                 iDate: { value: this.date },
                 iBufferTexture1: { value: this.renderTarget1.texture },
                 iBufferTexture2: { value: this.renderTarget2.texture },
+                iChannel0: { value: this.props.channels[3][0] ? loader.load(this.props.channels[3][0].path) : null },
+                iChannel1: { value: this.props.channels[3][1] ? loader.load(this.props.channels[3][1].path) : null },
+                iChannel2: { value: this.props.channels[3][2] ? loader.load(this.props.channels[3][2].path) : null },
+                iChannel3: { value: this.props.channels[3][3] ? loader.load(this.props.channels[3][3].path) : null },
             }, vertexShader: this.getVertexShader(), fragmentShader: this.getBuffer3FragShader(),
             glslVersion: THREE.GLSL3,
         });
@@ -234,6 +247,10 @@ class GraphicsComponent extends Component {
                 iBufferTexture1: { value: this.renderTarget1.texture },
                 iBufferTexture2: { value: this.renderTarget2.texture },
                 iBufferTexture3: { value: this.renderTarget3.texture },
+                iChannel0: { value: this.props.channels[4][0] ? loader.load(this.props.channels[4][0].path) : null },
+                iChannel1: { value: this.props.channels[4][1] ? loader.load(this.props.channels[4][1].path) : null },
+                iChannel2: { value: this.props.channels[4][2] ? loader.load(this.props.channels[4][2].path) : null },
+                iChannel3: { value: this.props.channels[4][3] ? loader.load(this.props.channels[4][3].path) : null },
             }, vertexShader: this.getVertexShader(), fragmentShader: this.getBuffer4FragShader(),
             glslVersion: THREE.GLSL3,
         });
@@ -270,6 +287,10 @@ class GraphicsComponent extends Component {
         return this.props.finalFragShaderCustomCode ? this.props.finalFragShaderCustomCode : "";
     }
 
+    getChannelType(bufferNumber, channelNumber) {
+        return this.props.channels && this.props.channels[bufferNumber][channelNumber] ? this.props.channels[bufferNumber][channelNumber].type : "float";
+    }
+
     getFinalFragmentShader() {
         return `
         precision highp float;
@@ -281,12 +302,17 @@ class GraphicsComponent extends Component {
         uniform sampler2D iBufferTexture3;
         uniform sampler2D iBufferTexture4;
 
+        uniform ` + this.getChannelType(0, 0) + ` iChannel0;
+        uniform ` + this.getChannelType(0, 1) + ` iChannel1;
+        uniform ` + this.getChannelType(0, 2) + ` iChannel2;
+        uniform ` + this.getChannelType(0, 3) + ` iChannel3;
+
         out vec4 FragColor;
 
         ` + this.getCommonFragCode() + this.getFinalFragShaderCustomCode() + `
 
         void main(){
-            mainImage(FragColor, gl_FragCoord);
+            mainImage(FragColor);
         }
     
     `;
@@ -298,12 +324,17 @@ class GraphicsComponent extends Component {
 
         ` + this.getCommonUniforms() + `
 
+        uniform ` + this.getChannelType(1, 0) + ` iChannel0;
+        uniform ` + this.getChannelType(1, 1) + ` iChannel1;
+        uniform ` + this.getChannelType(1, 2) + ` iChannel2;
+        uniform ` + this.getChannelType(1, 3) + ` iChannel3;
+
         out vec4 FragColor;
         
         ` + this.getCommonFragCode() + this.getBuffer1FragShaderCustomCode() + `
 
         void main(){
-            mainImage(FragColor, gl_FragCoord);
+            mainImage(FragColor);
         }
     
     `;
@@ -317,12 +348,17 @@ class GraphicsComponent extends Component {
 
         uniform sampler2D iBufferTexture1;
 
+        uniform ` + this.getChannelType(2, 0) + ` iChannel0;
+        uniform ` + this.getChannelType(2, 1) + ` iChannel1;
+        uniform ` + this.getChannelType(2, 2) + ` iChannel2;
+        uniform ` + this.getChannelType(2, 3) + ` iChannel3;
+
         out vec4 FragColor;
 
         ` + this.getCommonFragCode() + this.getBuffer2FragShaderCustomCode() + `
 
         void main(){
-            mainImage(FragColor, gl_FragCoord);
+            mainImage(FragColor);
         }
     
     `;
@@ -337,12 +373,17 @@ class GraphicsComponent extends Component {
         uniform sampler2D iBufferTexture1;
         uniform sampler2D iBufferTexture2;
 
+        uniform ` + this.getChannelType(3, 0) + ` iChannel0;
+        uniform ` + this.getChannelType(3, 1) + ` iChannel1;
+        uniform ` + this.getChannelType(3, 2) + ` iChannel2;
+        uniform ` + this.getChannelType(3, 3) + ` iChannel3;
+
         out vec4 FragColor;
 
         ` + this.getCommonFragCode() + this.getBuffer3FragShaderCustomCode() + `
 
         void main(){
-            mainImage(FragColor, gl_FragCoord);
+            mainImage(FragColor);
         }
     
     `;
@@ -358,12 +399,17 @@ class GraphicsComponent extends Component {
         uniform sampler2D iBufferTexture2;
         uniform sampler2D iBufferTexture3;
 
+        uniform ` + this.getChannelType(4, 0) + ` iChannel0;
+        uniform ` + this.getChannelType(4, 1) + ` iChannel1;
+        uniform ` + this.getChannelType(4, 2) + ` iChannel2;
+        uniform ` + this.getChannelType(4, 3) + ` iChannel3;
+
         out vec4 FragColor;
 
         ` + this.getCommonFragCode() + this.getBuffer4FragShaderCustomCode() + `
 
         void main(){
-            mainImage(FragColor, gl_FragCoord);
+            mainImage(FragColor);
         }
     
     `;
