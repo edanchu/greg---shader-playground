@@ -18,7 +18,8 @@ class GraphicsComponent extends Component {
         this.timePaused = 0;
         let tempDate = new Date();
         this.date = new THREE.Vector4(tempDate.getFullYear(), tempDate.getMonth(), tempDate.getDate(), (tempDate.getHours() * 3600) + (tempDate.getMinutes() * 60) + tempDate.getSeconds() + (tempDate.getMilliseconds / 1000));
-
+        this.loader = new THREE.TextureLoader();
+        this.cubeLoader = new THREE.CubeTextureLoader();
 
         document.addEventListener('keydown', this.keyDownCallback);
         document.addEventListener('keyup', this.keyUpCallback);
@@ -162,14 +163,14 @@ class GraphicsComponent extends Component {
             return null
         }
         if (this.props.channels[bufferNumber][channelNumber].type === "sampler2D") {
-            return new THREE.TextureLoader().load(this.props.channels[bufferNumber][channelNumber].path);
+            let tex = this.loader.load(this.props.channels[bufferNumber][channelNumber].path);
+            tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+            return tex;
         }
-        return new THREE.CubeTextureLoader().load(this.props.channels[bufferNumber][channelNumber].path);
+        return this.cubeLoader.load(this.props.channels[bufferNumber][channelNumber].path);
     }
 
     createMaterials() {
-        let loader = new THREE.TextureLoader();
-
         this.finalMat = new THREE.RawShaderMaterial({
             uniforms: {
                 iTime: { value: 0.0 },
