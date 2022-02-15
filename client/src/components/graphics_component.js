@@ -42,49 +42,6 @@ class GraphicsComponent extends Component {
         window.cancelAnimationFrame(this.requestID);
     }
 
-    mouseMoveCallback = (e) => {
-        this.mouse.y = Math.min((this.height - e.clientY - e.target.offsetTop), this.height);
-        this.mouse.x = Math.min((e.clientX - e.target.offsetLeft), this.width);
-    }
-
-    mouseDownCallback = (e) => {
-        this.mouse.w = Math.min((this.height - e.clientY - e.target.offsetTop), this.height);
-        this.mouse.z = Math.min((e.clientX - e.target.offsetLeft), this.width);
-    }
-
-    keyDownCallback = (e) => {
-        if (e.keyCode > 255) return;
-        this.keyboard.image.data[e.keyCode * 4] = 255;
-        this.keyboard.image.data[(e.keyCode * 4) + 1] = this.keyboard.image.data[(e.keyCode * 4) + 1] === 255 ? 0 : 255;
-        this.keyboard.image.data[(e.keyCode * 4) + 2] = this.frameNumber % 256;
-        this.keyboard.needsUpdate = true;
-    }
-
-    keyUpCallback = (e) => {
-        if (e.keyCode > 255) return;
-        this.keyboard.image.data[e.keyCode * 4] = 0;
-        this.keyboard.needsUpdate = true;
-    }
-
-    pauseStartCallback = (e) => {
-        this.pauseStartTime = this.clock.getElapsedTime();
-        this.pause = true;
-    }
-
-    pauseEndCallback = (e) => {
-        this.timePaused = this.clock.getElapsedTime() - this.pauseStartTime + this.timePaused;
-        this.pause = false;
-    }
-
-    restartCallback = (e) => {
-        this.clock.stop();
-        this.clock.start();
-        this.frameNumber = 0;
-        this.pauseStartTime = 0;
-        this.timePaused = 0;
-        this.pause = false;
-    }
-
     sceneSetup() {
         this.scene = new THREE.Scene();
         this.camera = new THREE.OrthographicCamera();
@@ -103,44 +60,6 @@ class GraphicsComponent extends Component {
         this.scene.add(this.quad);
     };
 
-    renderLoop() {
-        if (!this.pause) {
-            this.updateBufferUniforms();
-
-            this.renderBufferTextures();
-
-            this.updateFinalUniforms();
-
-            this.renderFinalScene();
-        }
-
-        this.requestID = window.requestAnimationFrame(this.renderLoop);
-    };
-
-    renderFinalScene() {
-        this.renderer.setRenderTarget(null);
-        this.quad.material = this.finalMat;
-        this.renderer.render(this.scene, this.camera);
-    }
-
-    renderBufferTextures() {
-        this.renderer.setRenderTarget(this.renderTarget1);
-        this.quad.material = this.bufferMat1;
-        this.renderer.render(this.scene, this.camera);
-
-        this.renderer.setRenderTarget(this.renderTarget2);
-        this.quad.material = this.bufferMat2;
-        this.renderer.render(this.scene, this.camera);
-
-        this.renderer.setRenderTarget(this.renderTarget3);
-        this.quad.material = this.bufferMat3;
-        this.renderer.render(this.scene, this.camera);
-
-        this.renderer.setRenderTarget(this.renderTarget4);
-        this.quad.material = this.bufferMat4;
-        this.renderer.render(this.scene, this.camera);
-    }
-
     createRenderBuffers() {
         const renderBufferSettings = { wrapS: THREE.RepeatWrapping, wrapT: THREE.RepeatWrapping, minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, depthBuffer: false };
 
@@ -148,36 +67,6 @@ class GraphicsComponent extends Component {
         this.renderTarget2 = new THREE.WebGLRenderTarget(this.width, this.height, renderBufferSettings);
         this.renderTarget3 = new THREE.WebGLRenderTarget(this.width, this.height, renderBufferSettings);
         this.renderTarget4 = new THREE.WebGLRenderTarget(this.width, this.height, renderBufferSettings);
-    }
-
-    updateFinalUniforms() {
-        this.finalMat.uniforms.iDeltaTime.value = this.bufferMat1.uniforms.iDeltaTime.value;
-        this.finalMat.uniforms.iTime.value = this.bufferMat1.uniforms.iTime.value;
-    }
-
-    updateBufferUniforms() {
-        if (!this.pause) {
-            this.bufferMat1.uniforms.iDeltaTime.value = this.bufferMat2.uniforms.iDeltaTime.value = this.bufferMat3.uniforms.iDeltaTime.value = this.bufferMat4.uniforms.iDeltaTime.value = this.clock.getDelta();
-            this.bufferMat1.uniforms.iTime.value = this.bufferMat2.uniforms.iTime.value = this.bufferMat3.uniforms.iTime.value = this.bufferMat4.uniforms.iTime.value = this.clock.getElapsedTime() - this.timePaused;
-            this.frameNumber++;
-            let tempDate = new Date();
-            this.date.x = tempDate.getFullYear();
-            this.date.y = tempDate.getMonth();
-            this.date.z = tempDate.getDay();
-            this.date.w = (tempDate.getHours() * 3600) + (tempDate.getMinutes() * 60) + tempDate.getSeconds() + (tempDate.getMilliseconds / 1000);
-        }
-    }
-
-    getChannelData(bufferNumber, channelNumber) {
-        if (!this.props.channels || !this.props.channels[bufferNumber][channelNumber]) {
-            return null
-        }
-        if (this.props.channels[bufferNumber][channelNumber].type === "sampler2D") {
-            let tex = this.loader.load(this.props.channels[bufferNumber][channelNumber].path);
-            tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-            return tex;
-        }
-        return this.cubeLoader.load(this.props.channels[bufferNumber][channelNumber].path);
     }
 
     createMaterials() {
@@ -277,6 +166,78 @@ class GraphicsComponent extends Component {
         });
     }
 
+    getChannelData(bufferNumber, channelNumber) {
+        if (!this.props.channels || !this.props.channels[bufferNumber][channelNumber]) {
+            return null
+        }
+        if (this.props.channels[bufferNumber][channelNumber].type === "sampler2D") {
+            let tex = this.loader.load(this.props.channels[bufferNumber][channelNumber].path);
+            tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+            return tex;
+        }
+        return this.cubeLoader.load(this.props.channels[bufferNumber][channelNumber].path);
+    }
+
+    getChannelType(bufferNumber, channelNumber) {
+        return this.props.channels && this.props.channels[bufferNumber][channelNumber] ? this.props.channels[bufferNumber][channelNumber].type : "float";
+    }
+
+    renderLoop() {
+        if (!this.pause) {
+            this.updateBufferUniforms();
+
+            this.renderBufferTextures();
+
+            this.updateFinalUniforms();
+
+            this.renderFinalScene();
+        }
+
+        this.requestID = window.requestAnimationFrame(this.renderLoop);
+    };
+
+    renderFinalScene() {
+        this.renderer.setRenderTarget(null);
+        this.quad.material = this.finalMat;
+        this.renderer.render(this.scene, this.camera);
+    }
+
+    renderBufferTextures() {
+        this.renderer.setRenderTarget(this.renderTarget1);
+        this.quad.material = this.bufferMat1;
+        this.renderer.render(this.scene, this.camera);
+
+        this.renderer.setRenderTarget(this.renderTarget2);
+        this.quad.material = this.bufferMat2;
+        this.renderer.render(this.scene, this.camera);
+
+        this.renderer.setRenderTarget(this.renderTarget3);
+        this.quad.material = this.bufferMat3;
+        this.renderer.render(this.scene, this.camera);
+
+        this.renderer.setRenderTarget(this.renderTarget4);
+        this.quad.material = this.bufferMat4;
+        this.renderer.render(this.scene, this.camera);
+    }
+
+    updateBufferUniforms() {
+        if (!this.pause) {
+            this.bufferMat1.uniforms.iDeltaTime.value = this.bufferMat2.uniforms.iDeltaTime.value = this.bufferMat3.uniforms.iDeltaTime.value = this.bufferMat4.uniforms.iDeltaTime.value = this.clock.getDelta();
+            this.bufferMat1.uniforms.iTime.value = this.bufferMat2.uniforms.iTime.value = this.bufferMat3.uniforms.iTime.value = this.bufferMat4.uniforms.iTime.value = this.clock.getElapsedTime() - this.timePaused;
+            this.frameNumber++;
+            let tempDate = new Date();
+            this.date.x = tempDate.getFullYear();
+            this.date.y = tempDate.getMonth();
+            this.date.z = tempDate.getDay();
+            this.date.w = (tempDate.getHours() * 3600) + (tempDate.getMinutes() * 60) + tempDate.getSeconds() + (tempDate.getMilliseconds / 1000);
+        }
+    }
+
+    updateFinalUniforms() {
+        this.finalMat.uniforms.iDeltaTime.value = this.bufferMat1.uniforms.iDeltaTime.value;
+        this.finalMat.uniforms.iTime.value = this.bufferMat1.uniforms.iTime.value;
+    }
+
     getVertexShader() {
         return `
             in vec3 position;
@@ -286,10 +247,6 @@ class GraphicsComponent extends Component {
             }
         
         `;
-    }
-
-    getCommonFragCode() {
-        return this.props.commonFragShaderCustomCode ? this.props.commonFragShaderCustomCode : "";
     }
 
     getCommonUniforms() {
@@ -302,10 +259,6 @@ class GraphicsComponent extends Component {
         uniform sampler2D iKeyboard;
         uniform vec4 iDate;
         `
-    }
-
-    getChannelType(bufferNumber, channelNumber) {
-        return this.props.channels && this.props.channels[bufferNumber][channelNumber] ? this.props.channels[bufferNumber][channelNumber].type : "float";
     }
 
     getFinalFragmentShader() {
@@ -432,6 +385,10 @@ class GraphicsComponent extends Component {
     `;
     }
 
+    getCommonFragCode() {
+        return this.props.commonFragShaderCustomCode ? this.props.commonFragShaderCustomCode : "";
+    }
+
     getFinalFragShaderCustomCode() {
         return this.props.finalFragShaderCustomCode ? this.props.finalFragShaderCustomCode : `void mainImage(out vec4 FragColor){ FragColor = vec4(0.0, 0.0, 0.0, 1.0);}`;
     }
@@ -450,6 +407,49 @@ class GraphicsComponent extends Component {
 
     getBuffer4FragShaderCustomCode() {
         return this.props.buffer4FragShaderCustomCode ? this.props.buffer4FragShaderCustomCode : `void mainImage(out vec4 FragColor){ FragColor = vec4(0.0, 0.0, 0.0, 1.0);}`;
+    }
+
+    mouseMoveCallback = (e) => {
+        this.mouse.y = Math.min((this.height - e.clientY - e.target.offsetTop), this.height);
+        this.mouse.x = Math.min((e.clientX - e.target.offsetLeft), this.width);
+    }
+
+    mouseDownCallback = (e) => {
+        this.mouse.w = Math.min((this.height - e.clientY - e.target.offsetTop), this.height);
+        this.mouse.z = Math.min((e.clientX - e.target.offsetLeft), this.width);
+    }
+
+    keyDownCallback = (e) => {
+        if (e.keyCode > 255) return;
+        this.keyboard.image.data[e.keyCode * 4] = 255;
+        this.keyboard.image.data[(e.keyCode * 4) + 1] = this.keyboard.image.data[(e.keyCode * 4) + 1] === 255 ? 0 : 255;
+        this.keyboard.image.data[(e.keyCode * 4) + 2] = this.frameNumber % 256;
+        this.keyboard.needsUpdate = true;
+    }
+
+    keyUpCallback = (e) => {
+        if (e.keyCode > 255) return;
+        this.keyboard.image.data[e.keyCode * 4] = 0;
+        this.keyboard.needsUpdate = true;
+    }
+
+    pauseStartCallback = (e) => {
+        this.pauseStartTime = this.clock.getElapsedTime();
+        this.pause = true;
+    }
+
+    pauseEndCallback = (e) => {
+        this.timePaused = this.clock.getElapsedTime() - this.pauseStartTime + this.timePaused;
+        this.pause = false;
+    }
+
+    restartCallback = (e) => {
+        this.clock.stop();
+        this.clock.start();
+        this.frameNumber = 0;
+        this.pauseStartTime = 0;
+        this.timePaused = 0;
+        this.pause = false;
     }
 
     render() {
