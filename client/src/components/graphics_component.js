@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-//import ReactDOM from "react-dom";
 import * as THREE from 'three';
 
 class GraphicsComponent extends Component {
@@ -7,9 +6,9 @@ class GraphicsComponent extends Component {
         this.sceneSetup = this.sceneSetup.bind(this);
         this.renderLoop = this.renderLoop.bind(this);
 
-        this.pause = this.props.pause;
+        this.pause = this.props.pause ? this.props.pause : false;
         this.mouse = new THREE.Vector4(0, 0, -1, -1);
-        this.height = this.props.height;
+        this.height = this.props.height ? this.props.height : 480;
         this.width = this.height * 16 / 9;
         this.clock = new THREE.Clock();
         this.keyboard = new THREE.DataTexture(new Uint8Array(4 * 256), 256, 1, THREE.RGBAFormat);
@@ -26,6 +25,17 @@ class GraphicsComponent extends Component {
 
         this.sceneSetup();
         this.renderLoop();
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (this.state.height !== prevState.height) {
+            this.height = this.props.height;
+            this.width = this.height * 16 / 9;
+            this.renderer.setSize(this.width, this.height);
+            this.createRenderBuffers();
+        }
+        this.createMaterials();
+        console.log("updated");
     }
 
     componentWillUnmount() {
@@ -294,10 +304,6 @@ class GraphicsComponent extends Component {
         `
     }
 
-    getFinalFragShaderCustomCode() {
-        return this.props.finalFragShaderCustomCode ? this.props.finalFragShaderCustomCode : "";
-    }
-
     getChannelType(bufferNumber, channelNumber) {
         return this.props.channels && this.props.channels[bufferNumber][channelNumber] ? this.props.channels[bufferNumber][channelNumber].type : "float";
     }
@@ -426,20 +432,24 @@ class GraphicsComponent extends Component {
     `;
     }
 
+    getFinalFragShaderCustomCode() {
+        return this.props.finalFragShaderCustomCode ? this.props.finalFragShaderCustomCode : `void mainImage(out vec4 FragColor){ FragColor = vec4(0.0, 0.0, 0.0, 1.0);}`;
+    }
+
     getBuffer1FragShaderCustomCode() {
-        return this.props.buffer1FragShaderCustomCode ? this.props.buffer1FragShaderCustomCode : "";
+        return this.props.buffer1FragShaderCustomCode ? this.props.buffer1FragShaderCustomCode : `void mainImage(out vec4 FragColor){ FragColor = vec4(0.0, 0.0, 0.0, 1.0);}`;
     }
 
     getBuffer2FragShaderCustomCode() {
-        return this.props.buffer2FragShaderCustomCode ? this.props.buffer2FragShaderCustomCode : "";
+        return this.props.buffer2FragShaderCustomCode ? this.props.buffer2FragShaderCustomCode : `void mainImage(out vec4 FragColor){ FragColor = vec4(0.0, 0.0, 0.0, 1.0);}`;
     }
 
     getBuffer3FragShaderCustomCode() {
-        return this.props.buffer3FragShaderCustomCode ? this.props.buffer3FragShaderCustomCode : "";
+        return this.props.buffer3FragShaderCustomCode ? this.props.buffer3FragShaderCustomCode : `void mainImage(out vec4 FragColor){ FragColor = vec4(0.0, 0.0, 0.0, 1.0);}`;
     }
 
     getBuffer4FragShaderCustomCode() {
-        return this.props.buffer4FragShaderCustomCode ? this.props.buffer4FragShaderCustomCode : "";
+        return this.props.buffer4FragShaderCustomCode ? this.props.buffer4FragShaderCustomCode : `void mainImage(out vec4 FragColor){ FragColor = vec4(0.0, 0.0, 0.0, 1.0);}`;
     }
 
     render() {
