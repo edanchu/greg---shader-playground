@@ -15,12 +15,16 @@
     display: block;
 }
 .description{
+    padding-top: 1%;
     margin-left: auto;
     margin-right: auto;
     display: block;
     text-align: center; 
     color: aliceblue;
     font-family: Georgia, 'Times New Roman', Times, serif;
+}
+.username{
+    padding: 0.25%;
 }
 .card-body{
     height: 90%;
@@ -35,6 +39,7 @@
     background-size: 200%;
     background-position: -100%;
     animation: textAnimation 10s infinite alternate-reverse;
+    padding: 0.25%;
 }
 @keyframes textAnimation {
     to{

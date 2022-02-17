@@ -1,0 +1,22 @@
+body{
+    margin: 0;
+    background-color: #424242;
+}
+.top-pane{
+    position: relative;
+    margin-left: auto; 
+}
+.pane{
+    height: 100vh;
+    width: 75vh;
+    display: flex;
+}
+.screen{
+    border-color: yellow;
+    color: aliceblue;
+    background-color: white;
+    height: 100vh;
+    width: 100vh;
+    margin-right: auto;
+    margin-top: -100vh;
+}
