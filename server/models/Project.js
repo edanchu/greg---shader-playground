@@ -10,41 +10,35 @@ const ProjectSchema = new mongoose.Schema({
     type: [String],
     default: [
       // Main
-      `void mainImage( out vec4 FragColor, in vec4 FragCoord ) 
+      `void mainImage(out vec4 FragColor) 
       {
-        // Normalized pixel coordinates (from 0 to 1)
-        vec2 uv = FragCoord.xy/iResolution.xy;
-
-        // Time varying pixel color
-        vec3 col = 0.5 + 0.5*cos(iTime+uv.xyx+vec3(0,2,4));
-
-        // Output to screen
-        FragColor = vec4(col,1.0);
+        float color = (1.0 + sin(iTime)) / 2.0;
+        FragColor = vec4(color, 1.0 - color, cos(color), 1.0);
       }`,
       // Buffer A
-      `void mainImage( out vec4 FragColor, in vec4 FragCoord )
+      `void mainImage(out vec4 FragColor)
       {
         FragColor = vec4(0.0, 0.0, 0.0, 1.0);
       }`,
       // Buffer B
-      `void mainImage( out vec4 FragColor, in vec4 FragCoord )
+      `void mainImage(out vec4 FragColor)
       {
         FragColor = vec4(0.0, 0.0, 0.0, 1.0);
       }`,
       // Buffer C
-      `void mainImage( out vec4 FragColor, in vec4 FragCoord )
+      `void mainImage(out vec4 FragColor)
       {
         FragColor = vec4(0.0, 0.0, 0.0, 1.0);
       }`,
       // Buffer D
-      `void mainImage( out vec4 FragColor, in vec4 FragCoord )
+      `void mainImage(out vec4 FragColor)
       {
         FragColor = vec4(0.0, 0.0, 0.0, 1.0);
       }`,
       // Common
-      `void someFunction( vec4 a, float b )
+      `void sampleFunction( vec2 input1, float input2 )
       {
-        return a+b;
+        return input1 * input2;
       }`,
     ],
     required: true,
