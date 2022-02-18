@@ -19,7 +19,7 @@ function Home() {
   return (
     <>
       <HeroSection />
-      <Cards />
+      <Cards projects={projects} />
     </>
   );
 }
