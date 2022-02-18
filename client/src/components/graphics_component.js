@@ -27,16 +27,24 @@ class GraphicsComponent extends Component {
         this.renderLoop();
     }
 
-    /*componentDidUpdate(prevProps, prevState) {
-        if (this.state.height !== prevState.height) {
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.height !== prevProps.height) {
             this.height = this.props.height;
             this.width = this.height * 16 / 9;
             this.renderer.setSize(this.width, this.height);
             this.createRenderBuffers();
         }
-        this.createMaterials();
-        console.log("updated");
-    }*/
+        if (this.props.finalFragShaderCustomCode != prevProps.finalFragShaderCustomCode ||
+            this.props.channels != prevProps.channels ||
+            this.props.buffer1FragShaderCustomCode != prevProps.buffer1FragShaderCustomCode ||
+            this.props.buffer2FragShaderCustomCode != prevProps.buffer2FragShaderCustomCode ||
+            this.props.buffer3FragShaderCustomCode != prevProps.buffer3FragShaderCustomCode ||
+            this.props.buffer4FragShaderCustomCode != prevProps.buffer4FragShaderCustomCode ||
+            this.props.commonFragShaderCustomCode != prevProps.commonFragShaderCustomCode
+        ) {
+            this.createMaterials();
+        }
+    }
 
     componentWillUnmount() {
         window.cancelAnimationFrame(this.requestID);
