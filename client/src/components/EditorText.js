@@ -1,7 +1,6 @@
 import 'codemirror/lib/codemirror.css'
-import 'codemirror/theme/material.css'
-import 'codemirror/mode/javascript/javascript'
-import '../assets/glsl'
+import 'codemirror/theme/yonce.css'
+import 'codemirror/mode/clike/clike.js'
 import { Controlled as ControlledEditor } from 'react-codemirror2'
 import './EditorText.css'
 
@@ -27,11 +26,18 @@ export default function EditorText(props) {
                     value={value}
                     className="code-mirror-wrapper"
                     options={{
+                        viewportMargin: Infinity,
+                        lineNumbers: true,
+                        matchBrackets: true,
+                        mode: 'x-shader/x-fragment',
+                        autoCloseBrackets: true,
+                        showCursorWhenSelecting: true,
+                        theme: 'yonce',
+                        dragDrop: false,
+                        indentUnit: 4,
+                        tabSize: 4,
+                        indentWithTabs: true,
                         lineWrapping: true,
-                        lint: true,
-                        mode: language,
-                        theme: 'material',
-                        lineNumbers: true
                     }}
                 />
             </div>

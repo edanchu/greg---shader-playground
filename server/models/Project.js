@@ -31,7 +31,7 @@ const ProjectSchema = new mongoose.Schema({
         FragColor = vec4(0.0, 0.0, 0.0, 1.0);
       }`,
       // Common
-      `void sampleFunction( vec2 input1, float input2 ){
+      `vec2 sampleFunction( vec2 input1, float input2 ){
         return input1 * input2;
       }`,
     ],
