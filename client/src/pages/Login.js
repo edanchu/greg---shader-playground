@@ -16,14 +16,15 @@ export default function Login() {
 
   function handleSubmit(event) {
     event.preventDefault();
+    validateForm();
     axios
       .post('/user/login', {
         email: email,
         password: password,
       })
       .then((res) => {
-        console.log(`Success: ${res.user.username} logged in`);
-        // REDIRECT to next page here (Account)
+        console.log(res);
+        return navigate('/UserPage');
       })
       .catch((err) => {
         console.log(err);
@@ -34,11 +35,6 @@ export default function Login() {
     if (email.length <= 0 || password.length <= 0) {
       toast.error("Email and Password must be at least 1 character");
     }
-
-    else {
-      return navigate("/UserPage");
-    }
-     
   }
 
   return (
@@ -63,7 +59,7 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </Form.Group>
-            <Button className='login-button' onClick={() => validateForm()}>
+            <Button className='login-button' type='submit'>
               Login
             </Button>
            <ToastContainer/>

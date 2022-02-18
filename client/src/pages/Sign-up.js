@@ -10,8 +10,10 @@ import axios from 'axios';
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
 
   let navigate = useNavigate();
 
@@ -27,15 +29,38 @@ export default function SignUp() {
     else if (password !== confirmPassword) {
       toast.error("Passwords must match");
     }
-
-    else {
-      return navigate("/UserPage");
-    }
   }
 
   function handleSubmit(event) {
     event.preventDefault();
+    validateForm();
+    axios
+      .post('/user/register', {
+        email: email,
+        username: username,
+        password: password,
+      })
+      .then((res) => {
+        console.log(res);
+        console.log(`Success: ${username} created`);
+        axios
+          .post('/user/login', {
+            email: email,
+            password: password,
+          })
+          .then((res) => {
+            console.log('& Logged in');
+            return navigate('/UserPage');
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch((err) => {
+        console.log(err.response.data.message);
+      });
   }
+  
 
   
 
@@ -50,6 +75,16 @@ export default function SignUp() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+          />
+        </Form.Group>
+        <h className="header"> Username </h>
+        <Form.Group controlId="email" className="input-box">
+          <Form.Control
+            className="input-box2"
+            autoFocus
+            type="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
         </Form.Group>
         <h className="header"> Password </h>
@@ -70,7 +105,7 @@ export default function SignUp() {
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </Form.Group>
-            <Button className='login-button' onClick={() => validateForm()}>
+            <Button className='login-button' type='submit'>
               Create Account
             </Button>
             <ToastContainer/>
@@ -83,4 +118,3 @@ export default function SignUp() {
     </div>
   );
 }
-
