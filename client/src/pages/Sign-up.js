@@ -1,35 +1,29 @@
-import React, { useState } from "react";
-import Form from "react-bootstrap/Form";
-import { Link,useNavigate } from 'react-router-dom';
-import Button from "react-bootstrap/Button";
-import "./Sign-Up.css";
-import "../App.css";
-import { ToastContainer, toast } from "react-toastify";
+import React, { useState } from 'react';
+import Form from 'react-bootstrap/Form';
+import { Link, useNavigate } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
+import './Sign-Up.css';
+import '../App.css';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 
 export default function SignUp() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   let navigate = useNavigate();
 
   function validateForm() {
     if (email.length <= 0 || password.length <= 0) {
-      toast.error("Email and Password must be at least 1 character");
-    }
-
-    else if (confirmPassword.length <= 0) {
-      toast.error("Please confirm password");
-    }
-    
-    else if (password !== confirmPassword) {
-      toast.error("Passwords must match");
-    }
-
-    else {
-      return navigate("/UserPage");
+      toast.error('Email and Password must be at least 1 character');
+    } else if (confirmPassword.length <= 0) {
+      toast.error('Please confirm password');
+    } else if (password !== confirmPassword) {
+      toast.error('Passwords must match');
+    } else {
+      return navigate('/UserPage');
     }
   }
 
@@ -37,50 +31,47 @@ export default function SignUp() {
     event.preventDefault();
   }
 
-  
-
   return (
-    <div className="SignUp">
+    <div className='SignUp'>
       <Form onSubmit={handleSubmit}>
-        <h className="header"> Email </h>
-        <Form.Group controlId="email" className="input-box">
+        <h className='header'> Email </h>
+        <Form.Group controlId='email' className='input-box'>
           <Form.Control
-            className="input-box2"
+            className='input-box2'
             autoFocus
-            type="email"
+            type='email'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </Form.Group>
-        <h className="header"> Password </h>
-        <Form.Group controlId="password" className="input-box">
+        <h className='header'> Password </h>
+        <Form.Group controlId='password' className='input-box'>
           <Form.Control
-            className="input-box2"
-            type="password"
+            className='input-box2'
+            type='password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </Form.Group>
-        <h className="header"> Confirm Password </h>
-        <Form.Group controlId="password" className="input-box">
+        <h className='header'> Confirm Password </h>
+        <Form.Group controlId='password' className='input-box'>
           <Form.Control
-            className="input-box2"
-            type="password"
+            className='input-box2'
+            type='password'
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </Form.Group>
-            <Button className='login-button' onClick={() => validateForm()}>
-              Create Account
-            </Button>
-            <ToastContainer/>
-          <Link to='/Login' className='login-link'>
-            <Button className='SignUp-button' type="submit">
-              Have an account? Sign in! 
-            </Button>
-          </Link>
+        <Button className='login-button' onClick={() => validateForm()}>
+          Create Account
+        </Button>
+        <ToastContainer />
+        <Link to='/Login' className='login-link'>
+          <Button className='SignUp-button' type='submit'>
+            Have an account? Sign in!
+          </Button>
+        </Link>
       </Form>
     </div>
   );
 }
-
