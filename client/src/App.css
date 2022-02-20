@@ -6,7 +6,7 @@
 }
 
 .home,
-.services,
+.browse,
 .products,
 .sign-up
 .login {
@@ -17,7 +17,7 @@
   font-size: 3rem;
 }
 
-.services {
+.browse {
   
   background-position: center;
   background-size: cover;
