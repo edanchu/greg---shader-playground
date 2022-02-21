@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import GraphicsComponent from './graphics_component';
 
 function CardItem(props) {
   return (
@@ -7,10 +8,19 @@ function CardItem(props) {
       <li className='cards__item'>
         <Link className='cards__item__link' to={props.path}>
           <figure className='cards__item__pic-wrap' data-category={props.label}>
-            <img
+            <GraphicsComponent
               className='cards__item__img'
-              alt='Travel Image'
-              src={props.src}
+              pause={props.pause}
+              playOnMouseOver={props.playOnMouseOver}
+              showButtons={props.showButtons}
+              commonFragShaderCustomCode={props.commonFragShaderCustomCode}
+              finalFragShaderCustomCode={props.finalFragShaderCustomCode}
+              buffer1FragShaderCustomCode={props.buffer1FragShaderCustomCode}
+              buffer2FragShaderCustomCode={props.buffer2FragShaderCustomCode}
+              buffer3FragShaderCustomCode={props.buffer3FragShaderCustomCode}
+              buffer4FragShaderCustomCode={props.buffer4FragShaderCustomCode}
+              channels={props.channels}
+              key={props.key}
             />
           </figure>
           <div className='cards__item__info'>

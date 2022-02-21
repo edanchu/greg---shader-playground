@@ -1,0 +1,20 @@
+.search-box {
+    background: rgb(24, 22, 22);
+    text-align: center;
+}
+
+.search {
+    padding: 5px 10px;
+    text-align: start;
+    width: 200px;
+}
+
+.search-button {
+    padding: 8px 20px;
+    border-radius: 5px;
+    outline: darkblue;
+    border: none;
+    cursor: pointer;
+    background-color: rgba(122, 122, 115, 0.329);
+    color: aliceblue;
+}

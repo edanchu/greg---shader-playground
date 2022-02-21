@@ -39,6 +39,7 @@ function App() {
             <Route path='/UserPage' element={<UserPage />} />
           </Route>
           <Route path='/Editor' element={<Editor />} />
+          <Route path='/Browse' element={<Browse />} />
         </Routes>
       </Router>
     </>

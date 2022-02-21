@@ -6,10 +6,11 @@ class GraphicsComponent extends Component {
         this.sceneSetup = this.sceneSetup.bind(this);
         this.renderLoop = this.renderLoop.bind(this);
 
-        this.pause = this.props.pause ? this.props.pause : false;
+        this.pause = false;
+        this.startPaused = this.props.pause;
         this.mouse = new THREE.Vector4(0, 0, -1, -1);
         this.height = this.props.height ? this.props.height : 480;
-        this.width = this.height * 16 / 9;
+        this.width = this.height * 14 / 9;
         this.clock = new THREE.Clock();
         this.keyboard = new THREE.DataTexture(new Uint8Array(4 * 256), 256, 1, THREE.RGBAFormat);
         this.frameNumber = 0;
@@ -34,15 +35,16 @@ class GraphicsComponent extends Component {
             this.renderer.setSize(this.width, this.height);
             this.createRenderBuffers();
         }
-        if (this.props.finalFragShaderCustomCode != prevProps.finalFragShaderCustomCode ||
-            this.props.channels != prevProps.channels ||
-            this.props.buffer1FragShaderCustomCode != prevProps.buffer1FragShaderCustomCode ||
-            this.props.buffer2FragShaderCustomCode != prevProps.buffer2FragShaderCustomCode ||
-            this.props.buffer3FragShaderCustomCode != prevProps.buffer3FragShaderCustomCode ||
-            this.props.buffer4FragShaderCustomCode != prevProps.buffer4FragShaderCustomCode ||
-            this.props.commonFragShaderCustomCode != prevProps.commonFragShaderCustomCode
+        if (this.props.finalFragShaderCustomCode !== prevProps.finalFragShaderCustomCode ||
+            this.props.channels !== prevProps.channels ||
+            this.props.buffer1FragShaderCustomCode !== prevProps.buffer1FragShaderCustomCode ||
+            this.props.buffer2FragShaderCustomCode !== prevProps.buffer2FragShaderCustomCode ||
+            this.props.buffer3FragShaderCustomCode !== prevProps.buffer3FragShaderCustomCode ||
+            this.props.buffer4FragShaderCustomCode !== prevProps.buffer4FragShaderCustomCode ||
+            this.props.commonFragShaderCustomCode !== prevProps.commonFragShaderCustomCode
         ) {
             this.createMaterials();
+            this.restartCallback(null);
         }
     }
 
@@ -66,7 +68,7 @@ class GraphicsComponent extends Component {
         this.quad = new THREE.Mesh(this.planeGeometry, this.finalMat);
 
         this.scene.add(this.quad);
-    };
+    }
 
     createRenderBuffers() {
         const renderBufferSettings = { wrapS: THREE.RepeatWrapping, wrapT: THREE.RepeatWrapping, minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, depthBuffer: false };
@@ -201,8 +203,15 @@ class GraphicsComponent extends Component {
             this.renderFinalScene();
         }
 
+        if (this.startPaused) {
+            if (this.frameNumber > 10) {
+                this.pause = true;
+                this.startPaused = false;
+            }
+        }
+
         this.requestID = window.requestAnimationFrame(this.renderLoop);
-    };
+    }
 
     renderFinalScene() {
         this.renderer.setRenderTarget(null);
