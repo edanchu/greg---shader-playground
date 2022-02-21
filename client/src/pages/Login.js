@@ -1,16 +1,16 @@
-import React, { useState } from "react";
-import Form from "react-bootstrap/Form";
-import { Link,useNavigate } from 'react-router-dom';
-import Button from "react-bootstrap/Button";
-import "./Login.css";
-import "../App.css";
-import { ToastContainer, toast } from "react-toastify";
+import React, { useState } from 'react';
+import Form from 'react-bootstrap/Form';
+import { Link, useNavigate } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
+import './Login.css';
+import '../App.css';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 
-export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+export default function Login({ setUser }) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   let navigate = useNavigate();
 
@@ -24,7 +24,9 @@ export default function Login() {
       })
       .then((res) => {
         console.log(res);
-        return navigate('/UserPage');
+        setUser(res.data.user);
+        console.log(setUser);
+        //return navigate('/UserPage');
       })
       .catch((err) => {
         console.log(err);
@@ -33,7 +35,7 @@ export default function Login() {
 
   function validateForm() {
     if (email.length <= 0 || password.length <= 0) {
-      toast.error("Email and Password must be at least 1 character");
+      toast.error('Email and Password must be at least 1 character');
     }
   }
 
@@ -59,15 +61,15 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </Form.Group>
-            <Button className='login-button' type='submit'>
-              Login
-            </Button>
-           <ToastContainer/>
-          <Link to='/Sign-Up' className='login-link'>
-            <Button className='SignUp-button' type="submit">
-              Don't have an account? Sign up! 
-            </Button>
-          </Link> 
+        <Button className='login-button' type='submit'>
+          Login
+        </Button>
+        <ToastContainer />
+        <Link to='/Sign-Up' className='login-link'>
+          <Button className='SignUp-button' type='submit'>
+            Don't have an account? Sign up!
+          </Button>
+        </Link>
       </Form>
     </div>
   );

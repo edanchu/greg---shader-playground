@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { ButtonLogin } from './ButtonLogin';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import './Navbar.css';
 
-function Navbar() {
+function Navbar({ user, setUser }) {
   const [click, setClick] = useState(false);
   const [button, setButton] = useState(true);
 
@@ -42,11 +43,6 @@ function Navbar() {
               </Link>
             </li>
             <li className='nav-item'>
-              <Link to='/Browse' className='nav-links' onClick={closeMobileMenu}>
-                Browse
-              </Link>
-            </li>
-            <li className='nav-item'>
               <Link
                 to='/UserPage'
                 className='nav-links'
@@ -61,7 +57,7 @@ function Navbar() {
                 className='nav-links'
                 onClick={closeMobileMenu}
               >
-                Let's Create!
+                New Shader
               </Link>
             </li>
             <li>
@@ -75,7 +71,13 @@ function Navbar() {
             </li>
           </ul>
           {button && (
-            <ButtonLogin buttonStyle='btn--outline'>SIGN UP</ButtonLogin>
+            <ButtonLogin
+              buttonStyle='btn--outline'
+              user={user}
+              setUser={setUser}
+            >
+              {user ? 'LOGOUT' : 'LOGIN'}
+            </ButtonLogin>
           )}
         </div>
       </nav>

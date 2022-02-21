@@ -3,7 +3,6 @@ import './Cards.css';
 import CardItem from './CardItem';
 
 function Cards({ projects }) {
-  console.log(projects);
   return (
     <div className='cards'>
       <h1>Check out these shaders!</h1>
@@ -33,11 +32,8 @@ function Cards({ projects }) {
             <ul className='cards__items'>
             {projects.map((project) => {
               return (
-                <CardItem
-                  text='Made by Jack357'
-                  label='Minecraft'
-                  path='/UserPage'
-                  pause={false}
+                <GraphicsComponent
+                  pause={true}
                   playOnMouseOver={true}
                   showButtons={false}
                   commonFragShaderCustomCode={project.code[5]}
