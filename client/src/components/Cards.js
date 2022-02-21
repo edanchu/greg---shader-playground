@@ -4,7 +4,6 @@ import CardItem from './CardItem';
 import GraphicsComponent from './graphics_component';
 
 function Cards({ projects }) {
-  console.log(projects);
   return (
     <div className='cards'>
       <h1>Check out these shaders!</h1>
@@ -14,7 +13,7 @@ function Cards({ projects }) {
             {projects.map((project) => {
               return (
                 <GraphicsComponent
-                  pause={false}
+                  pause={true}
                   playOnMouseOver={true}
                   showButtons={false}
                   commonFragShaderCustomCode={project.code[5]}
