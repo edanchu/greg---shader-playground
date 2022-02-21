@@ -16,7 +16,7 @@ function BrowseCards({ projects }) {
                   text='Made by Jack357'
                   label='Minecraft'
                   path='/UserPage'
-                  pause={false}
+                  pause={true}
                   playOnMouseOver={true}
                   showButtons={false}
                   commonFragShaderCustomCode={project.code[5]}
@@ -36,7 +36,7 @@ function BrowseCards({ projects }) {
                   text='Made by Jack357'
                   label='Minecraft'
                   path='/UserPage'
-                  pause={false}
+                  pause={true}
                   playOnMouseOver={true}
                   showButtons={false}
                   commonFragShaderCustomCode={project.code[5]}
@@ -58,7 +58,7 @@ function BrowseCards({ projects }) {
                   text='Made by Jack357'
                   label='Minecraft'
                   path='/UserPage'
-                  pause={false}
+                  pause={true}
                   playOnMouseOver={true}
                   showButtons={false}
                   commonFragShaderCustomCode={project.code[5]}
@@ -78,7 +78,7 @@ function BrowseCards({ projects }) {
                   text='Made by Jack357'
                   label='Minecraft'
                   path='/UserPage'
-                  pause={false}
+                  pause={true}
                   playOnMouseOver={true}
                   showButtons={false}
                   commonFragShaderCustomCode={project.code[5]}
