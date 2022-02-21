@@ -20,7 +20,6 @@ function CardItem(props) {
               buffer3FragShaderCustomCode={props.buffer3FragShaderCustomCode}
               buffer4FragShaderCustomCode={props.buffer4FragShaderCustomCode}
               channels={props.channels}
-              key={props.key}
             />
           </figure>
           <div className='cards__item__info'>

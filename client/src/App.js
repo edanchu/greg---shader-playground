@@ -30,7 +30,7 @@ function App() {
             path='/Sign-up'
             element={<UnprivateRoute user={user} setUser={setUser} />}
           >
-            <Route path='/Sign-up' element={<SignUp />} />
+            <Route path='/Sign-up' element={<SignUp setUser={setUser} />} />
           </Route>
           <Route
             path='/UserPage'

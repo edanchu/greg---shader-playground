@@ -16,27 +16,28 @@ export default function Login({ setUser }) {
 
   function handleSubmit(event) {
     event.preventDefault();
-    validateForm();
-    axios
-      .post('/user/login', {
-        email: email,
-        password: password,
-      })
-      .then((res) => {
-        console.log(res);
-        setUser(res.data.user);
-        console.log(setUser);
-        //return navigate('/UserPage');
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (validateForm())
+      axios
+        .post('/user/login', {
+          email: email,
+          password: password,
+        })
+        .then((res) => {
+          console.log(res);
+          setUser(res.data.user);
+          //return navigate('/UserPage');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
   }
 
   function validateForm() {
     if (email.length <= 0 || password.length <= 0) {
       toast.error('Email and Password must be at least 1 character');
+      return false;
     }
+    return true;
   }
 
   return (
