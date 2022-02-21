@@ -1,6 +1,7 @@
 import React from 'react';
 import './Cards.css';
 import CardItem from './CardItem';
+import GraphicsComponent from './graphics_component';
 
 function Cards({ projects }) {
   return (
@@ -9,7 +10,7 @@ function Cards({ projects }) {
       <div className='cards__container'>
         <div className='cards__wrapper'>
           <ul className='cards__items'>
-          {projects.map((project) => {
+            {projects.map((project) => {
               return (
                 <CardItem
                   text='Made by Jack357'
@@ -25,11 +26,12 @@ function Cards({ projects }) {
                   buffer3FragShaderCustomCode={project.code[3]}
                   buffer4FragShaderCustomCode={project.code[4]}
                   channels={project.channelUniforms}
-                  key={project._id}/>
+                  key={project._id}
+                />
               );
             })}
-            </ul>
-            <ul className='cards__items'>
+          </ul>
+          <ul className='cards__items'>
             {projects.map((project) => {
               return (
                 <GraphicsComponent
@@ -43,12 +45,13 @@ function Cards({ projects }) {
                   buffer3FragShaderCustomCode={project.code[3]}
                   buffer4FragShaderCustomCode={project.code[4]}
                   channels={project.channelUniforms}
-                  key={project._id}/>
+                  key={project._id}
+                />
               );
             })}
           </ul>
           <ul className='cards__items'>
-          {projects.map((project) => {
+            {projects.map((project) => {
               return (
                 <CardItem
                   text='Made by Jack357'
@@ -64,7 +67,8 @@ function Cards({ projects }) {
                   buffer3FragShaderCustomCode={project.code[3]}
                   buffer4FragShaderCustomCode={project.code[4]}
                   channels={project.channelUniforms}
-                  key={project._id}/>
+                  key={project._id}
+                />
               );
             })}
             {projects.map((project) => {
@@ -83,7 +87,8 @@ function Cards({ projects }) {
                   buffer3FragShaderCustomCode={project.code[3]}
                   buffer4FragShaderCustomCode={project.code[4]}
                   channels={project.channelUniforms}
-                  key={project._id}/>
+                  key={project._id}
+                />
               );
             })}
             {projects.map((project) => {
@@ -102,7 +107,8 @@ function Cards({ projects }) {
                   buffer3FragShaderCustomCode={project.code[3]}
                   buffer4FragShaderCustomCode={project.code[4]}
                   channels={project.channelUniforms}
-                  key={project._id}/>
+                  key={project._id}
+                />
               );
             })}
           </ul>

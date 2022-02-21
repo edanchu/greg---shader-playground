@@ -12,10 +12,6 @@ const UnprivateRoute = ({ user, setUser }) => {
       .catch((err) => setUser(null));
   }, []);
 
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
-
   return !user ? <Outlet /> : <Navigate to='/UserPage' />;
 };
 
