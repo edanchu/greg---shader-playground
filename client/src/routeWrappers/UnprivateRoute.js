@@ -5,7 +5,7 @@ import axios from 'axios';
 const UnprivateRoute = ({ user, setUser }) => {
   useEffect(() => {
     axios
-      .get('/user/authenticated')
+      .get('/api/user/authenticated')
       .then((res) => {
         setUser(res.data.user);
       })

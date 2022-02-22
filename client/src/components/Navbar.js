@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ButtonLogin } from './ButtonLogin';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import './Navbar.css';
 
 function Navbar({ user, setUser }) {

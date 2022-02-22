@@ -9,6 +9,7 @@
     "axios": "^0.26.0",
     "codemirror": "^5.65.1",
     "glsl-editor": "^1.0.0",
+    "http-proxy-middleware": "^2.0.3",
     "react": "^17.0.2",
     "react-bootstrap": "^2.1.2",
     "react-codemirror2": "^7.2.1",
@@ -43,6 +44,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "proxy": "http://localhost:8888"
+  }
 }
