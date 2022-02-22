@@ -45,9 +45,9 @@ export default function Login({ setUser }) {
         <h1 className='top-header'> Login </h1>
       <Form onSubmit={handleSubmit}>
         <p className='header'> Email </p>
-        <Form.Group controlId='email' className='input-box'>
+        <Form.Group controlId='email' className='login-input-box'>
           <Form.Control
-            className='input-box2'
+            className='login-input-box2'
             autoFocus
             type='email'
             value={email}
@@ -55,9 +55,9 @@ export default function Login({ setUser }) {
           />
         </Form.Group>
         <p className='header'> Password </p>
-        <Form.Group controlId='password' className='input-box'>
+        <Form.Group controlId='password' className='login-input-box'>
           <Form.Control
-            className='input-box2'
+            className='login-input-box2'
             type='password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}

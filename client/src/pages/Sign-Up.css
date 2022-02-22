@@ -13,7 +13,7 @@
   
   .signup-box {
     width: 380px;
-    height: 440px;
+    height: 520px;
     padding: 10px;
     border: 5px solid gray;
     background-color: rgb(255, 255, 255);
@@ -37,14 +37,16 @@
     margin-top: 10px;
   }
 
-  .input-box {
+  .signup-input-box {
     text-align: center;
-    padding: 12px;
+    padding-bottom: 10px;
+    padding-left: 18px;
   }
 
-  .input-box2 {
+  .signup-input-box2 {
       width: 310px;
       height: 32px;
+      background-color: rgb(204, 197, 197);
   }
 
   .login-link-mobile {

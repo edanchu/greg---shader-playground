@@ -65,9 +65,9 @@ export default function SignUp({ setUser }) {
         <h1 className='top-header'> Sign Up </h1>
       <Form onSubmit={handleSubmit}>
         <p className='header'> Email </p>
-        <Form.Group controlId='email' className='input-box'>
+        <Form.Group controlId='email' className='signup-input-box'>
           <Form.Control
-            className='input-box2'
+            className='signup-input-box2'
             autoFocus
             type='email'
             value={email}
@@ -75,9 +75,9 @@ export default function SignUp({ setUser }) {
           />
         </Form.Group>
         <p className='header'> Username </p>
-        <Form.Group controlId='email' className='input-box'>
+        <Form.Group controlId='email' className='signup-input-box'>
           <Form.Control
-            className='input-box2'
+            className='signup-input-box2'
             autoFocus
             type='username'
             value={username}
@@ -85,18 +85,18 @@ export default function SignUp({ setUser }) {
           />
         </Form.Group>
         <p className='header'> Password </p>
-        <Form.Group controlId='password' className='input-box'>
+        <Form.Group controlId='password' className='signup-input-box'>
           <Form.Control
-            className='input-box2'
+            className='signup-input-box2'
             type='password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </Form.Group>
         <p className='header'> Confirm Password </p>
-        <Form.Group controlId='password' className='input-box'>
+        <Form.Group controlId='password' className='signup-input-box'>
           <Form.Control
-            className='input-box2'
+            className='signup-input-box2'
             type='password'
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
