@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import BrowseCards from '../components/BrowseCards';
 import './browse.css';
@@ -9,7 +9,7 @@ function Browse() {
 
   useEffect(() => {
     axios
-      .get('/user/get-projects')
+      .get('/api/user/get-projects')
       .then((res) => {
         setProjects(res.data);
       })
@@ -18,8 +18,8 @@ function Browse() {
 
   return (
     <>
-    <Search/>
-    <BrowseCards projects={projects} />
+      <Search />
+      <BrowseCards projects={projects} />
     </>
   );
 }

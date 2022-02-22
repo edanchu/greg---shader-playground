@@ -14,7 +14,7 @@ export default function UserPage({ currUser }) {
 
   useEffect(() => {
     if (!user)
-      axios.get('/user/find-by-id/' + id).then((res) => {
+      axios.get('/api/user/find-by-id/' + id).then((res) => {
         setUser(res.data);
       });
   }, []);
@@ -24,14 +24,14 @@ export default function UserPage({ currUser }) {
       setIsCurrUser(currUser?._id === user._id);
       if (currUser?._id === user._id)
         axios
-          .get('/user/get-self-projects')
+          .get('/api/user/get-self-projects')
           .then((res) => {
             setProjects(res.data);
           })
           .catch((err) => console.log(err));
       else
         axios
-          .get('/user/get-user-projects/' + user?._id)
+          .get('/api/user/get-user-projects/' + user?._id)
           .then((res) => {
             setProjects(res.data);
           })
