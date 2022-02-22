@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import './UserPage.css';
-import '../components/Cards';
 import CardItem from '../components/CardItem';
 
 export default function UserPage({ currUser }) {

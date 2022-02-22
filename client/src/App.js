@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Navbar from './components/Navbar';
 import Home from './pages/home';
 import Browse from './pages/browse';
-import Cards from './components/Cards.js';
 import Login from './pages/Login';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SignUp from './pages/Sign-up';
