@@ -132,22 +132,18 @@ userRouter.post(
   }
 );
 
-userRouter.get(
-  '/get-project/:id',
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    Project.findById(
-      { _id: new mongoose.Types.ObjectId(req.params.id) },
-      (err, project) => {
-        if (err) {
-          console.log(err);
-          res.status(500).send('database error');
-        }
-        res.send(project);
+userRouter.get('/get-project/:id', (req, res) => {
+  Project.findById(
+    { _id: new mongoose.Types.ObjectId(req.params.id) },
+    (err, project) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send('database error');
       }
-    );
-  }
-);
+      res.send(project);
+    }
+  );
+});
 
 userRouter.put(
   '/update-project/:id',

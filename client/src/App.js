@@ -39,7 +39,8 @@ function App() {
           {/* <Route path='' element={<UserPage currUser={user} />} /> */}
           <Route path='/UserPage/:id' element={<UserPage currUser={user} />} />
           {/* </Route> */}
-          <Route path='/Editor' element={<Editor />} />
+          <Route path='/Editor/:id' element={<Editor />} />
+          <Route path='/Editor/' element={<Editor />} />
           <Route path='/Browse' element={<Browse />} />
         </Routes>
       </Router>

@@ -1,8 +1,10 @@
-import 'codemirror/lib/codemirror.css'
-import 'codemirror/theme/yonce.css'
-import 'codemirror/mode/clike/clike.js'
-import { Controlled as ControlledEditor } from 'react-codemirror2'
-import './EditorText.css'
+import 'codemirror/lib/codemirror.css';
+import 'codemirror/theme/yonce.css';
+import 'codemirror/mode/clike/clike.js';
+import { Controlled as ControlledEditor } from 'react-codemirror2';
+import Dropdown from 'react-dropdown';
+import 'react-dropdown/style.css';
+import './EditorText.css';
 import 'codemirror/addon/search/search';
 import 'codemirror/addon/search/searchcursor';
 import 'codemirror/addon/comment/comment';
@@ -15,43 +17,58 @@ import 'codemirror/addon/fold/foldgutter';
 import 'codemirror/addon/fold/indent-fold';
 import 'codemirror/keymap/sublime.js';
 
-export default function EditorText(props) {
-    const {
-        displayName,
-        value,
-        onChange,
-    } = props
-    function handleChange(editor, data, value) {
-        onChange(value)
-    }
-    return (
-        <>
-            <div className='editor-container'>
-                <button onClick={(e) => props.handleCompile(value)}>{'\u25B6'}</button>
-                <div className='editor-title'>
-                    {displayName}
-                </div>
-                <ControlledEditor
-                    onBeforeChange={handleChange}
-                    value={value}
-                    className="code-mirror-wrapper"
-                    options={{
-                        viewportMargin: Infinity,
-                        lineNumbers: true,
-                        matchBrackets: true,
-                        mode: 'x-shader/x-fragment',
-                        autoCloseBrackets: true,
-                        showCursorWhenSelecting: true,
-                        theme: 'yonce',
-                        keymap: 'sublime',
-                        indentUnit: 4,
-                        tabSize: 4,
-                        indentWithTabs: true,
-                        lineWrapping: true,
-                        autofocus: true
-                    }}
-                />
-            </div>
-        </>
-    );
-};
+const buffers = [
+  'Main',
+  'Buffer A',
+  'Buffer B',
+  'Buffer C',
+  'Buffer D',
+  'Common',
+];
+
+export default function EditorText({
+  project,
+  bufferIdx,
+  setBufferIdx,
+  updateBufferCode,
+  value,
+  handleCompile,
+  ...props
+}) {
+  return (
+    <>
+      <div className='editor-container'>
+        <button onClick={(e) => handleCompile()}>{'\u25B6'}</button>
+        <div className='editor-title'>
+          <Dropdown
+            options={buffers}
+            onChange={(e) => {
+              setBufferIdx(buffers.findIndex((b) => b === e.value));
+            }}
+            value={buffers[bufferIdx]}
+          ></Dropdown>
+        </div>
+        <ControlledEditor
+          onBeforeChange={updateBufferCode}
+          value={project.code[bufferIdx]}
+          className='code-mirror-wrapper'
+          options={{
+            viewportMargin: Infinity,
+            lineNumbers: true,
+            matchBrackets: true,
+            mode: 'x-shader/x-fragment',
+            autoCloseBrackets: true,
+            showCursorWhenSelecting: true,
+            theme: 'yonce',
+            keymap: 'sublime',
+            indentUnit: 4,
+            tabSize: 4,
+            indentWithTabs: true,
+            lineWrapping: true,
+            autofocus: true,
+          }}
+        />
+      </div>
+    </>
+  );
+}
