@@ -3,7 +3,6 @@ import Form from 'react-bootstrap/Form';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import './Login.css';
-import '../App.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
@@ -42,6 +41,8 @@ export default function Login({ setUser }) {
 
   return (
     <div className='Login'>
+      <div className='login-box'>
+        <h1 className='top-header'> Login </h1>
       <Form onSubmit={handleSubmit}>
         <p className='header'> Email </p>
         <Form.Group controlId='email' className='input-box'>
@@ -72,6 +73,7 @@ export default function Login({ setUser }) {
           </Button>
         </Link>
       </Form>
+      </div>
     </div>
   );
 }
