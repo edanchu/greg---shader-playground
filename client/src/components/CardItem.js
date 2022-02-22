@@ -6,7 +6,11 @@ function CardItem(props) {
   let navigate = useNavigate();
 
   return (
-    <div onClick={() => console.log('click')}>
+    <div
+      onClick={() => {
+        return navigate('/Editor/' + props.project._id);
+      }}
+    >
       <li className='cards__item'>
         <div className='cards__item__link'>
           <figure
@@ -17,7 +21,6 @@ function CardItem(props) {
               className='cards__item__owner-box'
               onClick={(e) => {
                 e.stopPropagation();
-                console.log('click owner');
                 return navigate('/UserPage/' + props.project.owner);
               }}
             ></div>
