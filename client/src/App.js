@@ -36,7 +36,10 @@ function App() {
             path='/UserPage'
             element={<PrivateRoute user={user} setUser={setUser} />}
           >
-            <Route path='/UserPage' element={<UserPage />} />
+            <Route
+              path='/UserPage'
+              element={<UserPage currUser={user} user={user} />}
+            />
           </Route>
           <Route path='/Editor' element={<Editor />} />
           <Route path='/Browse' element={<Browse />} />

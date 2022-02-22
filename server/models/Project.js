@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const ProjectSchema = new mongoose.Schema({
   owner: { type: mongoose.Schema.Types.ObjectId, required: true },
+  ownerName: { type: String, required: true },
   title: { type: String, required: true },
   description: { type: String, default: '', required: true },
   likes: { type: Number, default: 0, required: true },

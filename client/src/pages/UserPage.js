@@ -6,16 +6,25 @@ import './UserPage.css';
 import '../components/Cards';
 import CardItem from '../components/CardItem';
 
-export default function UserPage() {
+export default function UserPage({ currUser, user }) {
+  const [isCurrUser, setIsCurrUser] = useState(currUser._id === user._id);
   const [projects, setProjects] = useState([]);
 
   useEffect(() => {
-    axios
-      .get('/user/get-projects')
-      .then((res) => {
-        setProjects(res.data);
-      })
-      .catch((err) => console.log(err));
+    if (isCurrUser)
+      axios
+        .get('/user/get-projects')
+        .then((res) => {
+          setProjects(res.data);
+        })
+        .catch((err) => console.log(err));
+    else
+      axios
+        .get('/user/get-user-projects/' + user._id)
+        .then((res) => {
+          setProjects(res.data);
+        })
+        .catch((err) => console.log(err));
   }, []);
 
   return (
@@ -27,7 +36,7 @@ export default function UserPage() {
           className='profileImage'
         />
         <div className='description'>
-          <h4 className='username'>Shady boy</h4>
+          <h4 className='username'>{user.username}</h4>
           <p>Professional Shader</p>
         </div>
       </div>
@@ -41,10 +50,10 @@ export default function UserPage() {
               {projects.map((project) => (
                 <CardItem
                   key={project._id}
-                  text='Made by Jack357'
-                  label='Minecraft'
+                  title={project.title}
+                  owner={project.ownerName}
                   path='/UserPage'
-                  pause={false}
+                  pause={true}
                   playOnMouseOver={true}
                   showButtons={false}
                   commonFragShaderCustomCode={project.code[5]}

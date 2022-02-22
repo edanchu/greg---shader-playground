@@ -60,7 +60,7 @@ userRouter.post(
       res.cookie('access_token', token, { httpOnly: true, sameSite: true });
       res
         .status(200)
-        .json({ isAuthenticated: true, user: { email, username } });
+        .json({ isAuthenticated: true, user: { _id, email, username } });
     }
   }
 );
@@ -78,8 +78,10 @@ userRouter.get(
   '/authenticated',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    const { email, username } = req.user;
-    res.status(200).json({ isAuthenticated: true, user: { email, username } });
+    const { _id, email, username } = req.user;
+    res
+      .status(200)
+      .json({ isAuthenticated: true, user: { _id, email, username } });
   }
 );
 
@@ -89,6 +91,7 @@ userRouter.post(
   (req, res) => {
     var newProject = new Project({
       owner: req.user._id,
+      ownerName: req.user.username,
       title: req.body.title,
       description: req.body.description,
       public: req.body.public,
@@ -139,7 +142,6 @@ userRouter.put(
   '/update-project/:id',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    console.log(req.body);
     filter = { _id: new mongoose.Types.ObjectId(req.params.id) };
     update = req.body;
     Project.findOneAndUpdate(
@@ -168,6 +170,30 @@ userRouter.get('/get-projects', async (req, res) => {
       }
       res.send(projects);
     });
+});
+
+userRouter.get(
+  '/get-self-projects',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Project.find({ owner: req.user._id }).exec((err, projects) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send('Database error');
+      }
+      res.send(projects);
+    });
+  }
+);
+
+userRouter.get('/get-user-projects/:id', async (req, res) => {
+  Project.find({ public: true, owner: req.params.id }).exec((err, projects) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Database error');
+    }
+    res.send(projects);
+  });
 });
 
 userRouter.delete(
