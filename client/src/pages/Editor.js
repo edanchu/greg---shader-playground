@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import EditorText from '../components/EditorText';
+import TextureSelector from '../components/TextureSelector';
 import './Editor.css';
 import GraphicsComponent from '../components/graphics_component';
 import { Container, Row, Col } from 'react-bootstrap';
@@ -41,7 +42,7 @@ export default function Editor() {
   if (!project || !compiledCode) return <></>;
 
   return (
-    <Container>
+    <div className='editor-page'>
       {/* <div className='pane top-pane'> */}
       <Row>
         {/* </div> */}
@@ -70,21 +71,22 @@ export default function Editor() {
             {project.description}
           </p>
         </Col>
+        {/* </div> */}
+        <Col>
+          <div style={{ height: 'calc(100vh - 100px)' }}>
+            <EditorText
+              project={project}
+              bufferIdx={bufferIdx}
+              setBufferIdx={setBufferIdx}
+              updateBufferCode={updateBufferCode}
+              language='glsl'
+              handleCompile={handleCompile}
+            />
+            <TextureSelector />
+          </div>
+        </Col>
       </Row>
-      {/* </div> */}
-      <Col>
-        <div style={{ height: 'calc(100vh - 100px)' }}>
-          <EditorText
-            project={project}
-            bufferIdx={bufferIdx}
-            setBufferIdx={setBufferIdx}
-            updateBufferCode={updateBufferCode}
-            language='glsl'
-            handleCompile={handleCompile}
-          />
-        </div>
-      </Col>
-    </Container>
+    </div>
   );
 }
 

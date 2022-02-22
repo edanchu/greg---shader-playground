@@ -1,0 +1,8 @@
+.selector-container {
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  margin: 0.5rem;
+  background-color: #1c1c1c;
+  height: 20%;
+}
