@@ -1,31 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
-import Button from 'react-bootstrap/Button';
+import { useParams } from 'react-router-dom';
 import './UserPage.css';
 import '../components/Cards';
 import CardItem from '../components/CardItem';
 
-export default function UserPage({ currUser, user }) {
-  const [isCurrUser, setIsCurrUser] = useState(currUser._id === user._id);
+export default function UserPage({ currUser }) {
+  let { id } = useParams();
+
+  const [user, setUser] = useState(null);
+  const [isCurrUser, setIsCurrUser] = useState(false);
   const [projects, setProjects] = useState([]);
 
   useEffect(() => {
-    if (isCurrUser)
-      axios
-        .get('/user/get-projects')
-        .then((res) => {
-          setProjects(res.data);
-        })
-        .catch((err) => console.log(err));
-    else
-      axios
-        .get('/user/get-user-projects/' + user._id)
-        .then((res) => {
-          setProjects(res.data);
-        })
-        .catch((err) => console.log(err));
+    if (!user)
+      axios.get('/user/find-by-id/' + id).then((res) => {
+        setUser(res.data);
+      });
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      setIsCurrUser(currUser?._id === user._id);
+      if (currUser?._id === user._id)
+        axios
+          .get('/user/get-self-projects')
+          .then((res) => {
+            setProjects(res.data);
+          })
+          .catch((err) => console.log(err));
+      else
+        axios
+          .get('/user/get-user-projects/' + user?._id)
+          .then((res) => {
+            setProjects(res.data);
+          })
+          .catch((err) => console.log(err));
+    }
+  }, [user]);
+
+  if (!user) return <></>;
 
   return (
     <>
@@ -50,9 +64,7 @@ export default function UserPage({ currUser, user }) {
               {projects.map((project) => (
                 <CardItem
                   key={project._id}
-                  title={project.title}
-                  owner={project.ownerName}
-                  path='/UserPage'
+                  project={project}
                   pause={true}
                   playOnMouseOver={true}
                   showButtons={false}

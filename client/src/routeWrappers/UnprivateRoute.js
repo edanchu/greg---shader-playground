@@ -12,7 +12,7 @@ const UnprivateRoute = ({ user, setUser }) => {
       .catch((err) => setUser(null));
   }, []);
 
-  return !user ? <Outlet /> : <Navigate to='/UserPage' />;
+  return !user ? <Outlet /> : <Navigate to={'/UserPage/' + user._id} />;
 };
 
 export default UnprivateRoute;

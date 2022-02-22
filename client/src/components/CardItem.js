@@ -1,13 +1,26 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import GraphicsComponent from './graphics_component';
 
 function CardItem(props) {
+  let navigate = useNavigate();
+
   return (
-    <>
+    <div onClick={() => console.log('click')}>
       <li className='cards__item'>
-        <Link className='cards__item__link' to={props.path}>
-          <figure className='cards__item__pic-wrap' data-category={props.owner}>
+        <div className='cards__item__link'>
+          <figure
+            className='cards__item__pic-wrap'
+            data-category={props.project.ownerName}
+          >
+            <div
+              className='cards__item__owner-box'
+              onClick={(e) => {
+                e.stopPropagation();
+                console.log('click owner');
+                return navigate('/UserPage/' + props.project.owner);
+              }}
+            ></div>
             <GraphicsComponent
               className='cards__item__img'
               pause={props.pause}
@@ -23,11 +36,11 @@ function CardItem(props) {
             />
           </figure>
           <div className='cards__item__info'>
-            <h5 className='cards__item__text'>{props.title}</h5>
+            <h5 className='cards__item__text'>{props.project.title}</h5>
           </div>
-        </Link>
+        </div>
       </li>
-    </>
+    </div>
   );
 }
 
