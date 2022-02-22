@@ -10,7 +10,7 @@ function Home() {
 
   useEffect(() => {
     axios
-      .get('/user/get-projects')
+      .get('/api/user/get-projects')
       .then((res) => {
         setProjects(res.data);
       })

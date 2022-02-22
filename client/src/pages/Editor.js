@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import EditorText from '../components/EditorText';
 import TextureSelector from '../components/TextureSelector';
 import './Editor.css';
@@ -18,7 +18,7 @@ export default function Editor() {
 
   useEffect(() => {
     if (id) {
-      axios.get('/user/get-project/' + id).then((res) => {
+      axios.get('/api/user/get-project/' + id).then((res) => {
         setProject(res.data);
         setCompiledCode(res.data.code);
       });
@@ -30,6 +30,20 @@ export default function Editor() {
       ...project,
       code: project.code.map((c, i) => {
         if (i === bufferIdx) return value;
+        return c;
+      }),
+    });
+  }
+
+  function updateChanUniforms(chan, file) {
+    setProject({
+      ...project,
+      channelUniforms: project.channelUniforms.map((c, i) => {
+        if (i === bufferIdx)
+          return c.map((u, u_i) => {
+            if (u_i === chan) return file;
+            return u;
+          });
         return c;
       }),
     });
@@ -64,9 +78,12 @@ export default function Editor() {
           <h1 style={{ position: 'absolute', top: '600px', left: '20px' }}>
             {project.title}
           </h1>
-          <h3 style={{ position: 'absolute', top: '640px', left: '20px' }}>
+          <Link
+            style={{ position: 'absolute', top: '640px', left: '20px' }}
+            to={'/UserPage/' + project.owner}
+          >
             {project.ownerName}
-          </h3>
+          </Link>
           <p style={{ position: 'absolute', top: '680px', left: '20px' }}>
             {project.description}
           </p>
@@ -82,7 +99,10 @@ export default function Editor() {
               language='glsl'
               handleCompile={handleCompile}
             />
-            <TextureSelector />
+            <TextureSelector
+              chanUniforms={project.channelUniforms[bufferIdx]}
+              updateChanUniforms={updateChanUniforms}
+            />
           </div>
         </Col>
       </Row>

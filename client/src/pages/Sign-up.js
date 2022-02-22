@@ -33,7 +33,7 @@ export default function SignUp({ setUser }) {
     event.preventDefault();
     if (validateForm())
       axios
-        .post('/user/register', {
+        .post('/api/user/register', {
           email: email,
           username: username,
           password: password,
@@ -42,7 +42,7 @@ export default function SignUp({ setUser }) {
           console.log(res);
           console.log(`Success: ${username} created`);
           axios
-            .post('/user/login', {
+            .post('/api/user/login', {
               email: email,
               password: password,
             })
