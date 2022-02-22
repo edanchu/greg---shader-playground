@@ -19,6 +19,9 @@ export default function SignUp({ setUser }) {
     if (email.length <= 0 || password.length <= 0) {
       toast.error('Email and Password must be at least 1 character');
       return false;
+    } else if (username.length <= 0) {
+      toast.error('Username must be at least 1 character');
+      return false;
     } else if (confirmPassword.length <= 0) {
       toast.error('Please confirm password');
       return false;
