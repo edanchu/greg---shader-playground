@@ -6,6 +6,7 @@ import './Editor.css';
 import GraphicsComponent from '../components/graphics_component';
 import { Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
+import { Texture } from 'three';
 
 export default function Editor() {
   let { id } = useParams();
@@ -99,10 +100,12 @@ export default function Editor() {
               language='glsl'
               handleCompile={handleCompile}
             />
-            <TextureSelector
-              chanUniforms={project.channelUniforms[bufferIdx]}
-              updateChanUniforms={updateChanUniforms}
-            />
+            {bufferIdx !== 5 && (
+              <TextureSelector
+                chanUniforms={project.channelUniforms[bufferIdx]}
+                updateChanUniforms={updateChanUniforms}
+              />
+            )}
           </div>
         </Col>
       </Row>
