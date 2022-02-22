@@ -19,10 +19,10 @@ import 'codemirror/keymap/sublime.js';
 
 const buffers = [
   'Main',
-  'Buffer A',
-  'Buffer B',
-  'Buffer C',
-  'Buffer D',
+  'Buffer 1',
+  'Buffer 2',
+  'Buffer 3',
+  'Buffer 4',
   'Common',
 ];
 
