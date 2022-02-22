@@ -1,42 +1,94 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import EditorText from '../components/EditorText';
 import './Editor.css';
 import GraphicsComponent from '../components/graphics_component';
+import { Container, Row, Col } from 'react-bootstrap';
+import axios from 'axios';
 
-export default function Editor({ project: p }) {
-  const [project, setProject] = useState(p ?? emptyProject);
-  const [glsl, setGlsl] = useState('');
-  const [mainFragShader, setMainFragShader] = useState('');
+export default function Editor() {
+  let { id } = useParams();
 
-  function handleCompile(value) {
-    setMainFragShader(value);
+  const [project, setProject] = useState(id ? null : defaultProject);
+  const [compiledCode, setCompiledCode] = useState(
+    id ? null : defaultProject.code
+  );
+  const [bufferIdx, setBufferIdx] = useState(0);
+
+  useEffect(() => {
+    if (id) {
+      axios.get('/user/get-project/' + id).then((res) => {
+        setProject(res.data);
+        setCompiledCode(res.data.code);
+      });
+    }
+  }, []);
+
+  function updateBufferCode(editor, data, value) {
+    setProject({
+      ...project,
+      code: project.code.map((c, i) => {
+        if (i === bufferIdx) return value;
+        return c;
+      }),
+    });
   }
 
+  function handleCompile() {
+    setCompiledCode(project.code);
+  }
+
+  if (!project || !compiledCode) return <></>;
+
   return (
-    <>
-      <div className='pane top-pane'>
-        <EditorText
-          language='glsl'
-          displayName='Buffer1'
-          value={glsl}
-          onChange={setGlsl}
-          handleCompile={handleCompile}
-        />
-      </div>
-      <div className='pane screen'>
-        <GraphicsComponent
-          height={480}
-          pause={false}
-          playOnMouseOver={false}
-          showButtons={true}
-          finalFragShaderCustomCode={mainFragShader}
-        />
-      </div>
-    </>
+    <Container>
+      {/* <div className='pane top-pane'> */}
+      <Row>
+        {/* </div> */}
+        {/* <div className='pane screen'> */}
+        <Col>
+          <GraphicsComponent
+            height={480}
+            pause={false}
+            playOnMouseOver={false}
+            showButtons={true}
+            commonFragShaderCustomCode={compiledCode[5]}
+            finalFragShaderCustomCode={compiledCode[0]}
+            buffer1FragShaderCustomCode={compiledCode[1]}
+            buffer2FragShaderCustomCode={compiledCode[2]}
+            buffer3FragShaderCustomCode={compiledCode[3]}
+            buffer4FragShaderCustomCode={compiledCode[4]}
+            channels={project.channelUniforms}
+          />
+          <h1 style={{ position: 'absolute', top: '600px', left: '20px' }}>
+            {project.title}
+          </h1>
+          <h3 style={{ position: 'absolute', top: '640px', left: '20px' }}>
+            {project.ownerName}
+          </h3>
+          <p style={{ position: 'absolute', top: '680px', left: '20px' }}>
+            {project.description}
+          </p>
+        </Col>
+      </Row>
+      {/* </div> */}
+      <Col>
+        <div style={{ height: 'calc(100vh - 100px)' }}>
+          <EditorText
+            project={project}
+            bufferIdx={bufferIdx}
+            setBufferIdx={setBufferIdx}
+            updateBufferCode={updateBufferCode}
+            language='glsl'
+            handleCompile={handleCompile}
+          />
+        </div>
+      </Col>
+    </Container>
   );
 }
 
-const emptyProject = {
+const defaultProject = {
   owner: null,
   ownerName: null,
   title: 'New Project',
