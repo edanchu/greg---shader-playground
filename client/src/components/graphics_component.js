@@ -296,7 +296,7 @@ class GraphicsComponent extends Component {
 
         out vec4 FragColor;
 
-        ` + this.getCommonFragCode() + this.getFinalFragShaderCustomCode() + `
+        ` + this.getCommonFragCode() + `\n` + this.getFinalFragShaderCustomCode() + `
 
         void main(){
             mainImage(FragColor);
@@ -318,7 +318,7 @@ class GraphicsComponent extends Component {
 
         out vec4 FragColor;
         
-        ` + this.getCommonFragCode() + this.getBuffer1FragShaderCustomCode() + `
+        ` + this.getCommonFragCode() + `\n` + this.getBuffer1FragShaderCustomCode() + `
 
         void main(){
             mainImage(FragColor);
@@ -342,7 +342,7 @@ class GraphicsComponent extends Component {
 
         out vec4 FragColor;
 
-        ` + this.getCommonFragCode() + this.getBuffer2FragShaderCustomCode() + `
+        ` + this.getCommonFragCode() + `\n` + this.getBuffer2FragShaderCustomCode() + `
 
         void main(){
             mainImage(FragColor);
@@ -367,7 +367,7 @@ class GraphicsComponent extends Component {
 
         out vec4 FragColor;
 
-        ` + this.getCommonFragCode() + this.getBuffer3FragShaderCustomCode() + `
+        ` + this.getCommonFragCode() + `\n` + this.getBuffer3FragShaderCustomCode() + `
 
         void main(){
             mainImage(FragColor);
@@ -393,7 +393,7 @@ class GraphicsComponent extends Component {
 
         out vec4 FragColor;
 
-        ` + this.getCommonFragCode() + this.getBuffer4FragShaderCustomCode() + `
+        ` + this.getCommonFragCode() + `\n` + this.getBuffer4FragShaderCustomCode() + `
 
         void main(){
             mainImage(FragColor);
