@@ -30,8 +30,8 @@ function Navbar({ user, setUser }) {
       <nav className='navbar'>
         <div className='navbar-container'>
           <Link to='/' className='navbar-logo' onClick={closeMobileMenu}>
-            Greg
-            <i className='fab fa-typo3' />
+            GREG &nbsp;
+            <i className='fas fa-robot' />
           </Link>
           <div className='menu-icon' onClick={handleClick}>
             <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
@@ -44,7 +44,7 @@ function Navbar({ user, setUser }) {
             </li>
             <li className='nav-item'>
               <Link
-                to='/UserPage'
+                to={user ? '/UserPage/' + user._id : '/Login'}
                 className='nav-links'
                 onClick={closeMobileMenu}
               >

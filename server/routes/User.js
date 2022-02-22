@@ -85,6 +85,17 @@ userRouter.get(
   }
 );
 
+userRouter.get('/find-by-id/:id', (req, res) => {
+  User.findById(req.params.id).exec((err, user) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('database error');
+    }
+    const { _id, username } = user;
+    res.send({ _id: _id, username: username });
+  });
+});
+
 userRouter.post(
   '/add-project',
   passport.authenticate('jwt', { session: false }),

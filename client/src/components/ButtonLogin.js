@@ -27,6 +27,7 @@ export const ButtonLogin = ({
         .post('/user/logout')
         .then((res) => {
           setUser(null);
+          return navigate('/');
         })
         .catch((err) => console.log(err));
     } else {

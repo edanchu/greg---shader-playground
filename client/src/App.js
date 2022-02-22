@@ -24,23 +24,21 @@ function App() {
             path='/Login'
             element={<UnprivateRoute user={user} setUser={setUser} />}
           >
-            <Route path='/Login' element={<Login setUser={setUser} />} />
+            <Route path='' element={<Login setUser={setUser} />} />
           </Route>
           <Route
             path='/Sign-up'
             element={<UnprivateRoute user={user} setUser={setUser} />}
           >
-            <Route path='/Sign-up' element={<SignUp setUser={setUser} />} />
+            <Route path='' element={<SignUp setUser={setUser} />} />
           </Route>
-          <Route
-            path='/UserPage'
+          {/* <Route
+            path='/UserPage/:id'
             element={<PrivateRoute user={user} setUser={setUser} />}
-          >
-            <Route
-              path='/UserPage'
-              element={<UserPage currUser={user} user={user} />}
-            />
-          </Route>
+          > */}
+          {/* <Route path='' element={<UserPage currUser={user} />} /> */}
+          <Route path='/UserPage/:id' element={<UserPage currUser={user} />} />
+          {/* </Route> */}
           <Route path='/Editor' element={<Editor />} />
           <Route path='/Browse' element={<Browse />} />
         </Routes>
