@@ -4,6 +4,7 @@ import 'codemirror/mode/clike/clike.js';
 import { Controlled as ControlledEditor } from 'react-codemirror2';
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
+import { Button } from 'react-bootstrap';
 import './EditorText.css';
 import 'codemirror/addon/search/search';
 import 'codemirror/addon/search/searchcursor';
@@ -33,6 +34,7 @@ export default function EditorText({
   updateBufferCode,
   value,
   handleCompile,
+  handleSave,
   ...props
 }) {
   return (
@@ -47,6 +49,9 @@ export default function EditorText({
             }}
             value={buffers[bufferIdx]}
           ></Dropdown>
+          <Button variant='secondary' onClick={handleSave}>
+            SAVE
+          </Button>
         </div>
         <ControlledEditor
           onBeforeChange={updateBufferCode}

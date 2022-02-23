@@ -107,6 +107,8 @@ userRouter.post(
       description: req.body.description,
       public: req.body.public,
       likes: req.body.likes,
+      code: req.body.code,
+      channelUniforms: req.body.channelUniforms,
     });
 
     newProject.save((err, obj) => {

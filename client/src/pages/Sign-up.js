@@ -7,7 +7,12 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 
-export default function SignUp({ setUser }) {
+export default function SignUp({
+  setUser,
+  isNested,
+  switchLogin,
+  onSignLogIn,
+}) {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -52,6 +57,7 @@ export default function SignUp({ setUser }) {
             .then((res) => {
               console.log('& Logged in');
               setUser(res.data.user);
+              onSignLogIn(res.data.user);
             })
             .catch((err) => {
               console.log(err);
@@ -62,8 +68,15 @@ export default function SignUp({ setUser }) {
         });
   }
 
+  function handleClickLogin(e) {
+    if (isNested) {
+      e.preventDefault();
+      switchLogin();
+    }
+  }
+
   return (
-    <div className='SignUp'>
+    <div className='SignUp' style={isNested ? { height: '100%' } : {}}>
       <div className='signup-box'>
         <h1 className='top-header'> Sign Up </h1>
       <Form onSubmit={handleSubmit}>
@@ -109,7 +122,7 @@ export default function SignUp({ setUser }) {
           Create Account
         </Button>
         <ToastContainer />
-        <Link to='/Login' className='login-link'>
+        <Link onClick={handleClickLogin} to='/Login' className='login-link'>
           <Button className='SignUp-button' type='submit'>
             Have an account? Sign in!
           </Button>
