@@ -8,7 +8,9 @@ const SignLogInModal = ({ show, setShow, setUser, onSignLogIn }) => {
   return (
     <Modal show={show} onHide={() => setShow(false)}>
       <Modal.Header closeButton>
-        <Modal.Title>{loggingIn ? 'Log In' : 'Sign Up'}</Modal.Title>
+        <Modal.Title>
+          Please {loggingIn ? 'Log In' : 'Sign Up'} to Save
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {loggingIn ? (
