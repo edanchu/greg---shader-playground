@@ -21,16 +21,16 @@ const TextureSelector = ({ chanUniforms, updateChanUniforms }) => {
               chanUniforms[0] &&
               (chanUniforms[0].genType === 'sampler2D'
                 ? {
-                    backgroundImage: `url("/textures/${chanUniforms[0].path}")`,
-                    backgroundSize: 'cover',
-                  }
+                  backgroundImage: `url("/textures/${chanUniforms[0].path}")`,
+                  backgroundSize: 'cover',
+                }
                 : {
-                    backgroundImage: `url("/textures/${chanUniforms[0].path}/posz.jpg")`,
-                    backgroundSize: 'cover',
-                  })
+                  backgroundImage: `url("/textures/${chanUniforms[0].path}/posz.jpg")`,
+                  backgroundSize: 'cover',
+                })
             }
           >
-            1
+            0
           </div>
         </Col>
         <Col>
@@ -44,16 +44,16 @@ const TextureSelector = ({ chanUniforms, updateChanUniforms }) => {
               chanUniforms[1] &&
               (chanUniforms[1].genType === 'sampler2D'
                 ? {
-                    backgroundImage: `url("/textures/${chanUniforms[1].path}")`,
-                    backgroundSize: 'cover',
-                  }
+                  backgroundImage: `url("/textures/${chanUniforms[1].path}")`,
+                  backgroundSize: 'cover',
+                }
                 : {
-                    backgroundImage: `url("/textures/${chanUniforms[1].path}/posz.jpg")`,
-                    backgroundSize: 'cover',
-                  })
+                  backgroundImage: `url("/textures/${chanUniforms[1].path}/posz.jpg")`,
+                  backgroundSize: 'cover',
+                })
             }
           >
-            2
+            1
           </div>
         </Col>
         <Col>
@@ -67,16 +67,16 @@ const TextureSelector = ({ chanUniforms, updateChanUniforms }) => {
               chanUniforms[2] &&
               (chanUniforms[2].genType === 'sampler2D'
                 ? {
-                    backgroundImage: `url("/textures/${chanUniforms[2].path}")`,
-                    backgroundSize: 'cover',
-                  }
+                  backgroundImage: `url("/textures/${chanUniforms[2].path}")`,
+                  backgroundSize: 'cover',
+                }
                 : {
-                    backgroundImage: `url("/textures/${chanUniforms[2].path}/posz.jpg")`,
-                    backgroundSize: 'cover',
-                  })
+                  backgroundImage: `url("/textures/${chanUniforms[2].path}/posz.jpg")`,
+                  backgroundSize: 'cover',
+                })
             }
           >
-            3
+            2
           </div>
         </Col>
         <Col>
@@ -90,16 +90,16 @@ const TextureSelector = ({ chanUniforms, updateChanUniforms }) => {
               chanUniforms[3] &&
               (chanUniforms[3].genType === 'sampler2D'
                 ? {
-                    backgroundImage: `url("/textures/${chanUniforms[3].path}")`,
-                    backgroundSize: 'cover',
-                  }
+                  backgroundImage: `url("/textures/${chanUniforms[3].path}")`,
+                  backgroundSize: 'cover',
+                }
                 : {
-                    backgroundImage: `url("/textures/${chanUniforms[3].path}/posz.jpg")`,
-                    backgroundSize: 'cover',
-                  })
+                  backgroundImage: `url("/textures/${chanUniforms[3].path}/posz.jpg")`,
+                  backgroundSize: 'cover',
+                })
             }
           >
-            4
+            3
           </div>
         </Col>
       </Row>
