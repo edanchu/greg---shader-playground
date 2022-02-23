@@ -4,7 +4,7 @@ import EditorText from '../components/EditorText';
 import TextureSelector from '../components/TextureSelector';
 import './Editor.css';
 import GraphicsComponent from '../components/graphics_component';
-import { Container, Row, Col } from 'react-bootstrap';
+import {  Container, Row, Col, Modal, Button } from 'react-bootstrap';
 import axios from 'axios';
 import { Texture } from 'three';
 import SignLogInModal from '../components/SignLogInModal';
@@ -19,6 +19,7 @@ export default function Editor({ setUser }) {
   const [bufferIdx, setBufferIdx] = useState(0);
   const [showSignLogInModal, setShowSignLogInModal] = useState(false);
   const [pageWidth, setPageWidth] = useState(window.innerWidth);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   window.onbeforeunload = (e) => {
     if (project != lastSaved) {
@@ -61,7 +62,26 @@ export default function Editor({ setUser }) {
       }),
     });
   }
+  let nameValue;
+  let descriptionValue;
+  const getNameValue = (event)=>{
+    nameValue = event.target.value;
+    
+  };
 
+  const getDescriptionValue = (event)=>{
+    descriptionValue = event.target.value;
+  };
+
+  const getUpdateValues = (event)=>{
+    project.title = nameValue;
+    project.description = descriptionValue;
+  };
+
+  const likes = [];
+  const setLike = (event) =>{
+    likes.push(project.owner);
+  }
   function updateChanUniforms(chan, file) {
     setProject({
       ...project,
@@ -213,17 +233,56 @@ export default function Editor({ setUser }) {
             buffer4FragShaderCustomCode={compiledCode[4]}
             channels={project.channelUniforms}
           />
-          <h1 style={{ float: 'left' }}>
+           <div>
+          <button 
+              style={{position: 'absolute', top: '625px', left: '15px'}}
+              onClick={(e) => setLike()}
+            >Like</button>
+            <h6 style={{position: 'absolute', top: '628px', left: '55px', color: "white"}}> 0 </h6>
+          </div>
+          <button 
+           className="fa fa-edit"
+           style={{position: 'absolute', top: '705px', left: '275px'}}
+           onClick={(e) => setModalIsOpen(true)}
+           ></button>
+          <Modal show={modalIsOpen}>
+            <Modal.Header>
+              Update Project Information
+            </Modal.Header>
+            <Modal.Body>
+              <label for="name">Enter Project Name:</label><br/>
+              <input type="text" id="name" name="name" onChange={getNameValue}/><br/>
+              <label for="decription">Decription:</label><br/>
+              <input type="text" id="decription" name="decription" onChange={getDescriptionValue}/><br/><br/>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                variant='outline-danger'
+                style={{ position: 'absolute', left: '0' }}
+                onClick={(e) => setModalIsOpen(false)}
+              >
+                Close
+              </Button>
+              <Button
+                variant='outline-danger'
+                style={{ position: 'absolute', right: '0' }}
+                onClick={(e) => {setModalIsOpen(false); getUpdateValues();}}
+              >
+                Submit
+              </Button>
+            </Modal.Footer>
+          </Modal>
+          <h1 style={{position: 'absolute', top: '700px', left: '20px' }}>
             {project.title}
           </h1>
           <Link
-            style={{ float: 'left' }}
+            style={{ position: 'absolute', top: '740px', left: '20px'  }}
             to={'/UserPage/' + project.owner}
           >
             {project.ownerName}
           </Link>
           <br></br>
-          <p style={{ float: 'left' }}>
+          <p style={{ position: 'absolute', top: '780px', left: '20px' }}>
             {project.description}
           </p>
         </Col>
