@@ -133,6 +133,10 @@ class GraphicsComponent extends Component {
         iChannel1: { value: this.getChannelData(0, 1) },
         iChannel2: { value: this.getChannelData(0, 2) },
         iChannel3: { value: this.getChannelData(0, 3) },
+        iChannel0Resolution: { value: this.getChannelResolution(0, 0) },
+        iChannel1Resolution: { value: this.getChannelResolution(0, 1) },
+        iChannel2Resolution: { value: this.getChannelResolution(0, 2) },
+        iChannel3Resolution: { value: this.getChannelResolution(0, 3) },
       },
       vertexShader: this.getVertexShader(),
       fragmentShader: this.getFinalFragmentShader(),
@@ -152,6 +156,10 @@ class GraphicsComponent extends Component {
         iChannel1: { value: this.getChannelData(1, 1) },
         iChannel2: { value: this.getChannelData(1, 2) },
         iChannel3: { value: this.getChannelData(1, 3) },
+        iChannel0Resolution: { value: this.getChannelResolution(0, 0) },
+        iChannel1Resolution: { value: this.getChannelResolution(0, 1) },
+        iChannel2Resolution: { value: this.getChannelResolution(0, 2) },
+        iChannel3Resolution: { value: this.getChannelResolution(0, 3) },
       },
       vertexShader: this.getVertexShader(),
       fragmentShader: this.getBuffer1FragShader(),
@@ -172,6 +180,10 @@ class GraphicsComponent extends Component {
         iChannel1: { value: this.getChannelData(2, 1) },
         iChannel2: { value: this.getChannelData(2, 2) },
         iChannel3: { value: this.getChannelData(2, 3) },
+        iChannel0Resolution: { value: this.getChannelResolution(0, 0) },
+        iChannel1Resolution: { value: this.getChannelResolution(0, 1) },
+        iChannel2Resolution: { value: this.getChannelResolution(0, 2) },
+        iChannel3Resolution: { value: this.getChannelResolution(0, 3) },
       },
       vertexShader: this.getVertexShader(),
       fragmentShader: this.getBuffer2FragShader(),
@@ -193,6 +205,10 @@ class GraphicsComponent extends Component {
         iChannel1: { value: this.getChannelData(3, 1) },
         iChannel2: { value: this.getChannelData(3, 2) },
         iChannel3: { value: this.getChannelData(3, 3) },
+        iChannel0Resolution: { value: this.getChannelResolution(0, 0) },
+        iChannel1Resolution: { value: this.getChannelResolution(0, 1) },
+        iChannel2Resolution: { value: this.getChannelResolution(0, 2) },
+        iChannel3Resolution: { value: this.getChannelResolution(0, 3) },
       },
       vertexShader: this.getVertexShader(),
       fragmentShader: this.getBuffer3FragShader(),
@@ -215,6 +231,10 @@ class GraphicsComponent extends Component {
         iChannel1: { value: this.getChannelData(4, 1) },
         iChannel2: { value: this.getChannelData(4, 2) },
         iChannel3: { value: this.getChannelData(4, 3) },
+        iChannel0Resolution: { value: this.getChannelResolution(0, 0) },
+        iChannel1Resolution: { value: this.getChannelResolution(0, 1) },
+        iChannel2Resolution: { value: this.getChannelResolution(0, 2) },
+        iChannel3Resolution: { value: this.getChannelResolution(0, 3) },
       },
       vertexShader: this.getVertexShader(),
       fragmentShader: this.getBuffer4FragShader(),
@@ -223,8 +243,7 @@ class GraphicsComponent extends Component {
   }
 
   getChannelData(bufferNumber, channelNumber) {
-    if (
-      !this.props.channels || !this.props.channels[bufferNumber][channelNumber]) {
+    if (!this.props.channels || !this.props.channels[bufferNumber][channelNumber]) {
       return null;
     }
     if (this.props.channels[bufferNumber][channelNumber].genType === 'sampler2D') {
@@ -239,6 +258,16 @@ class GraphicsComponent extends Component {
     "/textures/" + this.props.channels[bufferNumber][channelNumber].path + "/posz.jpg",
     "/textures/" + this.props.channels[bufferNumber][channelNumber].path + "/negz.jpg"]);
     return tex;
+  }
+
+  getChannelResolution(bufferNumber, channelNumber) {
+    if (!this.props.channels || !this.props.channels[bufferNumber][channelNumber] || this.props.channels[bufferNumber][channelNumber].genType === 'samplerCube') {
+      return new THREE.Vector2(2048, 2048);
+    }
+    let re = new RegExp("[0-9]+x[0-9]+");
+    let matches = re.exec(this.props.channels[bufferNumber][channelNumber].path);
+    matches = matches[0].split('x');
+    return new THREE.Vector2(matches[0], matches[1]);
   }
 
   getChannelType(bufferNumber, channelNumber) {
@@ -344,6 +373,10 @@ class GraphicsComponent extends Component {
         uniform vec4 iMouse;
         uniform sampler2D iKeyboard;
         uniform vec4 iDate;
+        uniform vec2 iChannel0Resolution;
+        uniform vec2 iChannel1Resolution;
+        uniform vec2 iChannel2Resolution;
+        uniform vec2 iChannel3Resolution;
         `;
   }
 
