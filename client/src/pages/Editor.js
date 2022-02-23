@@ -85,23 +85,23 @@ export default function Editor({ setUser }) {
               '/api/user/add-project/',
               project.owner
                 ? {
-                    ...project,
-                    title: 'Copy of: ' + project.title,
-                    description:
-                      'This is a copy of ' +
-                      project.title +
-                      ' by ' +
-                      project.ownerName,
-                    owner: res.data.user._id,
-                    ownerName: res.data.user.username,
-                    likes: 0,
-                  }
+                  ...project,
+                  title: 'Copy of: ' + project.title,
+                  description:
+                    'This is a copy of ' +
+                    project.title +
+                    ' by ' +
+                    project.ownerName,
+                  owner: res.data.user._id,
+                  ownerName: res.data.user.username,
+                  likes: 0,
+                }
                 : {
-                    ...project,
-                    owner: res.data.user._id,
-                    ownerName: res.data.user.username,
-                    likes: 0,
-                  }
+                  ...project,
+                  owner: res.data.user._id,
+                  ownerName: res.data.user.username,
+                  likes: 0,
+                }
             )
             .then((res) => {
               console.log('successfully added/forked project');
@@ -134,23 +134,23 @@ export default function Editor({ setUser }) {
           '/api/user/add-project/',
           project.owner
             ? {
-                ...project,
-                title: 'Copy of: ' + project.title,
-                description:
-                  'This is a copy of ' +
-                  project.title +
-                  ' by ' +
-                  project.ownerName,
-                owner: user._id,
-                ownerName: user.username,
-                likes: 0,
-              }
+              ...project,
+              title: 'Copy of: ' + project.title,
+              description:
+                'This is a copy of ' +
+                project.title +
+                ' by ' +
+                project.ownerName,
+              owner: user._id,
+              ownerName: user.username,
+              likes: 0,
+            }
             : {
-                ...project,
-                owner: user._id,
-                ownerName: user.username,
-                likes: 0,
-              }
+              ...project,
+              owner: user._id,
+              ownerName: user.username,
+              likes: 0,
+            }
         )
         .then((res) => {
           console.log('successfully added/forked project');

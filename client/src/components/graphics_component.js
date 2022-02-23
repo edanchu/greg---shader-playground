@@ -27,9 +27,9 @@ class GraphicsComponent extends Component {
       tempDate.getMonth(),
       tempDate.getDate(),
       tempDate.getHours() * 3600 +
-        tempDate.getMinutes() * 60 +
-        tempDate.getSeconds() +
-        tempDate.getMilliseconds / 1000
+      tempDate.getMinutes() * 60 +
+      tempDate.getSeconds() +
+      tempDate.getMilliseconds / 1000
     );
     this.loader = new THREE.TextureLoader();
     this.cubeLoader = new THREE.CubeTextureLoader();
@@ -49,19 +49,13 @@ class GraphicsComponent extends Component {
       this.createRenderBuffers();
     }
     if (
-      this.props.finalFragShaderCustomCode !==
-        prevProps.finalFragShaderCustomCode ||
+      this.props.finalFragShaderCustomCode !== prevProps.finalFragShaderCustomCode ||
       this.props.channels !== prevProps.channels ||
-      this.props.buffer1FragShaderCustomCode !==
-        prevProps.buffer1FragShaderCustomCode ||
-      this.props.buffer2FragShaderCustomCode !==
-        prevProps.buffer2FragShaderCustomCode ||
-      this.props.buffer3FragShaderCustomCode !==
-        prevProps.buffer3FragShaderCustomCode ||
-      this.props.buffer4FragShaderCustomCode !==
-        prevProps.buffer4FragShaderCustomCode ||
-      this.props.commonFragShaderCustomCode !==
-        prevProps.commonFragShaderCustomCode
+      this.props.buffer1FragShaderCustomCode !== prevProps.buffer1FragShaderCustomCode ||
+      this.props.buffer2FragShaderCustomCode !== prevProps.buffer2FragShaderCustomCode ||
+      this.props.buffer3FragShaderCustomCode !== prevProps.buffer3FragShaderCustomCode ||
+      this.props.buffer4FragShaderCustomCode !== prevProps.buffer4FragShaderCustomCode ||
+      this.props.commonFragShaderCustomCode !== prevProps.commonFragShaderCustomCode
     ) {
       this.createMaterials();
       this.restartCallback(null);
@@ -230,23 +224,21 @@ class GraphicsComponent extends Component {
 
   getChannelData(bufferNumber, channelNumber) {
     if (
-      !this.props.channels ||
-      !this.props.channels[bufferNumber][channelNumber]
-    ) {
+      !this.props.channels || !this.props.channels[bufferNumber][channelNumber]) {
       return null;
     }
-    if (
-      this.props.channels[bufferNumber][channelNumber].genType === 'sampler2D'
-    ) {
-      let tex = this.loader.load(
-        this.props.channels[bufferNumber][channelNumber].path
-      );
+    if (this.props.channels[bufferNumber][channelNumber].genType === 'sampler2D') {
+      let tex = this.loader.load("/textures/" + this.props.channels[bufferNumber][channelNumber].path);
       tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
       return tex;
     }
-    return this.cubeLoader.load(
-      this.props.channels[bufferNumber][channelNumber].path
-    );
+    let tex = this.cubeLoader.load(["/textures/" + this.props.channels[bufferNumber][channelNumber].path + "/posx.jpg",
+    "/textures/" + this.props.channels[bufferNumber][channelNumber].path + "/negx.jpg",
+    "/textures/" + this.props.channels[bufferNumber][channelNumber].path + "/posy.jpg",
+    "/textures/" + this.props.channels[bufferNumber][channelNumber].path + "/negy.jpg",
+    "/textures/" + this.props.channels[bufferNumber][channelNumber].path + "/posz.jpg",
+    "/textures/" + this.props.channels[bufferNumber][channelNumber].path + "/negz.jpg"]);
+    return tex;
   }
 
   getChannelType(bufferNumber, channelNumber) {
@@ -307,12 +299,12 @@ class GraphicsComponent extends Component {
         this.bufferMat2.uniforms.iDeltaTime.value =
         this.bufferMat3.uniforms.iDeltaTime.value =
         this.bufferMat4.uniforms.iDeltaTime.value =
-          this.clock.getDelta();
+        this.clock.getDelta();
       this.bufferMat1.uniforms.iTime.value =
         this.bufferMat2.uniforms.iTime.value =
         this.bufferMat3.uniforms.iTime.value =
         this.bufferMat4.uniforms.iTime.value =
-          this.clock.getElapsedTime() - this.timePaused;
+        this.clock.getElapsedTime() - this.timePaused;
       this.frameNumber++;
       let tempDate = new Date();
       this.date.x = tempDate.getFullYear();
