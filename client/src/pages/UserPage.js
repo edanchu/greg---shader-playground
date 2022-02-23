@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import './UserPage.css';
 
 import CardItem from '../components/CardItem';
-import {Row, Col, Modal, Button  } from 'react-bootstrap';
+import { Row, Col, Modal, Button } from 'react-bootstrap';
 
 export default function UserPage({ currUser }) {
   let { id } = useParams();
@@ -13,7 +13,6 @@ export default function UserPage({ currUser }) {
   const [isCurrUser, setIsCurrUser] = useState(false);
   const [projects, setProjects] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [showTextures, setShowTextures] = useState(true);
   const [selected, setSelected] = useState();
 
   useEffect(() => {
@@ -47,22 +46,8 @@ export default function UserPage({ currUser }) {
     return dir.keys().map((item) => item.slice(2));
   };
 
-  const getCubemapPaths = () => {
-    return [
-      'ForbiddenCity 2048x2048',
-      'GamlaStan 2048x2048',
-      'Kastellholmen 2048x2048',
-      'Langholmen 2048x2048',
-      'Langholmen3 2048x2048',
-      'SaintLazarusChurch2 2048x2048',
-      'Skinnarviksberget 2048x2048',
-      'UnionSquare 2048x2048',
-    ];
-  };
-
   const dir = require.context('../../public/textures', false);
   let imagePaths = getTexturePaths(dir);
-  let cubemapPaths = getCubemapPaths();
 
   if (!user) return <></>;
 
@@ -74,7 +59,7 @@ export default function UserPage({ currUser }) {
           alt='Admin'
           className='profileImage'
         />
-<button onClick={(e) => setModalIsOpen(true)}>Edit picture</button>
+        <button onClick={(e) => setModalIsOpen(true)}>Edit picture</button>
         <Modal show={modalIsOpen}>
           <Modal.Header closeButton>
             <Modal.Title> Select new Profile Image</Modal.Title>
@@ -85,87 +70,49 @@ export default function UserPage({ currUser }) {
               overflowY: 'auto',
             }}
           >
-          <Row>
-            {showTextures
-              ? imagePaths.map((i, index) => (
-                  <Col
-                    style={{
-                      width: '50%',
-                      flexBasis: 'auto',
-                    }}
-                    key={index}
-                  >
-                    <img
-                      src={window.location.origin + '/textures/' + i}
-                      alt='texture-img'
-                      style={
-                        selected?.path === i
-                          ? {
-                              width: '100%',
-                              margin: '2%',
-                              borderRadius: '5%',
-                              cursor: 'pointer',
-                              border: '7px solid red',
-                            }
-                          : {
-                              width: '100%',
-                              margin: '2%',
-                              borderRadius: '5%',
-                              cursor: 'pointer',
-                            }
-                      }
-                      onClick={() =>
-                        setSelected({
-                          path: i,
-                        })
-                      }
-                    />
-                  </Col>
-                ))
-              : cubemapPaths.map((c, index) => (
-                  <Col
-                    style={{
-                      width: '50%',
-                      flexBasis: 'auto',
-                    }}
-                    key={index}
-                  >
-                    <img
-                      src={
-                        window.location.origin + '/textures/' + c + '/posz.jpg'
-                      }
-                      alt='texture-img'
-                      style={
-                        selected?.path === c
-                          ? {
-                              width: '100%',
-                              margin: '2%',
-                              borderRadius: '5%',
-                              cursor: 'pointer',
-                              border: '7px solid red',
-                            }
-                          : {
-                              width: '100%',
-                              margin: '2%',
-                              borderRadius: '5%',
-                              cursor: 'pointer',
-                            }
-                      }
-                      onClick={() =>
-                        setSelected({
-                          path: c,
-                        })
-                      }
-                    />
-                  </Col>
-                ))}
-          </Row>
+            <Row>
+              {imagePaths.map((i, index) => (
+                <Col
+                  style={{
+                    width: '50%',
+                    flexBasis: 'auto',
+                  }}
+                  key={index}
+                >
+                  <img
+                    src={window.location.origin + '/textures/' + i}
+                    alt='texture-img'
+                    style={
+                      selected?.path === i
+                        ? {
+                            width: '100%',
+                            margin: '2%',
+                            borderRadius: '5%',
+                            cursor: 'pointer',
+                            border: '7px solid red',
+                          }
+                        : {
+                            width: '100%',
+                            margin: '2%',
+                            borderRadius: '5%',
+                            cursor: 'pointer',
+                          }
+                    }
+                    onClick={() =>
+                      setSelected({
+                        path: i,
+                      })
+                    }
+                  />
+                </Col>
+              ))}
+            </Row>
           </Modal.Body>
           <Modal.Footer>
             <Button
-            variant='outline-danger'
-            style={{ position: 'absolute', right: '0' }}
-            onClick={() => setSelected(null)}
+              variant='outline-danger'
+              style={{ position: 'absolute', right: '0' }}
+              onClick={() => setSelected(null)}
             >
               Clear
             </Button>
@@ -177,17 +124,15 @@ export default function UserPage({ currUser }) {
               Close
             </Button>
             <Button
-            variant='primary'
-            style={{ position: 'absolute', left: '40%', right: '40%' }}
-            onClick={() => {
-            setModalIsOpen(false)
-            }}
+              variant='primary'
+              style={{ position: 'absolute', left: '40%', right: '40%' }}
+              onClick={() => {
+                setModalIsOpen(false);
+              }}
             >
-            Confirm
+              Confirm
             </Button>
           </Modal.Footer>
-
-
         </Modal>
         <div className='description'>
           <h4 className='username'>{user.username}</h4>
