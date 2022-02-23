@@ -106,6 +106,23 @@ export default function Editor({ user, setUser }) {
     }
   };
 
+  const handleDelete = (event) => {
+    if (user) {
+      axios
+        .put('/api/user/update-project/' + id, {
+          ...project,
+        })
+        .then((res) => {
+          setProject(null);
+        })
+        .catch((err) => console.log(err));
+    }
+
+    else {
+      toast.error('Must be signed in to delete project');
+    }
+  }
+
   function updateChanUniforms(chan, file) {
     setProject({
       ...project,
@@ -268,6 +285,17 @@ export default function Editor({ user, setUser }) {
               onClick={(e) => handleLike()}
             >
               <i className='fas fa-thumbs-up'></i>
+            </button>
+            <button 
+              style={{
+                position: 'absolute',
+                top: '625px',
+                left: '105px',
+                color: 'red',
+              }}
+              onClick={(e) => handleDelete()}
+            >
+              <i class="fa fa-trash" aria-hidden="true"></i>
             </button>
             <h6
               style={{
