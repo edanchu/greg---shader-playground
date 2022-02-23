@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import './UserPage.css';
+
 import CardItem from '../components/CardItem';
+import {Row, Col, Modal, Button  } from 'react-bootstrap';
 
 export default function UserPage({ currUser }) {
   let { id } = useParams();
@@ -10,6 +12,9 @@ export default function UserPage({ currUser }) {
   const [user, setUser] = useState(null);
   const [isCurrUser, setIsCurrUser] = useState(false);
   const [projects, setProjects] = useState([]);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [showTextures, setShowTextures] = useState(true);
+  const [selected, setSelected] = useState();
 
   useEffect(() => {
     if (!user)
@@ -38,6 +43,27 @@ export default function UserPage({ currUser }) {
     }
   }, [user]);
 
+  const getTexturePaths = (dir) => {
+    return dir.keys().map((item) => item.slice(2));
+  };
+
+  const getCubemapPaths = () => {
+    return [
+      'ForbiddenCity 2048x2048',
+      'GamlaStan 2048x2048',
+      'Kastellholmen 2048x2048',
+      'Langholmen 2048x2048',
+      'Langholmen3 2048x2048',
+      'SaintLazarusChurch2 2048x2048',
+      'Skinnarviksberget 2048x2048',
+      'UnionSquare 2048x2048',
+    ];
+  };
+
+  const dir = require.context('../../public/textures', false);
+  let imagePaths = getTexturePaths(dir);
+  let cubemapPaths = getCubemapPaths();
+
   if (!user) return <></>;
 
   return (
@@ -48,9 +74,123 @@ export default function UserPage({ currUser }) {
           alt='Admin'
           className='profileImage'
         />
+<button onClick={(e) => setModalIsOpen(true)}>Edit picture</button>
+        <Modal show={modalIsOpen}>
+          <Modal.Header closeButton>
+            <Modal.Title> Select new Profile Image</Modal.Title>
+          </Modal.Header>
+          <Modal.Body
+            style={{
+              maxHeight: 'calc(100vh - 300px)',
+              overflowY: 'auto',
+            }}
+          >
+          <Row>
+            {showTextures
+              ? imagePaths.map((i, index) => (
+                  <Col
+                    style={{
+                      width: '50%',
+                      flexBasis: 'auto',
+                    }}
+                    key={index}
+                  >
+                    <img
+                      src={window.location.origin + '/textures/' + i}
+                      alt='texture-img'
+                      style={
+                        selected?.path === i
+                          ? {
+                              width: '100%',
+                              margin: '2%',
+                              borderRadius: '5%',
+                              cursor: 'pointer',
+                              border: '7px solid red',
+                            }
+                          : {
+                              width: '100%',
+                              margin: '2%',
+                              borderRadius: '5%',
+                              cursor: 'pointer',
+                            }
+                      }
+                      onClick={() =>
+                        setSelected({
+                          path: i,
+                        })
+                      }
+                    />
+                  </Col>
+                ))
+              : cubemapPaths.map((c, index) => (
+                  <Col
+                    style={{
+                      width: '50%',
+                      flexBasis: 'auto',
+                    }}
+                    key={index}
+                  >
+                    <img
+                      src={
+                        window.location.origin + '/textures/' + c + '/posz.jpg'
+                      }
+                      alt='texture-img'
+                      style={
+                        selected?.path === c
+                          ? {
+                              width: '100%',
+                              margin: '2%',
+                              borderRadius: '5%',
+                              cursor: 'pointer',
+                              border: '7px solid red',
+                            }
+                          : {
+                              width: '100%',
+                              margin: '2%',
+                              borderRadius: '5%',
+                              cursor: 'pointer',
+                            }
+                      }
+                      onClick={() =>
+                        setSelected({
+                          path: c,
+                        })
+                      }
+                    />
+                  </Col>
+                ))}
+          </Row>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+            variant='outline-danger'
+            style={{ position: 'absolute', right: '0' }}
+            onClick={() => setSelected(null)}
+            >
+              Clear
+            </Button>
+            <Button
+              variant='outline-danger'
+              style={{ position: 'absolute', left: '0' }}
+              onClick={(e) => setModalIsOpen(false)}
+            >
+              Close
+            </Button>
+            <Button
+            variant='primary'
+            style={{ position: 'absolute', left: '40%', right: '40%' }}
+            onClick={() => {
+            setModalIsOpen(false)
+            }}
+            >
+            Confirm
+            </Button>
+          </Modal.Footer>
+
+
+        </Modal>
         <div className='description'>
           <h4 className='username'>{user.username}</h4>
-          <p>Professional Shader</p>
         </div>
       </div>
       <div className='card-body'>
