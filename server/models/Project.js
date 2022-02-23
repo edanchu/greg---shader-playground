@@ -5,7 +5,7 @@ const ProjectSchema = new mongoose.Schema({
   ownerName: { type: String, required: true },
   title: { type: String, required: true },
   description: { type: String, default: '', required: true },
-  likes: { type: Number, default: 0, required: true },
+  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   public: { type: Boolean, default: false, required: true },
   code: {
     type: [String],
