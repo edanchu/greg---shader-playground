@@ -14,12 +14,20 @@ export default function Editor({ setUser }) {
   let navigate = useNavigate();
 
   const [project, setProject] = useState(id ? null : defaultProject);
-  const [lastSaved, setLastSaved] = useState(null);
+  const [lastSaved, setLastSaved] = useState(id ? null : defaultProject);
   const [compiledCode, setCompiledCode] = useState(
     id ? null : defaultProject.code
   );
   const [bufferIdx, setBufferIdx] = useState(0);
   const [showSignLogInModal, setShowSignLogInModal] = useState(false);
+
+  window.onbeforeunload = (e) => {
+    if (project != lastSaved) {
+      e.preventDefault();
+      if (e) e.returnValue = '';
+      return '';
+    }
+  }
 
   useEffect(() => {
     if (id) {

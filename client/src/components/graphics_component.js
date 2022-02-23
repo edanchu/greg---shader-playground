@@ -348,8 +348,7 @@ class GraphicsComponent extends Component {
   }
 
   updateFinalUniforms() {
-    this.finalMat.uniforms.iDeltaTime.value =
-      this.bufferMat1.uniforms.iDeltaTime.value;
+    this.finalMat.uniforms.iDeltaTime.value = this.bufferMat1.uniforms.iDeltaTime.value;
     this.finalMat.uniforms.iTime.value = this.bufferMat1.uniforms.iTime.value;
   }
 
@@ -661,32 +660,12 @@ class GraphicsComponent extends Component {
         <div
           onMouseMove={(e) => this.mouseMoveCallback(e)}
           onMouseDown={(e) => this.mouseDownCallback(e)}
-          onMouseEnter={(e) => {
-            this.props.playOnMouseOver ? this.pauseEndCallback(e) : <></>;
-          }}
-          onMouseLeave={(e) => {
-            this.props.playOnMouseOver ? this.pauseStartCallback(e) : <></>;
-          }}
+          onMouseEnter={(e) => { this.props.playOnMouseOver ? this.pauseEndCallback(e) : <></>; }}
+          onMouseLeave={(e) => { this.props.playOnMouseOver ? this.pauseStartCallback(e) : <></>; }}
           ref={(ref) => (this.mount = ref)}
         />
-        {this.props.showButtons ? (
-          <button onClick={(e) => this.restartCallback(e)}>{'\u23ee'}</button>
-        ) : (
-          <></>
-        )}
-        {this.props.showButtons ? (
-          <button
-            onClick={(e) =>
-              !this.pause
-                ? this.pauseStartCallback(e)
-                : this.pauseEndCallback(e)
-            }
-          >
-            {'\u23ef'}
-          </button>
-        ) : (
-          <></>
-        )}
+        {this.props.showButtons ? (<button onClick={(e) => this.restartCallback(e)}>{'\u23ee'}</button>) : (<></>)}
+        {this.props.showButtons ? (<button onClick={(e) => !this.pause ? this.pauseStartCallback(e) : this.pauseEndCallback(e)}>{'\u23ef'}</button>) : (<></>)}
       </div>
     );
   }
