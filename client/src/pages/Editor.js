@@ -94,11 +94,13 @@ export default function Editor({ setUser }) {
                       project.ownerName,
                     owner: res.data.user._id,
                     ownerName: res.data.user.username,
+                    likes: 0,
                   }
                 : {
                     ...project,
                     owner: res.data.user._id,
                     ownerName: res.data.user.username,
+                    likes: 0,
                   }
             )
             .then((res) => {
@@ -141,11 +143,13 @@ export default function Editor({ setUser }) {
                   project.ownerName,
                 owner: user._id,
                 ownerName: user.username,
+                likes: 0,
               }
             : {
                 ...project,
                 owner: user._id,
                 ownerName: user.username,
+                likes: 0,
               }
         )
         .then((res) => {
