@@ -4,6 +4,10 @@ const ProjectSchema = new mongoose.Schema({
   owner: { type: mongoose.Schema.Types.ObjectId, required: true },
   ownerName: { type: String, required: true },
   title: { type: String, required: true },
+  comments: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Comment",
+  },
   description: { type: String, default: '', required: true },
   likes: { type: Map, of: mongoose.Schema.Types.ObjectId, default: {} },
   public: { type: Boolean, default: false, required: true },

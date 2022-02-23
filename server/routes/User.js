@@ -1,12 +1,14 @@
 const express = require('express');
 const userRouter = express.Router();
-const passport = require('passport');
-const passportConfig = require('../passport');
-const JWT = require('jsonwebtoken');
-const User = require('../models/User');
-const Project = require('../models/Project');
-const { deleteOne, db } = require('../models/User');
-const mongoose = require('mongoose');
+const passport = require("passport");
+const passportConfig = require("../passport");
+const JWT = require("jsonwebtoken");
+const User = require("../models/User");
+const Project = require("../models/Project");
+const { deleteOne, db } = require("../models/User");
+const mongoose = require("mongoose");
+const Comment = require("../models/Comment");
+
 
 const signToken = (userID) => {
   return JWT.sign(
@@ -85,6 +87,7 @@ userRouter.get(
   }
 );
 
+
 userRouter.get('/find-by-id/:id', (req, res) => {
   User.findById(req.params.id).exec((err, user) => {
     if (err) {
@@ -134,6 +137,7 @@ userRouter.post(
   }
 );
 
+
 userRouter.get('/get-project/:id', (req, res) => {
   Project.findById(
     { _id: new mongoose.Types.ObjectId(req.params.id) },
@@ -169,6 +173,7 @@ userRouter.put(
   }
 );
 
+
 userRouter.get('/get-projects', async (req, res) => {
   Project.find({ public: true })
     .sort({ likes: -1 })
@@ -194,6 +199,7 @@ userRouter.get(
     });
   }
 );
+
 
 userRouter.get('/get-user-projects/:id', async (req, res) => {
   Project.find({ public: true, owner: req.params.id }).exec((err, projects) => {
@@ -233,6 +239,60 @@ userRouter.delete(
           res.status(500).send('Database error');
         }
         res.send(deletedProject);
+      }
+    );
+  }
+);
+
+userRouter.post(
+  "/add-comment/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    var newComment = new Comment({
+      owner: req.user._id,
+      content: req.body.content,
+    });
+
+    newComment.save((err, obj) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send("database error");
+      }
+      console.log("added comment");
+    });
+
+    Project.findByIdAndUpdate(
+      req.params.id,
+      { $push: { comments: newComment._id } },
+      { safe: true, upsert: true, new: true },
+      (err, model) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send("database error");
+        }
+        res.send(newComment);
+      }
+    );
+  }
+);
+
+userRouter.put(
+  "/update-comment/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    filter = { _id: new mongoose.Types.ObjectId(req.params.id) };
+    update = req.body;
+    Comment.findOneAndUpdate(
+      filter,
+      update,
+      { new: true },
+      (err, updatedComment) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send("Database error");
+        }
+        console.log("updated");
+        res.send(updatedComment);
       }
     );
   }
