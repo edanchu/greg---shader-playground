@@ -94,13 +94,13 @@ export default function Editor({ setUser }) {
                     project.ownerName,
                   owner: res.data.user._id,
                   ownerName: res.data.user.username,
-                  likes: 0,
+                  likes: new Map(),
                 }
                 : {
                   ...project,
                   owner: res.data.user._id,
                   ownerName: res.data.user.username,
-                  likes: 0,
+                  likes: new Map(),
                 }
             )
             .then((res) => {
@@ -143,13 +143,13 @@ export default function Editor({ setUser }) {
                 project.ownerName,
               owner: user._id,
               ownerName: user.username,
-              likes: 0,
+              likes: new Map(),
             }
             : {
               ...project,
               owner: user._id,
               ownerName: user.username,
-              likes: 0,
+              likes: new Map(),
             }
         )
         .then((res) => {
@@ -227,7 +227,7 @@ const defaultProject = {
   ownerName: null,
   title: 'New Project',
   description: 'Welcome to your new project!',
-  likes: 0,
+  likes: new Map(),
   public: false,
   code: [
     'void mainImage(out vec4 FragColor) {\n\tfloat color = (1.0 + sin(iTime)) / 2.0;\n\tFragColor = vec4(color, 1.0 - color, cos(color), 1.0);\n}',
