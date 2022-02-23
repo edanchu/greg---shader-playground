@@ -34,6 +34,7 @@ export default function Login({
         })
         .catch((err) => {
           console.log(err);
+          validateUser(err);
         });
   }
 
@@ -43,6 +44,12 @@ export default function Login({
       return false;
     }
     return true;
+  }
+
+  function validateUser(err) {
+    if (err){
+      toast.error("Wrong email address or password");
+    }
   }
 
   function handleClickSignUp(e) {
