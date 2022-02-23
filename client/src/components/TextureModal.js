@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Row, Col, Modal, Button } from 'react-bootstrap';
 
 const TextureModal = ({
@@ -10,6 +10,10 @@ const TextureModal = ({
 }) => {
   const [showTextures, setShowTextures] = useState(true);
   const [selected, setSelected] = useState(chanUniforms[chanIdx]);
+
+  useEffect(() => {
+    setSelected(chanUniforms[chanIdx]);
+  }, [chanIdx]);
 
   const getTexturePaths = (dir) => {
     return dir.keys().map((item) => item.slice(2));
@@ -93,7 +97,7 @@ const TextureModal = ({
                     }
                     onClick={() =>
                       setSelected({
-                        type: 'sampler2D',
+                        genType: 'sampler2D',
                         path: i,
                       })
                     }
@@ -131,7 +135,7 @@ const TextureModal = ({
                     }
                     onClick={() =>
                       setSelected({
-                        type: 'samplerCube',
+                        genType: 'samplerCube',
                         path: c,
                       })
                     }
@@ -141,7 +145,13 @@ const TextureModal = ({
         </Row>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant='secondary' onClick={() => setShow(false)}>
+        <Button
+          variant='secondary'
+          onClick={() => {
+            setShow(false);
+            setSelected(chanUniforms[chanIdx]);
+          }}
+        >
           Cancel
         </Button>
         <Button

@@ -39,7 +39,7 @@ const ProjectSchema = new mongoose.Schema({
     required: true,
   },
   channelUniforms: {
-    type: [[String]],
+    type: [[{ genType: String, path: String }]],
     default: [
       [null, null, null, null], // Main
       [null, null, null, null], // Buffer A

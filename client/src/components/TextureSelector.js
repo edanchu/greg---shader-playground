@@ -19,7 +19,7 @@ const TextureSelector = ({ chanUniforms, updateChanUniforms }) => {
             }}
             style={
               chanUniforms[0] &&
-              (chanUniforms[0].type === 'sampler2D'
+              (chanUniforms[0].genType === 'sampler2D'
                 ? {
                     backgroundImage: `url("/textures/${chanUniforms[0].path}")`,
                     backgroundSize: 'cover',
@@ -42,7 +42,7 @@ const TextureSelector = ({ chanUniforms, updateChanUniforms }) => {
             }}
             style={
               chanUniforms[1] &&
-              (chanUniforms[1].type === 'sampler2D'
+              (chanUniforms[1].genType === 'sampler2D'
                 ? {
                     backgroundImage: `url("/textures/${chanUniforms[1].path}")`,
                     backgroundSize: 'cover',
@@ -65,7 +65,7 @@ const TextureSelector = ({ chanUniforms, updateChanUniforms }) => {
             }}
             style={
               chanUniforms[2] &&
-              (chanUniforms[2].type === 'sampler2D'
+              (chanUniforms[2].genType === 'sampler2D'
                 ? {
                     backgroundImage: `url("/textures/${chanUniforms[2].path}")`,
                     backgroundSize: 'cover',
@@ -88,7 +88,7 @@ const TextureSelector = ({ chanUniforms, updateChanUniforms }) => {
             }}
             style={
               chanUniforms[3] &&
-              (chanUniforms[3].type === 'sampler2D'
+              (chanUniforms[3].genType === 'sampler2D'
                 ? {
                     backgroundImage: `url("/textures/${chanUniforms[3].path}")`,
                     backgroundSize: 'cover',
