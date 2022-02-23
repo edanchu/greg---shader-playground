@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Home from './pages/home';
 import Browse from './pages/browse';
@@ -9,9 +9,17 @@ import UserPage from './pages/UserPage';
 import Editor from './pages/Editor';
 import PrivateRoute from './routeWrappers/PrivateRoute';
 import UnprivateRoute from './routeWrappers/UnprivateRoute';
+import axios from 'axios';
 
 function App() {
   const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    axios
+      .get('/api/user/authenticated')
+      .then((res) => setUser(res.data.user))
+      .catch((err) => setUser(null));
+  }, []);
 
   return (
     <>
@@ -39,7 +47,10 @@ function App() {
           <Route path='/UserPage/:id' element={<UserPage currUser={user} />} />
           {/* </Route> */}
           <Route path='/Editor/:id' element={<Editor setUser={setUser} />} />
-          <Route path='/Editor/' element={<Editor setUser={setUser} />} />
+          <Route
+            path='/Editor/'
+            element={<Editor user={user} setUser={setUser} />}
+          />
           <Route path='/Browse' element={<Browse />} />
         </Routes>
       </Router>
