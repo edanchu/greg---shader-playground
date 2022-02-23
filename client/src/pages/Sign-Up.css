@@ -7,8 +7,19 @@
     align-items: center;
     box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2);
     object-fit: contain;
+    background-image: url('/public/images/LoginBackground.jpg');
+    background-size: cover;
   }
   
+  .signup-box {
+    width: 380px;
+    height: 520px;
+    padding: 10px;
+    border: 5px solid gray;
+    background-color: rgb(255, 255, 255);
+    align-items: center;
+  }
+
   .login-button {
     background-color: rgb(75, 144, 201);
     border: 0.5px solid rgb(90, 160, 226);
@@ -26,21 +37,18 @@
     margin-top: 10px;
   }
 
-  .input-box {
+  .signup-input-box {
     text-align: center;
-    padding: 12px;
+    padding-bottom: 10px;
+    padding-left: 18px;
   }
 
-  .input-box2 {
+  .signup-input-box2 {
       width: 310px;
       height: 32px;
+      background-color: rgb(204, 197, 197);
   }
 
-  .error {
-    color: red;
-  }
-
-  
   .login-link-mobile {
     display: none;
   }

@@ -1,6 +1,4 @@
 import React from 'react';
-import GraphicsComponent from './graphics_component';
-import Search from './Search';
 import CardItem from './CardItem.js';
 import './Cards.css';
 

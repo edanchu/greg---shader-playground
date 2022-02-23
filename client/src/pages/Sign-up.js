@@ -3,7 +3,6 @@ import Form from 'react-bootstrap/Form';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import './Sign-Up.css';
-import '../App.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
@@ -24,6 +23,9 @@ export default function SignUp({
   function validateForm() {
     if (email.length <= 0 || password.length <= 0) {
       toast.error('Email and Password must be at least 1 character');
+      return false;
+    } else if (username.length <= 0) {
+      toast.error('Username must be at least 1 character');
       return false;
     } else if (confirmPassword.length <= 0) {
       toast.error('Please confirm password');
@@ -75,11 +77,13 @@ export default function SignUp({
 
   return (
     <div className='SignUp' style={isNested ? { height: '100%' } : {}}>
+      <div className='signup-box'>
+        <h1 className='top-header'> Sign Up </h1>
       <Form onSubmit={handleSubmit}>
         <p className='header'> Email </p>
-        <Form.Group controlId='email' className='input-box'>
+        <Form.Group controlId='email' className='signup-input-box'>
           <Form.Control
-            className='input-box2'
+            className='signup-input-box2'
             autoFocus
             type='email'
             value={email}
@@ -87,9 +91,9 @@ export default function SignUp({
           />
         </Form.Group>
         <p className='header'> Username </p>
-        <Form.Group controlId='email' className='input-box'>
+        <Form.Group controlId='email' className='signup-input-box'>
           <Form.Control
-            className='input-box2'
+            className='signup-input-box2'
             autoFocus
             type='username'
             value={username}
@@ -97,18 +101,18 @@ export default function SignUp({
           />
         </Form.Group>
         <p className='header'> Password </p>
-        <Form.Group controlId='password' className='input-box'>
+        <Form.Group controlId='password' className='signup-input-box'>
           <Form.Control
-            className='input-box2'
+            className='signup-input-box2'
             type='password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </Form.Group>
         <p className='header'> Confirm Password </p>
-        <Form.Group controlId='password' className='input-box'>
+        <Form.Group controlId='password' className='signup-input-box'>
           <Form.Control
-            className='input-box2'
+            className='signup-input-box2'
             type='password'
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
@@ -124,6 +128,7 @@ export default function SignUp({
           </Button>
         </Link>
       </Form>
+      </div>
     </div>
   );
 }

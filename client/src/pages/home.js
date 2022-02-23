@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import HeroSection from '../components/HeroSection.js';
 import '../App.css';
-import Cards from '../components/Cards.js';
 import BrowseCards from '../components/BrowseCards.js';
 
 function Home() {

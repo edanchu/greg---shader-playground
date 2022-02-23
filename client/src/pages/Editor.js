@@ -226,12 +226,12 @@ const defaultProject = {
   likes: 0,
   public: false,
   code: [
-    'void mainImage(out vec4 FragColor) {\n        float color = (1.0 + sin(iTime)) / 2.0;\n        FragColor = vec4(color, 1.0 - color, cos(color), 1.0);\n      }',
-    'void mainImage(out vec4 FragColor){\n        FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n      }',
-    'void mainImage(out vec4 FragColor){\n        FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n      }',
-    'void mainImage(out vec4 FragColor){\n        FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n      }',
-    'void mainImage(out vec4 FragColor){\n        FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n      }',
-    'vec2 sampleFunction( vec2 input1, float input2 ){\n        return input1 * input2;\n      }',
+    'void mainImage(out vec4 FragColor) {\n\tfloat color = (1.0 + sin(iTime)) / 2.0;\n\tFragColor = vec4(color, 1.0 - color, cos(color), 1.0);\n}',
+    'void mainImage(out vec4 FragColor){\n\tFragColor = vec4(0.0, 0.0, 0.0, 1.0);\n}',
+    'void mainImage(out vec4 FragColor){\n\tFragColor = vec4(0.0, 0.0, 0.0, 1.0);\n}',
+    'void mainImage(out vec4 FragColor){\n\tFragColor = vec4(0.0, 0.0, 0.0, 1.0);\n}',
+    'void mainImage(out vec4 FragColor){\n\tFragColor = vec4(0.0, 0.0, 0.0, 1.0);\n}',
+    'vec2 sampleFunction( vec2 input1, float input2 ){\n\treturn input1 * input2;\n}',
   ],
   channelUniforms: [
     [null, null, null, null],

@@ -1,16 +1,31 @@
 import './Search.css';
+import {useNavigate} from 'react-router-dom';
+import Form from 'react-bootstrap/Form';
+import React, { useState } from 'react';
+import { Button } from 'react-bootstrap';
 
-const Search = () => (
-    <form className='search-box' action="/" method="get">
-        <input
+function Search() {
+    const [project, setProject] = useState('');
+    let navigate = useNavigate();
+
+    function handleSubmit() {
+        if (project != '')
+            navigate('/editor/' + project);
+    }
+
+    return (
+    <Form className='search-box'>
+        <Form.Group>
+          <Form.Control
             className='search'
-            type="text"
-            id="header-search"
-            placeholder="Search Projects"
-            name="s" 
-        />
-        <button className='search-button' type="submit">Search</button>
-    </form>
-);
+            autoFocus
+            type='text'
+            value={project}
+            onChange={(e) => setProject(e.target.value)}
+          />
+        </Form.Group>
+        <Button className='search-button' onClick={() => handleSubmit()}>Search</Button>
+    </Form> );
+}
 
 export default Search;
