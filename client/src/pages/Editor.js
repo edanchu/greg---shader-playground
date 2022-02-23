@@ -4,22 +4,29 @@ import EditorText from '../components/EditorText';
 import TextureSelector from '../components/TextureSelector';
 import './Editor.css';
 import GraphicsComponent from '../components/graphics_component';
-import {  Container, Row, Col, Modal, Button } from 'react-bootstrap';
+import { Container, Row, Col, Modal, Button } from 'react-bootstrap';
 import axios from 'axios';
 import { Texture } from 'three';
+import { ToastContainer, toast } from 'react-toastify';
 import SignLogInModal from '../components/SignLogInModal';
 
-export default function Editor({ setUser }) {
+export default function Editor({ user, setUser }) {
   let { id } = useParams();
   let navigate = useNavigate();
 
   const [project, setProject] = useState(id ? null : defaultProject);
   const [lastSaved, setLastSaved] = useState(id ? null : defaultProject);
-  const [compiledCode, setCompiledCode] = useState(id ? null : defaultProject.code);
+  const [compiledCode, setCompiledCode] = useState(
+    id ? null : defaultProject.code
+  );
   const [bufferIdx, setBufferIdx] = useState(0);
   const [showSignLogInModal, setShowSignLogInModal] = useState(false);
   const [pageWidth, setPageWidth] = useState(window.innerWidth);
+  const [liked, setLiked] = useState(false);
+
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [titleInfo, setTitleInfo] = useState(null);
+  const [descriptionInfo, setDescriptionInfo] = useState(null);
 
   window.onbeforeunload = (e) => {
     if (project != lastSaved) {
@@ -27,7 +34,7 @@ export default function Editor({ setUser }) {
       if (e) e.returnValue = '';
       return '';
     }
-  }
+  };
 
   function handleResize() {
     setPageWidth(window.innerWidth);
@@ -40,6 +47,7 @@ export default function Editor({ setUser }) {
         setLastSaved(res.data);
         setCompiledCode(res.data.code);
         setBufferIdx(0);
+        setLiked(res.data.likes.has(user?._id));
       });
     }
     if (!id) {
@@ -51,7 +59,7 @@ export default function Editor({ setUser }) {
 
   useEffect(() => {
     window.addEventListener('resize', handleResize);
-  })
+  });
 
   function updateBufferCode(editor, data, value) {
     setProject({
@@ -62,26 +70,42 @@ export default function Editor({ setUser }) {
       }),
     });
   }
-  let nameValue;
-  let descriptionValue;
-  const getNameValue = (event)=>{
-    nameValue = event.target.value;
-    
+
+  const handleUpdateInformation = () => {
+    setProject({ ...project, title: titleInfo, description: descriptionInfo });
   };
 
-  const getDescriptionValue = (event)=>{
-    descriptionValue = event.target.value;
+  const handleLike = (event) => {
+    if (user) {
+      let newLikes = project.likes;
+      let likeStatus;
+      if (!project.likes.has(user._id)) {
+        newLikes.set(user._id, 1); // 1 is any value
+        likeStatus = true;
+      } else {
+        newLikes.delete(user._id);
+        likeStatus = false;
+      }
+      if (id) {
+        axios
+          .put('/api/user/update-project/' + id, {
+            ...project,
+            likes: newLikes,
+          })
+          .then((res) => {
+            setProject({ ...project, likes: newLikes });
+            setLiked(likeStatus);
+          })
+          .catch((err) => console.log(err));
+      } else {
+        setProject({ ...project, likes: newLikes });
+        setLiked(likeStatus);
+      }
+    } else {
+      toast.error('Must be signed in to like');
+    }
   };
 
-  const getUpdateValues = (event)=>{
-    project.title = nameValue;
-    project.description = descriptionValue;
-  };
-
-  const likes = [];
-  const setLike = (event) =>{
-    likes.push(project.owner);
-  }
   function updateChanUniforms(chan, file) {
     setProject({
       ...project,
@@ -120,23 +144,23 @@ export default function Editor({ setUser }) {
               '/api/user/add-project/',
               project.owner
                 ? {
-                  ...project,
-                  title: 'Copy of: ' + project.title,
-                  description:
-                    'This is a copy of ' +
-                    project.title +
-                    ' by ' +
-                    project.ownerName,
-                  owner: res.data.user._id,
-                  ownerName: res.data.user.username,
-                  likes: new Map(),
-                }
+                    ...project,
+                    title: 'Copy of: ' + project.title,
+                    description:
+                      'This is a copy of ' +
+                      project.title +
+                      ' by ' +
+                      project.ownerName,
+                    owner: res.data.user._id,
+                    ownerName: res.data.user.username,
+                    likes: new Map(),
+                  }
                 : {
-                  ...project,
-                  owner: res.data.user._id,
-                  ownerName: res.data.user.username,
-                  likes: new Map(),
-                }
+                    ...project,
+                    owner: res.data.user._id,
+                    ownerName: res.data.user.username,
+                    likes: new Map(),
+                  }
             )
             .then((res) => {
               console.log('successfully added/forked project');
@@ -169,23 +193,23 @@ export default function Editor({ setUser }) {
           '/api/user/add-project/',
           project.owner
             ? {
-              ...project,
-              title: 'Copy of: ' + project.title,
-              description:
-                'This is a copy of ' +
-                project.title +
-                ' by ' +
-                project.ownerName,
-              owner: user._id,
-              ownerName: user.username,
-              likes: new Map(),
-            }
+                ...project,
+                title: 'Copy of: ' + project.title,
+                description:
+                  'This is a copy of ' +
+                  project.title +
+                  ' by ' +
+                  project.ownerName,
+                owner: user._id,
+                ownerName: user.username,
+                likes: new Map(),
+              }
             : {
-              ...project,
-              owner: user._id,
-              ownerName: user.username,
-              likes: new Map(),
-            }
+                ...project,
+                owner: user._id,
+                ownerName: user.username,
+                likes: new Map(),
+              }
         )
         .then((res) => {
           console.log('successfully added/forked project');
@@ -233,27 +257,62 @@ export default function Editor({ setUser }) {
             buffer4FragShaderCustomCode={compiledCode[4]}
             channels={project.channelUniforms}
           />
-           <div>
-          <button 
-              style={{position: 'absolute', top: '625px', left: '15px'}}
-              onClick={(e) => setLike()}
-            >Like</button>
-            <h6 style={{position: 'absolute', top: '628px', left: '55px', color: "white"}}> 0 </h6>
+          <div>
+            <button
+              style={{
+                position: 'absolute',
+                top: '625px',
+                left: '15px',
+                color: liked ? 'aqua' : 'lightgrey',
+              }}
+              onClick={(e) => handleLike()}
+            >
+              <i className='fas fa-thumbs-up'></i>
+            </button>
+            <h6
+              style={{
+                position: 'absolute',
+                top: '628px',
+                left: '55px',
+                color: 'white',
+              }}
+            >
+              {project.likes.size}
+            </h6>
           </div>
-          <button 
-           className="fa fa-edit"
-           style={{position: 'absolute', top: '705px', left: '275px'}}
-           onClick={(e) => setModalIsOpen(true)}
-           ></button>
+          <button
+            className='fa fa-edit'
+            style={{ position: 'absolute', top: '705px', left: '275px' }}
+            onClick={() => {
+              setModalIsOpen(true);
+              setTitleInfo(project.title);
+              setDescriptionInfo(project.description);
+            }}
+          ></button>
           <Modal show={modalIsOpen}>
-            <Modal.Header>
-              Update Project Information
-            </Modal.Header>
+            <Modal.Header>Update Project Information</Modal.Header>
             <Modal.Body>
-              <label for="name">Enter Project Name:</label><br/>
-              <input type="text" id="name" name="name" onChange={getNameValue}/><br/>
-              <label for="decription">Decription:</label><br/>
-              <input type="text" id="decription" name="decription" onChange={getDescriptionValue}/><br/><br/>
+              <label htmlFor='name'>Title:</label>
+              <br />
+              <input
+                type='text'
+                id='name'
+                name='name'
+                value={titleInfo}
+                onChange={(e) => setTitleInfo(e.target.value)}
+              />
+              <br />
+              <label htmlFor='decription'>Decription:</label>
+              <br />
+              <textarea
+                type='text'
+                id='decription'
+                name='decription'
+                value={descriptionInfo}
+                onChange={(e) => setDescriptionInfo(e.target.value)}
+              />
+              <br />
+              <br />
             </Modal.Body>
             <Modal.Footer>
               <Button
@@ -266,17 +325,20 @@ export default function Editor({ setUser }) {
               <Button
                 variant='outline-danger'
                 style={{ position: 'absolute', right: '0' }}
-                onClick={(e) => {setModalIsOpen(false); getUpdateValues();}}
+                onClick={(e) => {
+                  setModalIsOpen(false);
+                  handleUpdateInformation();
+                }}
               >
                 Submit
               </Button>
             </Modal.Footer>
           </Modal>
-          <h1 style={{position: 'absolute', top: '700px', left: '20px' }}>
+          <h1 style={{ position: 'absolute', top: '700px', left: '20px' }}>
             {project.title}
           </h1>
           <Link
-            style={{ position: 'absolute', top: '740px', left: '20px'  }}
+            style={{ position: 'absolute', top: '740px', left: '20px' }}
             to={'/UserPage/' + project.owner}
           >
             {project.ownerName}
@@ -293,6 +355,7 @@ export default function Editor({ setUser }) {
         setUser={setUser}
         onSignLogIn={onSignLogIn}
       />
+      <ToastContainer />
     </div>
   );
 }
