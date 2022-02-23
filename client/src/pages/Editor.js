@@ -15,11 +15,10 @@ export default function Editor({ setUser }) {
 
   const [project, setProject] = useState(id ? null : defaultProject);
   const [lastSaved, setLastSaved] = useState(id ? null : defaultProject);
-  const [compiledCode, setCompiledCode] = useState(
-    id ? null : defaultProject.code
-  );
+  const [compiledCode, setCompiledCode] = useState(id ? null : defaultProject.code);
   const [bufferIdx, setBufferIdx] = useState(0);
   const [showSignLogInModal, setShowSignLogInModal] = useState(false);
+  const [pageWidth, setPageWidth] = useState(window.innerWidth);
 
   window.onbeforeunload = (e) => {
     if (project != lastSaved) {
@@ -27,6 +26,10 @@ export default function Editor({ setUser }) {
       if (e) e.returnValue = '';
       return '';
     }
+  }
+
+  function handleResize() {
+    setPageWidth(window.innerWidth);
   }
 
   useEffect(() => {
@@ -44,6 +47,10 @@ export default function Editor({ setUser }) {
       setBufferIdx(0);
     }
   }, [id]);
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+  })
 
   function updateBufferCode(editor, data, value) {
     setProject({
@@ -194,7 +201,7 @@ export default function Editor({ setUser }) {
         </Col>
         <Col>
           <GraphicsComponent
-            height={480}
+            height={pageWidth * 0.3}
             pause={false}
             playOnMouseOver={false}
             showButtons={true}
@@ -206,16 +213,17 @@ export default function Editor({ setUser }) {
             buffer4FragShaderCustomCode={compiledCode[4]}
             channels={project.channelUniforms}
           />
-          <h1 style={{ position: 'absolute', top: '600px', left: '20px' }}>
+          <h1 style={{ float: 'left' }}>
             {project.title}
           </h1>
           <Link
-            style={{ position: 'absolute', top: '640px', left: '20px' }}
+            style={{ float: 'left' }}
             to={'/UserPage/' + project.owner}
           >
             {project.ownerName}
           </Link>
-          <p style={{ position: 'absolute', top: '680px', left: '20px' }}>
+          <br></br>
+          <p style={{ float: 'left' }}>
             {project.description}
           </p>
         </Col>

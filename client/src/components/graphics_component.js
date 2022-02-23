@@ -47,8 +47,9 @@ class GraphicsComponent extends Component {
       this.width = (this.height * 16) / 9;
       this.renderer.setSize(this.width, this.height);
       this.createRenderBuffers();
+      this.createMaterials();
     }
-    if (
+    else if (
       this.props.finalFragShaderCustomCode !== prevProps.finalFragShaderCustomCode ||
       this.props.channels !== prevProps.channels ||
       this.props.buffer1FragShaderCustomCode !== prevProps.buffer1FragShaderCustomCode ||
