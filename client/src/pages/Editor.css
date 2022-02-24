@@ -6,3 +6,16 @@ body {
 .editor-page {
   margin: 0 5vw;
 }
+
+.modal-header {
+  font-weight: bold;
+  font-size: larger;
+}
+
+.modal-body-header {
+  font-weight: bold;
+}
+
+.input {
+  background-color: #ccc6c6;
+}

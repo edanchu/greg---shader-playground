@@ -329,11 +329,12 @@ export default function Editor({ user, setUser }) {
             }}
           >{project.public ? "Set Private" : "Set Public"}</button>
           <Modal show={modalIsOpen}>
-            <Modal.Header>Update Project Information</Modal.Header>
+            <Modal.Header className='modal-header'>Update Project Information</Modal.Header>
             <Modal.Body>
-              <label htmlFor='name'>Title:</label>
+              <label className='modal-body-header' htmlFor='name'>Title:</label>
               <br />
               <input
+                className='input'
                 type='text'
                 id='name'
                 name='name'
@@ -341,9 +342,10 @@ export default function Editor({ user, setUser }) {
                 onChange={(e) => setTitleInfo(e.target.value)}
               />
               <br />
-              <label htmlFor='decription'>Decription:</label>
+              <label className='modal-body-header' htmlFor='decription'>Decription:</label>
               <br />
               <textarea
+                className='input'
                 type='text'
                 id='decription'
                 name='decription'
@@ -351,7 +353,7 @@ export default function Editor({ user, setUser }) {
                 onChange={(e) => setDescriptionInfo(e.target.value)}
               />
               <br />
-              <label htmlFor='public'>Public:</label>
+              <label className='modal-body-header' htmlFor='public'>Public:</label>
               <br />
               <input
                 type='checkbox'
