@@ -5,8 +5,7 @@ const CommentSchema = new mongoose.Schema({
   content: { type: String, required: true, default: '' },
   likes: {
     type: Map,
-    of: mongoose.Schema.Types.ObjectId,
-    default: new Map(),
+    of: mongoose.Schema.Types.Mixed,
     required: true,
   },
 });

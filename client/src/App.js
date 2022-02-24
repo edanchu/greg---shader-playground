@@ -46,7 +46,10 @@ function App() {
           {/* <Route path='' element={<UserPage currUser={user} />} /> */}
           <Route path='/UserPage/:id' element={<UserPage currUser={user} />} />
           {/* </Route> */}
-          <Route path='/Editor/:id' element={<Editor setUser={setUser} />} />
+          <Route
+            path='/Editor/:id'
+            element={<Editor user={user} setUser={setUser} />}
+          />
           <Route
             path='/Editor/'
             element={<Editor user={user} setUser={setUser} />}
