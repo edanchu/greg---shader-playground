@@ -7,6 +7,7 @@ import 'react-dropdown/style.css';
 import { Button } from 'react-bootstrap';
 import './EditorText.css';
 import 'codemirror/addon/search/search';
+import 'codemirror/addon/search/matchesonscrollbar'
 import 'codemirror/addon/search/searchcursor';
 import 'codemirror/addon/comment/comment';
 import 'codemirror/addon/dialog/dialog';
@@ -63,6 +64,7 @@ export default function EditorText({
             lineNumbers: true,
             matchBrackets: true,
             mode: 'x-shader/x-fragment',
+            gutters: 'CodeMirror-foldgutter',
             autoCloseBrackets: true,
             showCursorWhenSelecting: true,
             theme: 'yonce',
