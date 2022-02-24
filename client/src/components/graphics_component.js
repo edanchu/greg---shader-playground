@@ -89,9 +89,10 @@ class GraphicsComponent extends Component {
     const renderBufferSettings = {
       wrapS: THREE.RepeatWrapping,
       wrapT: THREE.RepeatWrapping,
-      minFilter: THREE.NearestFilter,
-      magFilter: THREE.NearestFilter,
+      minFilter: THREE.LinearMipmapLinearFilter,
+      magFilter: THREE.LinearFilter,
       depthBuffer: false,
+      generateMipmaps: true
     };
 
     this.renderTarget1 = new THREE.WebGLRenderTarget(
@@ -280,6 +281,7 @@ class GraphicsComponent extends Component {
 
   renderLoop() {
     if (!this.pause) {
+
       this.updateBufferUniforms();
 
       this.renderBufferTextures();
@@ -287,6 +289,7 @@ class GraphicsComponent extends Component {
       this.updateFinalUniforms();
 
       this.renderFinalScene();
+
     }
 
     if (this.startPaused) {

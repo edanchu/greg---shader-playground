@@ -50,7 +50,6 @@ export default function Editor({ user, setUser }) {
         setCompiledCode(res.data.code);
         setBufferIdx(0);
         setLiked(res.data.likes.has(user?._id));
-        // setLiked(user?._id in res.data.likes);
       });
     }
     if (!id) {
@@ -117,6 +116,20 @@ export default function Editor({ user, setUser }) {
       toast.error('Must be signed in to like');
     }
   };
+
+  const handleDelete = (event) => {
+    if (user) {
+      axios
+        .delete('/api/user/delete-project/' + id)
+        .then((res) => {
+          toast('Project deleted successfully');
+        })
+        .catch((err) => console.log(err));
+    }
+    else {
+      toast.error('Must be signed in to delete project');
+    }
+  }
 
   function updateChanUniforms(chan, file) {
     setProject({
@@ -272,7 +285,7 @@ export default function Editor({ user, setUser }) {
           <div>
             <button
               style={{
-                position: 'absolute',
+                position: 'float',
                 top: '625px',
                 left: '15px',
                 color: liked ? 'aqua' : 'lightgrey',
@@ -281,9 +294,20 @@ export default function Editor({ user, setUser }) {
             >
               <i className='fas fa-thumbs-up'></i>
             </button>
+            <button
+              style={{
+                position: 'float',
+                top: '625px',
+                left: '105px',
+                color: 'red',
+              }}
+              onClick={(e) => handleDelete()}
+            >
+              <i class="fa fa-trash" aria-hidden="true"></i>
+            </button>
             <h6
               style={{
-                position: 'absolute',
+                position: 'float',
                 top: '628px',
                 left: '55px',
                 color: 'white',
@@ -295,7 +319,7 @@ export default function Editor({ user, setUser }) {
           </div>
           <button
             className='fa fa-edit'
-            style={{ position: 'absolute', top: '705px', left: '275px' }}
+            style={{ position: 'float', top: '705px', left: '275px' }}
             onClick={() => {
               setModalIsOpen(true);
               setTitleInfo(project.title);
@@ -303,6 +327,14 @@ export default function Editor({ user, setUser }) {
               setPublicInfo(project.public);
             }}
           ></button>
+          <button
+            className='fa fa-public'
+            style={{ position: 'float', top: '705px', left: '295px' }}
+            onClick={() => {
+              setIsPublic(!isPublic);
+              project.public = isPublic;
+            }}
+          >{project.public ? "Set Private" : "Set Public"}</button>
           <Modal show={modalIsOpen}>
             <Modal.Header>Update Project Information</Modal.Header>
             <Modal.Body>
@@ -340,14 +372,14 @@ export default function Editor({ user, setUser }) {
             <Modal.Footer>
               <Button
                 variant='outline-danger'
-                style={{ position: 'absolute', left: '0' }}
+                style={{ position: 'float', left: '0' }}
                 onClick={(e) => setModalIsOpen(false)}
               >
                 Close
               </Button>
               <Button
                 variant='outline-danger'
-                style={{ position: 'absolute', right: '0' }}
+                style={{ position: 'float', right: '0' }}
                 onClick={(e) => {
                   setModalIsOpen(false);
                   handleUpdateInformation();
@@ -357,17 +389,17 @@ export default function Editor({ user, setUser }) {
               </Button>
             </Modal.Footer>
           </Modal>
-          <h1 style={{ position: 'absolute', top: '700px', left: '20px' }}>
+          <h1 style={{ position: 'float', top: '700px', left: '20px' }}>
             {project.title}
           </h1>
           <Link
-            style={{ position: 'absolute', top: '740px', left: '20px' }}
+            style={{ position: 'float', top: '740px', left: '20px' }}
             to={'/UserPage/' + project.owner}
           >
             {project.ownerName}
           </Link>
           <br></br>
-          <p style={{ position: 'absolute', top: '780px', left: '20px' }}>
+          <p style={{ position: 'float', top: '780px', left: '20px' }}>
             {project.description}
           </p>
         </Col>
