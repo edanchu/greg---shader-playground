@@ -6,10 +6,15 @@ const ProjectSchema = new mongoose.Schema({
   title: { type: String, required: true },
   comments: {
     type: [mongoose.Schema.Types.ObjectId],
-    ref: "Comment",
+    ref: 'Comment',
   },
   description: { type: String, default: '', required: true },
-  likes: { type: Map, of: mongoose.Schema.Types.ObjectId, default: {} },
+  likes: {
+    type: Map,
+    of: mongoose.Schema.Types.ObjectId,
+    default: new Map(),
+    required: true,
+  },
   public: { type: Boolean, default: false, required: true },
   code: {
     type: [String],
