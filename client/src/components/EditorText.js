@@ -2,7 +2,7 @@ import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/yonce.css';
 import 'codemirror/mode/clike/clike.js';
 import { Controlled as ControlledEditor } from 'react-codemirror2';
-import Dropdown from 'react-dropdown';
+import { Nav } from 'react-bootstrap';
 import 'react-dropdown/style.css';
 import { Button } from 'react-bootstrap';
 import './EditorText.css';
@@ -27,6 +27,12 @@ const buffers = [
   'Common',
 ];
 
+// options={buffers}
+//             onChange={(e) => {
+//               setBufferIdx(buffers.findIndex((b) => b === e.value));
+//             }}
+//             value={buffers[bufferIdx]}
+
 export default function EditorText({
   project,
   bufferIdx,
@@ -42,13 +48,14 @@ export default function EditorText({
       <div className='editor-container'>
         <button onClick={(e) => handleCompile()}>{'\u25B6'}</button>
         <div className='editor-title'>
-          <Dropdown
-            options={buffers}
-            onChange={(e) => {
-              setBufferIdx(buffers.findIndex((b) => b === e.value));
-            }}
-            value={buffers[bufferIdx]}
-          ></Dropdown>
+          <Nav variant="pills" defaultActiveKey="Main" onSelect={(selectedKey) => { setBufferIdx(buffers.findIndex((b) => b === selectedKey)); }}>
+            <Nav.Item> <Nav.Link eventKey="Common"> Common </Nav.Link> </Nav.Item>
+            <Nav.Item> <Nav.Link eventKey="Main"> Main </Nav.Link> </Nav.Item>
+            <Nav.Item> <Nav.Link eventKey="Buffer 1"> Buffer 1 </Nav.Link> </Nav.Item>
+            <Nav.Item> <Nav.Link eventKey="Buffer 2"> Buffer 2 </Nav.Link> </Nav.Item>
+            <Nav.Item> <Nav.Link eventKey="Buffer 3"> Buffer 3 </Nav.Link> </Nav.Item>
+            <Nav.Item> <Nav.Link eventKey="Buffer 4"> Buffer 4 </Nav.Link> </Nav.Item>
+          </Nav>
           <Button variant='secondary' onClick={handleSave}>
             SAVE
           </Button>
