@@ -101,14 +101,17 @@ userRouter.put(
   '/update-avatar',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    console.log(req);
-    User.findByIdAndUpdate(req.user._id, { avatar: req.body }, (err, user) => {
-      if (err) {
-        console.log(err);
-        res.status(500).send('Database error');
+    User.findByIdAndUpdate(
+      req.user._id,
+      { avatar: req.body.avatar },
+      (err, user) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send('Database error');
+        }
+        res.send(user);
       }
-      res.send(user);
-    });
+    );
   }
 );
 
