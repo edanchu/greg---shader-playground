@@ -9,12 +9,7 @@ const ProjectSchema = new mongoose.Schema({
     ref: 'Comment',
   },
   description: { type: String, default: '', required: true },
-  likes: {
-    type: Map,
-    of: mongoose.Schema.Types.Mixed,
-    required: true,
-    default: new Map([['placeholder', -1]]),
-  },
+  likes: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
   public: { type: Boolean, default: false, required: true },
   code: {
     type: [String],
