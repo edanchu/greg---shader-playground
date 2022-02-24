@@ -1,14 +1,13 @@
 const express = require('express');
 const userRouter = express.Router();
-const passport = require("passport");
-const passportConfig = require("../passport");
-const JWT = require("jsonwebtoken");
-const User = require("../models/User");
-const Project = require("../models/Project");
-const { deleteOne, db } = require("../models/User");
-const mongoose = require("mongoose");
-const Comment = require("../models/Comment");
-
+const passport = require('passport');
+const passportConfig = require('../passport');
+const JWT = require('jsonwebtoken');
+const User = require('../models/User');
+const Project = require('../models/Project');
+const { deleteOne, db } = require('../models/User');
+const mongoose = require('mongoose');
+const Comment = require('../models/Comment');
 
 const signToken = (userID) => {
   return JWT.sign(
@@ -80,13 +79,12 @@ userRouter.get(
   '/authenticated',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    const { _id, email, username } = req.user;
+    const { _id, email, username, avatar } = req.user;
     res
       .status(200)
-      .json({ isAuthenticated: true, user: { _id, email, username } });
+      .json({ isAuthenticated: true, user: { _id, email, username, avatar } });
   }
 );
-
 
 userRouter.get('/find-by-id/:id', (req, res) => {
   User.findById(req.params.id).exec((err, user) => {
@@ -94,10 +92,25 @@ userRouter.get('/find-by-id/:id', (req, res) => {
       console.log(err);
       res.status(500).send('database error');
     }
-    const { _id, username } = user;
-    res.send({ _id: _id, username: username });
+    const { _id, username, avatar } = user;
+    res.send({ _id: _id, username: username, avatar: avatar });
   });
 });
+
+userRouter.put(
+  '/update-avatar',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    console.log(req);
+    User.findByIdAndUpdate(req.user._id, { avatar: req.body }, (err, user) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send('Database error');
+      }
+      res.send(user);
+    });
+  }
+);
 
 userRouter.post(
   '/add-project',
@@ -137,7 +150,6 @@ userRouter.post(
   }
 );
 
-
 userRouter.get('/get-project/:id', (req, res) => {
   Project.findById(
     { _id: new mongoose.Types.ObjectId(req.params.id) },
@@ -157,6 +169,7 @@ userRouter.put(
   (req, res) => {
     filter = { _id: new mongoose.Types.ObjectId(req.params.id) };
     update = req.body;
+    console.log(req.body);
     Project.findOneAndUpdate(
       filter,
       update,
@@ -172,7 +185,6 @@ userRouter.put(
     );
   }
 );
-
 
 userRouter.get('/get-projects', async (req, res) => {
   Project.find({ public: true })
@@ -199,7 +211,6 @@ userRouter.get(
     });
   }
 );
-
 
 userRouter.get('/get-user-projects/:id', async (req, res) => {
   Project.find({ public: true, owner: req.params.id }).exec((err, projects) => {
@@ -245,8 +256,8 @@ userRouter.delete(
 );
 
 userRouter.post(
-  "/add-comment/:id",
-  passport.authenticate("jwt", { session: false }),
+  '/add-comment/:id',
+  passport.authenticate('jwt', { session: false }),
   (req, res) => {
     var newComment = new Comment({
       owner: req.user._id,
@@ -256,9 +267,9 @@ userRouter.post(
     newComment.save((err, obj) => {
       if (err) {
         console.log(err);
-        return res.status(500).send("database error");
+        return res.status(500).send('database error');
       }
-      console.log("added comment");
+      console.log('added comment');
     });
 
     Project.findByIdAndUpdate(
@@ -268,7 +279,7 @@ userRouter.post(
       (err, model) => {
         if (err) {
           console.log(err);
-          res.status(500).send("database error");
+          res.status(500).send('database error');
         }
         res.send(newComment);
       }
@@ -277,8 +288,8 @@ userRouter.post(
 );
 
 userRouter.put(
-  "/update-comment/:id",
-  passport.authenticate("jwt", { session: false }),
+  '/update-comment/:id',
+  passport.authenticate('jwt', { session: false }),
   (req, res) => {
     filter = { _id: new mongoose.Types.ObjectId(req.params.id) };
     update = req.body;
@@ -289,9 +300,9 @@ userRouter.put(
       (err, updatedComment) => {
         if (err) {
           console.log(err);
-          res.status(500).send("Database error");
+          res.status(500).send('Database error');
         }
-        console.log("updated");
+        console.log('updated');
         res.send(updatedComment);
       }
     );

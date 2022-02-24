@@ -19,6 +19,7 @@ export default function UserPage({ currUser }) {
     if (!user)
       axios.get('/api/user/find-by-id/' + id).then((res) => {
         setUser(res.data);
+        setSelected(res.data.avatar);
       });
   }, []);
 
@@ -40,14 +41,25 @@ export default function UserPage({ currUser }) {
           })
           .catch((err) => console.log(err));
     }
-  }, [user]);
+  }, [user, currUser]);
 
-  const getTexturePaths = (dir) => {
+  const handleChangeAvatar = () => {
+    console.log(selected);
+    axios
+      .put('/api/user/update-avatar', selected)
+      .then((res) => {
+        console.log(res);
+        setModalIsOpen(false);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const getAvatarPaths = (dir) => {
     return dir.keys().map((item) => item.slice(2));
   };
 
-  const dir = require.context('../../public/textures', false);
-  let imagePaths = getTexturePaths(dir);
+  const dir = require.context('../../public/avatars', false);
+  let imagePaths = getAvatarPaths(dir);
 
   if (!user) return <></>;
 
@@ -55,85 +67,90 @@ export default function UserPage({ currUser }) {
     <>
       <div className='Profile'>
         <img
-          src='https://bootdey.com/img/Content/avatar/avatar7.png'
-          alt='Admin'
+          src={'/avatars/' + user.avatar}
+          alt='avatar-img'
           className='profileImage'
         />
-        <button onClick={(e) => setModalIsOpen(true)}>Edit picture</button>
-        <Modal show={modalIsOpen}>
-          <Modal.Header closeButton>
-            <Modal.Title> Select new Profile Image</Modal.Title>
-          </Modal.Header>
-          <Modal.Body
-            style={{
-              maxHeight: 'calc(100vh - 300px)',
-              overflowY: 'auto',
-            }}
-          >
-            <Row>
-              {imagePaths.map((i, index) => (
-                <Col
-                  style={{
-                    width: '50%',
-                    flexBasis: 'auto',
-                  }}
-                  key={index}
-                >
-                  <img
-                    src={window.location.origin + '/textures/' + i}
-                    alt='texture-img'
-                    style={
-                      selected?.path === i
-                        ? {
-                            width: '100%',
-                            margin: '2%',
-                            borderRadius: '5%',
-                            cursor: 'pointer',
-                            border: '7px solid red',
-                          }
-                        : {
-                            width: '100%',
-                            margin: '2%',
-                            borderRadius: '5%',
-                            cursor: 'pointer',
-                          }
-                    }
-                    onClick={() =>
-                      setSelected({
-                        path: i,
-                      })
-                    }
-                  />
-                </Col>
-              ))}
-            </Row>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button
-              variant='outline-danger'
-              style={{ position: 'absolute', right: '0' }}
-              onClick={() => setSelected(null)}
-            >
-              Clear
-            </Button>
-            <Button
-              variant='outline-danger'
-              style={{ position: 'absolute', left: '0' }}
-              onClick={(e) => setModalIsOpen(false)}
-            >
-              Close
-            </Button>
-            <Button
-              variant='primary'
-              style={{ position: 'absolute', left: '40%', right: '40%' }}
-              onClick={() => {
-                setModalIsOpen(false);
+        {isCurrUser && (
+          <>
+            <button
+              onClick={(e) => {
+                setSelected(user.avatar);
+                setModalIsOpen(true);
               }}
             >
-              Confirm
-            </Button>
-          </Modal.Footer>
-        </Modal>
+              Edit picture
+            </button>
+            <Modal show={modalIsOpen} onHide={() => setModalIsOpen(false)}>
+              <Modal.Header closeButton>
+                <Modal.Title> Select new Profile Image</Modal.Title>
+              </Modal.Header>
+              <Modal.Body
+                style={{
+                  maxHeight: 'calc(100vh - 300px)',
+                  overflowY: 'auto',
+                }}
+              >
+                <Row>
+                  {imagePaths.map((a, index) => (
+                    <Col
+                      style={{
+                        width: '50%',
+                        flexBasis: 'auto',
+                      }}
+                      key={index}
+                    >
+                      <img
+                        src={window.location.origin + '/avatars/' + a}
+                        alt='texture-img'
+                        style={
+                          selected === a
+                            ? {
+                                width: '100%',
+                                margin: '2%',
+                                borderRadius: '5%',
+                                cursor: 'pointer',
+                                border: '7px solid red',
+                              }
+                            : {
+                                width: '100%',
+                                margin: '2%',
+                                borderRadius: '5%',
+                                cursor: 'pointer',
+                              }
+                        }
+                        onClick={() => setSelected(a)}
+                      />
+                    </Col>
+                  ))}
+                </Row>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button
+                  variant='outline-danger'
+                  style={{ position: 'absolute', right: '0' }}
+                  onClick={() => setSelected(null)}
+                >
+                  Clear
+                </Button>
+                <Button
+                  variant='outline-danger'
+                  style={{ position: 'absolute', left: '0' }}
+                  onClick={(e) => setModalIsOpen(false)}
+                >
+                  Close
+                </Button>
+                <Button
+                  variant='primary'
+                  style={{ position: 'absolute', left: '40%', right: '40%' }}
+                  onClick={handleChangeAvatar}
+                >
+                  Confirm
+                </Button>
+              </Modal.Footer>
+            </Modal>
+          </>
+        )}
         <div className='description'>
           <h4 className='username'>{user.username}</h4>
         </div>
