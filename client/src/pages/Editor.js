@@ -27,7 +27,7 @@ export default function Editor({ user, setUser }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [titleInfo, setTitleInfo] = useState(null);
   const [descriptionInfo, setDescriptionInfo] = useState(null);
-  const [isPublic, setIsPublic] = useState(false);
+  const [publicInfo, setPublicInfo] = useState(false);
 
   window.onbeforeunload = (e) => {
     if (project != lastSaved) {
@@ -44,12 +44,12 @@ export default function Editor({ user, setUser }) {
   useEffect(() => {
     if (id) {
       axios.get('/api/user/get-project/' + id).then((res) => {
+        console.log(res.data.likes);
         setProject(res.data);
         setLastSaved(res.data);
         setCompiledCode(res.data.code);
         setBufferIdx(0);
         setLiked(res.data.likes.has(user?._id));
-        setIsPublic(res.data.public);
       });
     }
     if (!id) {
@@ -74,15 +74,24 @@ export default function Editor({ user, setUser }) {
   }
 
   const handleUpdateInformation = () => {
-    setProject({ ...project, title: titleInfo, description: descriptionInfo });
+    setProject({
+      ...project,
+      title: titleInfo,
+      description: descriptionInfo,
+      public: publicInfo,
+    });
   };
 
-  const handleLike = (event) => {
+  const handleLike = () => {
+    console.log(project);
     if (user) {
       let newLikes = project.likes;
       let likeStatus;
       if (!project.likes.has(user._id)) {
-        newLikes.set(user._id, 1); // 1 is any value
+        // if (project.likes.get(user._id) === undefined) {
+        // if (!(user._id in project.likes)) {
+        newLikes.set(user._id, user._id); // 1 is any value
+        // newLikes.user._id = 1; // 1 is
         likeStatus = true;
       } else {
         newLikes.delete(user._id);
@@ -160,23 +169,23 @@ export default function Editor({ user, setUser }) {
               '/api/user/add-project/',
               project.owner
                 ? {
-                  ...project,
-                  title: 'Copy of: ' + project.title,
-                  description:
-                    'This is a copy of ' +
-                    project.title +
-                    ' by ' +
-                    project.ownerName,
-                  owner: res.data.user._id,
-                  ownerName: res.data.user.username,
-                  likes: new Map(),
-                }
+                    ...project,
+                    title: 'Copy of: ' + project.title,
+                    description:
+                      'This is a copy of ' +
+                      project.title +
+                      ' by ' +
+                      project.ownerName,
+                    owner: res.data.user._id,
+                    ownerName: res.data.user.username,
+                    likes: new Map([['placeholder', -1]]),
+                  }
                 : {
-                  ...project,
-                  owner: res.data.user._id,
-                  ownerName: res.data.user.username,
-                  likes: new Map(),
-                }
+                    ...project,
+                    owner: res.data.user._id,
+                    ownerName: res.data.user.username,
+                    likes: new Map([['placeholder', -1]]),
+                  }
             )
             .then((res) => {
               console.log('successfully added/forked project');
@@ -209,23 +218,23 @@ export default function Editor({ user, setUser }) {
           '/api/user/add-project/',
           project.owner
             ? {
-              ...project,
-              title: 'Copy of: ' + project.title,
-              description:
-                'This is a copy of ' +
-                project.title +
-                ' by ' +
-                project.ownerName,
-              owner: user._id,
-              ownerName: user.username,
-              likes: new Map(),
-            }
+                ...project,
+                title: 'Copy of: ' + project.title,
+                description:
+                  'This is a copy of ' +
+                  project.title +
+                  ' by ' +
+                  project.ownerName,
+                owner: user._id,
+                ownerName: user.username,
+                likes: new Map([['placeholder', 1]]),
+              }
             : {
-              ...project,
-              owner: user._id,
-              ownerName: user.username,
-              likes: new Map(),
-            }
+                ...project,
+                owner: user._id,
+                ownerName: user.username,
+                likes: new Map([['placeholder', 1]]),
+              }
         )
         .then((res) => {
           console.log('successfully added/forked project');
@@ -281,7 +290,7 @@ export default function Editor({ user, setUser }) {
                 left: '15px',
                 color: liked ? 'aqua' : 'lightgrey',
               }}
-              onClick={(e) => handleLike()}
+              onClick={() => handleLike()}
             >
               <i className='fas fa-thumbs-up'></i>
             </button>
@@ -304,7 +313,8 @@ export default function Editor({ user, setUser }) {
                 color: 'white',
               }}
             >
-              {project.likes.size}
+              {project.likes.size - 1}
+              {/* -1 to account for placeholder for map initialization */}
             </h6>
           </div>
           <button
@@ -314,6 +324,7 @@ export default function Editor({ user, setUser }) {
               setModalIsOpen(true);
               setTitleInfo(project.title);
               setDescriptionInfo(project.description);
+              setPublicInfo(project.public);
             }}
           ></button>
           <button
@@ -347,6 +358,15 @@ export default function Editor({ user, setUser }) {
                 onChange={(e) => setDescriptionInfo(e.target.value)}
               />
               <br />
+              <label htmlFor='public'>Public:</label>
+              <br />
+              <input
+                type='checkbox'
+                id='public'
+                name='public'
+                checked={publicInfo}
+                onChange={(e) => setPublicInfo(e.target.checked)}
+              />
               <br />
             </Modal.Body>
             <Modal.Footer>
@@ -400,7 +420,7 @@ const defaultProject = {
   ownerName: null,
   title: 'New Project',
   description: 'Welcome to your new project!',
-  likes: new Map(),
+  likes: new Map([['placeholder', -1]]),
   public: false,
   code: [
     'void mainImage(out vec4 FragColor) {\n\tfloat color = (1.0 + sin(iTime)) / 2.0;\n\tFragColor = vec4(color, 1.0 - color, cos(color), 1.0);\n}',

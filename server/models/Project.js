@@ -11,9 +11,9 @@ const ProjectSchema = new mongoose.Schema({
   description: { type: String, default: '', required: true },
   likes: {
     type: Map,
-    of: mongoose.Schema.Types.ObjectId,
-    default: new Map(),
+    of: mongoose.Schema.Types.Mixed,
     required: true,
+    default: new Map([['placeholder', -1]]),
   },
   public: { type: Boolean, default: false, required: true },
   code: {

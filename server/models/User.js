@@ -21,6 +21,7 @@ const UserSchema = new mongoose.Schema({
     },
   },
   projects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }],
+  avatar: { type: String, default: 'default-avatar.png', required: true },
 });
 
 UserSchema.plugin(findOrCreate);

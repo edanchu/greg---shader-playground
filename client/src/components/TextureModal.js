@@ -37,7 +37,13 @@ const TextureModal = ({
   let cubemapPaths = getCubemapPaths();
 
   return (
-    <Modal show={show} onHide={() => setShow(false)}>
+    <Modal
+      show={show}
+      onHide={() => {
+        setShow(false);
+        setSelected(chanUniforms[chanIdx]);
+      }}
+    >
       <Modal.Header closeButton>
         <Modal.Title>Select input for Channel {chanIdx}</Modal.Title>
       </Modal.Header>
