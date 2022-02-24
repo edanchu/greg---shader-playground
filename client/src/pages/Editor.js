@@ -169,23 +169,23 @@ export default function Editor({ user, setUser }) {
               '/api/user/add-project/',
               project.owner
                 ? {
-                    ...project,
-                    title: 'Copy of: ' + project.title,
-                    description:
-                      'This is a copy of ' +
-                      project.title +
-                      ' by ' +
-                      project.ownerName,
-                    owner: res.data.user._id,
-                    ownerName: res.data.user.username,
-                    likes: new Map([['placeholder', -1]]),
-                  }
+                  ...project,
+                  title: 'Copy of: ' + project.title,
+                  description:
+                    'This is a copy of ' +
+                    project.title +
+                    ' by ' +
+                    project.ownerName,
+                  owner: res.data.user._id,
+                  ownerName: res.data.user.username,
+                  likes: new Map([['placeholder', -1]]),
+                }
                 : {
-                    ...project,
-                    owner: res.data.user._id,
-                    ownerName: res.data.user.username,
-                    likes: new Map([['placeholder', -1]]),
-                  }
+                  ...project,
+                  owner: res.data.user._id,
+                  ownerName: res.data.user.username,
+                  likes: new Map([['placeholder', -1]]),
+                }
             )
             .then((res) => {
               console.log('successfully added/forked project');
@@ -218,23 +218,23 @@ export default function Editor({ user, setUser }) {
           '/api/user/add-project/',
           project.owner
             ? {
-                ...project,
-                title: 'Copy of: ' + project.title,
-                description:
-                  'This is a copy of ' +
-                  project.title +
-                  ' by ' +
-                  project.ownerName,
-                owner: user._id,
-                ownerName: user.username,
-                likes: new Map([['placeholder', 1]]),
-              }
+              ...project,
+              title: 'Copy of: ' + project.title,
+              description:
+                'This is a copy of ' +
+                project.title +
+                ' by ' +
+                project.ownerName,
+              owner: user._id,
+              ownerName: user.username,
+              likes: new Map([['placeholder', 1]]),
+            }
             : {
-                ...project,
-                owner: user._id,
-                ownerName: user.username,
-                likes: new Map([['placeholder', 1]]),
-              }
+              ...project,
+              owner: user._id,
+              ownerName: user.username,
+              likes: new Map([['placeholder', 1]]),
+            }
         )
         .then((res) => {
           console.log('successfully added/forked project');
@@ -331,8 +331,8 @@ export default function Editor({ user, setUser }) {
             className='fa fa-public'
             style={{ position: 'float', top: '705px', left: '295px' }}
             onClick={() => {
-              setIsPublic(!isPublic);
-              project.public = isPublic;
+              setPublicInfo(!project.public);
+              project.public = !project.public;
             }}
           >{project.public ? "Set Private" : "Set Public"}</button>
           <Modal show={modalIsOpen}>

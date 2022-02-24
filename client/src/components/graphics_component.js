@@ -622,8 +622,7 @@ class GraphicsComponent extends Component {
   keyDownCallback = (e) => {
     if (e.keyCode > 255) return;
     this.keyboard.image.data[e.keyCode * 4] = 255;
-    this.keyboard.image.data[e.keyCode * 4 + 1] =
-      this.keyboard.image.data[e.keyCode * 4 + 1] === 255 ? 0 : 255;
+    this.keyboard.image.data[e.keyCode * 4 + 1] = this.keyboard.image.data[e.keyCode * 4 + 1] === 255 ? 0 : 255;
     this.keyboard.image.data[e.keyCode * 4 + 2] = this.frameNumber % 256;
     this.keyboard.needsUpdate = true;
   };

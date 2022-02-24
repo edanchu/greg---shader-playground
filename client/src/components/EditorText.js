@@ -27,12 +27,6 @@ const buffers = [
   'Common',
 ];
 
-// options={buffers}
-//             onChange={(e) => {
-//               setBufferIdx(buffers.findIndex((b) => b === e.value));
-//             }}
-//             value={buffers[bufferIdx]}
-
 export default function EditorText({
   project,
   bufferIdx,
