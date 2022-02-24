@@ -9,8 +9,8 @@ class GraphicsComponent extends Component {
     this.pause = false;
     this.startPaused = this.props.pause;
     this.mouse = new THREE.Vector4(0, 0, -1, -1);
-    this.height = this.props.height ? this.props.height : 480;
-    this.width = (this.height * 14) / 9;
+    this.height = this.props.height ? this.props.height : 350;
+    this.width = (this.height * 15) / 9;
     this.clock = new THREE.Clock();
     this.keyboard = new THREE.DataTexture(
       new Uint8Array(4 * 256),
