@@ -320,6 +320,14 @@ export default function Editor({ user, setUser }) {
               setPublicInfo(project.public);
             }}
           ></button>
+          <button
+            className='fa fa-public'
+            style={{ position: 'float', top: '705px', left: '295px' }}
+            onClick={() => {
+              setPublicInfo(!project.public);
+              project.public = !project.public;
+            }}
+          >{project.public ? "Set Private" : "Set Public"}</button>
           <Modal show={modalIsOpen}>
             <Modal.Header>Update Project Information</Modal.Header>
             <Modal.Body>
