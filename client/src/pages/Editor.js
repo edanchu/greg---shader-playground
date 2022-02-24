@@ -109,15 +109,12 @@ export default function Editor({ user, setUser }) {
   const handleDelete = (event) => {
     if (user) {
       axios
-        .put('/api/user/update-project/' + id, {
-          ...project,
-        })
+        .delete('/api/user/delete-project/' + id)
         .then((res) => {
-          setProject(null);
+          toast('Project deleted successfully');
         })
         .catch((err) => console.log(err));
     }
-
     else {
       toast.error('Must be signed in to delete project');
     }
