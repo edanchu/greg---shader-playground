@@ -44,12 +44,11 @@ export default function Editor({ user, setUser }) {
   useEffect(() => {
     if (id) {
       axios.get('/api/user/get-project/' + id).then((res) => {
-        console.log(res.data.likes);
         setProject(res.data);
         setLastSaved(res.data);
         setCompiledCode(res.data.code);
         setBufferIdx(0);
-        setLiked(res.data.likes.has(user?._id));
+        setLiked(res.data.likes.indexOf(user?._id) !== -1);
       });
     }
     if (!id) {
@@ -57,7 +56,7 @@ export default function Editor({ user, setUser }) {
       setCompiledCode(defaultProject.code);
       setBufferIdx(0);
     }
-  }, [id]);
+  }, [id, user]);
 
   useEffect(() => {
     window.addEventListener('resize', handleResize);
@@ -83,18 +82,14 @@ export default function Editor({ user, setUser }) {
   };
 
   const handleLike = () => {
-    console.log(project);
     if (user) {
       let newLikes = project.likes;
       let likeStatus;
-      if (!project.likes.has(user._id)) {
-        // if (project.likes.get(user._id) === undefined) {
-        // if (!(user._id in project.likes)) {
-        newLikes.set(user._id, user._id); // 1 is any value
-        // newLikes.user._id = 1; // 1 is
+      if (project.likes.indexOf(user._id) === -1) {
+        newLikes.push(user._id);
         likeStatus = true;
       } else {
-        newLikes.delete(user._id);
+        newLikes = newLikes.filter((id) => id !== user._id);
         likeStatus = false;
       }
       if (id) {
@@ -125,11 +120,10 @@ export default function Editor({ user, setUser }) {
           toast('Project deleted successfully');
         })
         .catch((err) => console.log(err));
-    }
-    else {
+    } else {
       toast.error('Must be signed in to delete project');
     }
-  }
+  };
 
   function updateChanUniforms(chan, file) {
     setProject({
@@ -169,23 +163,23 @@ export default function Editor({ user, setUser }) {
               '/api/user/add-project/',
               project.owner
                 ? {
-                  ...project,
-                  title: 'Copy of: ' + project.title,
-                  description:
-                    'This is a copy of ' +
-                    project.title +
-                    ' by ' +
-                    project.ownerName,
-                  owner: res.data.user._id,
-                  ownerName: res.data.user.username,
-                  likes: new Map([['placeholder', -1]]),
-                }
+                    ...project,
+                    title: 'Copy of: ' + project.title,
+                    description:
+                      'This is a copy of ' +
+                      project.title +
+                      ' by ' +
+                      project.ownerName,
+                    owner: res.data.user._id,
+                    ownerName: res.data.user.username,
+                    likes: !id ? project.likes : [],
+                  }
                 : {
-                  ...project,
-                  owner: res.data.user._id,
-                  ownerName: res.data.user.username,
-                  likes: new Map([['placeholder', -1]]),
-                }
+                    ...project,
+                    owner: res.data.user._id,
+                    ownerName: res.data.user.username,
+                    likes: !id ? project.likes : [],
+                  }
             )
             .then((res) => {
               console.log('successfully added/forked project');
@@ -218,23 +212,23 @@ export default function Editor({ user, setUser }) {
           '/api/user/add-project/',
           project.owner
             ? {
-              ...project,
-              title: 'Copy of: ' + project.title,
-              description:
-                'This is a copy of ' +
-                project.title +
-                ' by ' +
-                project.ownerName,
-              owner: user._id,
-              ownerName: user.username,
-              likes: new Map([['placeholder', 1]]),
-            }
+                ...project,
+                title: 'Copy of: ' + project.title,
+                description:
+                  'This is a copy of ' +
+                  project.title +
+                  ' by ' +
+                  project.ownerName,
+                owner: user._id,
+                ownerName: user.username,
+                likes: [],
+              }
             : {
-              ...project,
-              owner: user._id,
-              ownerName: user.username,
-              likes: new Map([['placeholder', 1]]),
-            }
+                ...project,
+                owner: user._id,
+                ownerName: user.username,
+                likes: [],
+              }
         )
         .then((res) => {
           console.log('successfully added/forked project');
@@ -303,7 +297,7 @@ export default function Editor({ user, setUser }) {
               }}
               onClick={(e) => handleDelete()}
             >
-              <i class="fa fa-trash" aria-hidden="true"></i>
+              <i class='fa fa-trash' aria-hidden='true'></i>
             </button>
             <h6
               style={{
@@ -313,8 +307,7 @@ export default function Editor({ user, setUser }) {
                 color: 'white',
               }}
             >
-              {project.likes.size - 1}
-              {/* -1 to account for placeholder for map initialization */}
+              {project.likes.length}
             </h6>
           </div>
           <button
@@ -420,7 +413,7 @@ const defaultProject = {
   ownerName: null,
   title: 'New Project',
   description: 'Welcome to your new project!',
-  likes: new Map([['placeholder', -1]]),
+  likes: [],
   public: false,
   code: [
     'void mainImage(out vec4 FragColor) {\n\tfloat color = (1.0 + sin(iTime)) / 2.0;\n\tFragColor = vec4(color, 1.0 - color, cos(color), 1.0);\n}',
