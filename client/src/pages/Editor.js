@@ -4,9 +4,8 @@ import EditorText from '../components/EditorText';
 import TextureSelector from '../components/TextureSelector';
 import './Editor.css';
 import GraphicsComponent from '../components/graphics_component';
-import { Container, Row, Col, Modal, Button } from 'react-bootstrap';
+import { Row, Col, Modal, Button, Tab, Tabs } from 'react-bootstrap';
 import axios from 'axios';
-import { Texture } from 'three';
 import { ToastContainer, toast } from 'react-toastify';
 import SignLogInModal from '../components/SignLogInModal';
 
@@ -29,8 +28,11 @@ export default function Editor({ user, setUser }) {
   const [descriptionInfo, setDescriptionInfo] = useState(null);
   const [publicInfo, setPublicInfo] = useState(false);
 
+  const [errorModalIsOpen, setErrorModalIsOpen] = useState(false);
+  const [compileErrors, setCompileErrors] = useState([]);
+
   window.onbeforeunload = (e) => {
-    if (project != lastSaved) {
+    if (project !== lastSaved) {
       e.preventDefault();
       if (e) e.returnValue = '';
       return '';
@@ -39,6 +41,11 @@ export default function Editor({ user, setUser }) {
 
   function handleResize() {
     setPageWidth(window.innerWidth);
+  }
+
+  function handleErrorMessages(messages) {
+    setCompileErrors(messages);
+    setErrorModalIsOpen(true);
   }
 
   useEffect(() => {
@@ -141,6 +148,7 @@ export default function Editor({ user, setUser }) {
 
   function handleCompile() {
     setCompiledCode(project.code);
+    setCompileErrors([]);
   }
 
   function handleSave() {
@@ -275,6 +283,7 @@ export default function Editor({ user, setUser }) {
             buffer3FragShaderCustomCode={compiledCode[3]}
             buffer4FragShaderCustomCode={compiledCode[4]}
             channels={project.channelUniforms}
+            handleErrors={handleErrorMessages}
           />
           <div>
             <button
@@ -381,6 +390,25 @@ export default function Editor({ user, setUser }) {
                 }}
               >
                 Submit
+              </Button>
+            </Modal.Footer>
+          </Modal>
+          <Modal show={errorModalIsOpen}>
+            <Modal.Header className='modal-header'>Shader Compile Errors</Modal.Header>
+            <Modal.Body>
+              <Tabs id="Compile Errors">
+                {errorModalIsOpen ? (compileErrors.map((error, index) => { return <Tab eventKey={index} title={"Error " + (index + 1)}><pre>{error}</pre></Tab> })) : (<></>)}
+              </Tabs>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                variant='outline-danger'
+                style={{ position: 'float', right: '0' }}
+                onClick={(e) => {
+                  setErrorModalIsOpen(false);
+                }}
+              >
+                Close
               </Button>
             </Modal.Footer>
           </Modal>
