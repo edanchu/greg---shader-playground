@@ -18,7 +18,7 @@ export default function UserPage({ currUser }) {
   useEffect(() => {
     if (!user)
       axios.get('/api/user/find-by-id/' + id).then((res) => {
-        setUser(res.data);
+        setUser({ ...res.data });
         setSelected(res.data.avatar);
       });
   }, []);
