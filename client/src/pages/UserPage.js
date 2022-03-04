@@ -44,17 +44,17 @@ export default function UserPage({ currUser }) {
   }, [user, currUser]);
 
   const handleChangeAvatar = () => {
-    console.log(selected);
     axios
       .put('/api/user/update-avatar', { avatar: selected })
       .then((res) => {
-        console.log(res);
-        setModalIsOpen(false);
+        axios
+          .get('/api/user/authenticated')
+          .then((res) => {
+            setModalIsOpen(false);
+            setUser({ ...res.data.user });
+          })
+          .catch((err) => console.log(err));
       })
-      .catch((err) => console.log(err));
-    axios
-      .get('/api/user/authenticated')
-      .then((res) => setUser(res.data.user))
       .catch((err) => console.log(err));
   };
 
