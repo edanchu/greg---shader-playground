@@ -69,6 +69,7 @@ export default function EditorText({
             showCursorWhenSelecting: true,
             theme: 'yonce',
             keymap: 'sublime',
+            extraKeys: { 'Ctrl-/': 'toggleComment' },
             indentUnit: 4,
             tabSize: 4,
             indentWithTabs: true,
