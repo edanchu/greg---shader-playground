@@ -1,75 +1,80 @@
-  .Login {
-    height: 100vh;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2);
-    object-fit: contain;
-    background-image: url('/public/images/LoginBackground.jpg');
-    background-size: cover;
-  }
+.Login {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2);
+  object-fit: contain;
+  background-image: url('/public/images/LoginBackground.jpg');
+  background-size: cover;
+}
 
-  .login-box {
-    width: 380px;
-    height: 360px;
-    padding: 10px;
-    border: 5px solid gray;
-    background-color: rgb(255, 255, 255);
-    align-items: center;
-  }
+.login-box {
+  width: 380px;
+  height: 360px;
+  padding: 10px;
+  border: 5px solid gray;
+  background-color: rgb(255, 255, 255);
+  align-items: center;
+}
 
-  .login-button {
-    background-color: rgb(75, 144, 201);
-    border: 0.5px solid rgb(90, 160, 226);
-    color: white;
-    font-weight: bold;
-    width: 100%; 
-  }
+.login-button {
+  background-color: rgb(75, 144, 201);
+  border: 0.5px solid rgb(90, 160, 226);
+  color: white;
+  font-weight: bold;
+  width: 100%;
+}
 
-  .top-header {
-    color: black;
-  }
+.google {
+  color: white;
+  font-weight: bold;
+  width: 100%;
+}
 
-  .header {
-    color: rgb(9, 11, 14);
-    font-weight: bold;
-  }
+.top-header {
+  color: black;
+}
 
-  .SignUp-button {
-    background-color: rgb(75, 144, 201);
-    border: 0.5px solid rgb(90, 160, 226);
-    color: white;
-    font-weight: bold;
-    width: 100%;
-    margin-top: 10px;
-  }
+.header {
+  color: rgb(9, 11, 14);
+  font-weight: bold;
+}
 
-  .login-input-box {
-    text-align: center;
-    padding-bottom: 10px;
-    padding-left: 4px;
-  }
+.SignUp-button {
+  background-color: rgb(75, 144, 201);
+  border: 0.5px solid rgb(90, 160, 226);
+  color: white;
+  font-weight: bold;
+  width: 100%;
+  margin-top: 10px;
+}
 
-  .login-input-box2 {
-      width: 310px;
-      height: 32px;
-      background-color: rgb(204, 197, 197);
-  }
-  
-  .login-link-mobile {
-    display: none;
-  }
+.login-input-box {
+  text-align: center;
+  padding-bottom: 10px;
+  padding-left: 4px;
+}
+
+.login-input-box2 {
+  width: 310px;
+  height: 32px;
+  background-color: rgb(204, 197, 197);
+}
+
+.login-link-mobile {
+  display: none;
+}
 
 @media all and (min-width: 480px) {
-    .Login {
-      padding: 60px 0;
-    }
-  
-    .Login form {
-      margin: 0 auto;
-      max-width: 320px;
-    }
-    
+  .Login {
+    padding: 60px 0;
   }
+
+  .Login form {
+    margin: 0 auto;
+    max-width: 320px;
+  }
+}

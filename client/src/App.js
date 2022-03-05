@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import Home from './pages/home';
 import Browse from './pages/browse';
 import Login from './pages/Login';
+import GoogleCB from './pages/GoogleCB';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SignUp from './pages/Sign-up';
 import UserPage from './pages/UserPage';
@@ -32,6 +33,12 @@ function App() {
             element={<UnprivateRoute user={user} setUser={setUser} />}
           >
             <Route path='' element={<Login setUser={setUser} />} />
+          </Route>
+          <Route
+            path='/GoogleCB/:tok'
+            element={<UnprivateRoute user={user} setUser={setUser} />}
+          >
+            <Route path='' element={<GoogleCB setUser={setUser} />} />
           </Route>
           <Route
             path='/Sign-up'

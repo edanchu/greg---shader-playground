@@ -20,6 +20,24 @@ const signToken = (userID) => {
   );
 };
 
+userRouter.get(
+  '/auth/google',
+  passport.authenticate('google', { scope: ['email'], session: false })
+);
+
+userRouter.get(
+  '/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/', session: false }),
+  function (req, res) {
+    if (req.isAuthenticated()) {
+      const { _id } = req.user;
+      const token = signToken(_id);
+      res.redirect('http://localhost:3000/GoogleCB/' + token);
+      // res.redirect('http://localhost:3000/UserPage/');
+    }
+  }
+);
+
 userRouter.post('/register', (req, res) => {
   const { email, username, password } = req.body;
   User.findOne({ email }, (err, user) => {
