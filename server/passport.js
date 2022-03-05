@@ -1,6 +1,7 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const JwtStrategy = require('passport-jwt').Strategy;
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('./models/User');
 
 const cookieExtractor = (req) => {
@@ -24,6 +25,28 @@ passport.use(
         if (user) return done(null, user, req.body);
         else return done(null, false);
       });
+    }
+  )
+);
+
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_ID,
+      clientSecret: process.env.GOOGLE_SECRET,
+      callbackURL: '/api/user/auth/google/callback',
+    },
+    function (accessToken, refreshToken, email, cb) {
+      const emailAddress = email.emails[0].value;
+      User.findOrCreate(
+        {
+          googleId: email.id,
+          username: emailAddress.split('@')[0],
+        },
+        function (err, user) {
+          return cb(err, user);
+        }
+      );
     }
   )
 );
