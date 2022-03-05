@@ -6,6 +6,7 @@ class GraphicsComponent extends Component {
     this.sceneSetup = this.sceneSetup.bind(this);
     this.renderLoop = this.renderLoop.bind(this);
 
+    this.errorMessages = [];
     this.pause = false;
     this.startPaused = this.props.pause;
     this.mouse = new THREE.Vector4(0, 0, -1, -1);
@@ -144,6 +145,7 @@ class GraphicsComponent extends Component {
       fragmentShader: this.getFinalFragmentShader(),
       glslVersion: THREE.GLSL3,
     });
+
 
     this.bufferMat1 = new THREE.RawShaderMaterial({
       uniforms: {
@@ -284,11 +286,23 @@ class GraphicsComponent extends Component {
 
       this.updateBufferUniforms();
 
-      this.renderBufferTextures();
-
       this.updateFinalUniforms();
 
+      const holder = console.error;
+      console.error = (...messages) => {
+        this.errorMessages.push(messages[0])
+      }
+
+      this.renderBufferTextures();
+
       this.renderFinalScene();
+
+      console.error = holder;
+
+      if (this.errorMessages.length > 0) {
+        this.props.handleErrors(this.errorMessages);
+        this.errorMessages = [];
+      }
 
     }
 
@@ -369,201 +383,138 @@ class GraphicsComponent extends Component {
 
   getCommonUniforms() {
     return `
-        uniform float iTime;
-        uniform float iDeltaTime;
-        uniform int iFrame;
-        uniform vec2 iResolution;
-        uniform vec4 iMouse;
-        uniform sampler2D iKeyboard;
-        uniform vec4 iDate;
-        uniform vec2 iChannel0Resolution;
-        uniform vec2 iChannel1Resolution;
-        uniform vec2 iChannel2Resolution;
-        uniform vec2 iChannel3Resolution;
-        `;
+uniform float iTime;
+uniform float iDeltaTime;
+uniform int iFrame;
+uniform vec2 iResolution;
+uniform vec4 iMouse;
+uniform sampler2D iKeyboard;
+uniform vec4 iDate;
+uniform vec2 iChannel0Resolution;
+uniform vec2 iChannel1Resolution;
+uniform vec2 iChannel2Resolution;
+uniform vec2 iChannel3Resolution;
+`;
   }
 
   getFinalFragmentShader() {
     return (
       `
-        precision highp float;
-
-        ` +
+precision highp float;
+` +
       this.getCommonUniforms() +
       `
+uniform sampler2D iBufferTexture1;
+uniform sampler2D iBufferTexture2;
+uniform sampler2D iBufferTexture3;
+uniform sampler2D iBufferTexture4;
 
-        uniform sampler2D iBufferTexture1;
-        uniform sampler2D iBufferTexture2;
-        uniform sampler2D iBufferTexture3;
-        uniform sampler2D iBufferTexture4;
+uniform ` + this.getChannelType(0, 0) + ` iChannel0;
+uniform ` + this.getChannelType(0, 1) + ` iChannel1;
+uniform ` + this.getChannelType(0, 2) + ` iChannel2;
+uniform ` + this.getChannelType(0, 3) + ` iChannel3;
 
-        uniform ` +
-      this.getChannelType(0, 0) +
-      ` iChannel0;
-        uniform ` +
-      this.getChannelType(0, 1) +
-      ` iChannel1;
-        uniform ` +
-      this.getChannelType(0, 2) +
-      ` iChannel2;
-        uniform ` +
-      this.getChannelType(0, 3) +
-      ` iChannel3;
+out vec4 FragColor;
 
-        out vec4 FragColor;
+` + this.getCommonFragCode() + `\n\n` + this.getFinalFragShaderCustomCode() + `
 
-        ` + this.getCommonFragCode() + `\n` + this.getFinalFragShaderCustomCode() + `
-
-        void main(){
-            mainImage(FragColor);
-        }
-    
-    `
-    );
+void main(){
+    mainImage(FragColor);
+}
+`);
   }
 
   getBuffer1FragShader() {
     return (
       `
-        precision highp float;
+precision highp float;
+` + this.getCommonUniforms() + `
+uniform ` + this.getChannelType(1, 0) + ` iChannel0;
+uniform ` + this.getChannelType(1, 1) + ` iChannel1;
+uniform ` + this.getChannelType(1, 2) + ` iChannel2;
+uniform ` + this.getChannelType(1, 3) + ` iChannel3;
 
-        ` +
-      this.getCommonUniforms() +
-      `
+out vec4 FragColor;
 
-        uniform ` +
-      this.getChannelType(1, 0) +
-      ` iChannel0;
-        uniform ` +
-      this.getChannelType(1, 1) +
-      ` iChannel1;
-        uniform ` +
-      this.getChannelType(1, 2) +
-      ` iChannel2;
-        uniform ` +
-      this.getChannelType(1, 3) +
-      ` iChannel3;
+` + this.getCommonFragCode() + `\n\n` + this.getBuffer1FragShaderCustomCode() + `
 
-        out vec4 FragColor;
-        
-        ` + this.getCommonFragCode() + `\n` + this.getBuffer1FragShaderCustomCode() + `
-
-        void main(){
-            mainImage(FragColor);
-        }
-    
-    `
+void main(){
+    mainImage(FragColor);
+}
+`
     );
   }
 
   getBuffer2FragShader() {
     return (
       `
-        precision highp float;
+precision highp float;
+` + this.getCommonUniforms() + `
+uniform sampler2D iBufferTexture1;
 
-        ` +
-      this.getCommonUniforms() +
-      `
+uniform ` + this.getChannelType(2, 0) + ` iChannel0;
+uniform ` + this.getChannelType(2, 1) + ` iChannel1;
+uniform ` + this.getChannelType(2, 2) + ` iChannel2;
+uniform ` + this.getChannelType(2, 3) + ` iChannel3;
 
-        uniform sampler2D iBufferTexture1;
+out vec4 FragColor;
 
-        uniform ` +
-      this.getChannelType(2, 0) +
-      ` iChannel0;
-        uniform ` +
-      this.getChannelType(2, 1) +
-      ` iChannel1;
-        uniform ` +
-      this.getChannelType(2, 2) +
-      ` iChannel2;
-        uniform ` +
-      this.getChannelType(2, 3) +
-      ` iChannel3;
+` + this.getCommonFragCode() + `\n\n` + this.getBuffer2FragShaderCustomCode() + `
 
-        out vec4 FragColor;
-
-        ` + this.getCommonFragCode() + `\n` + this.getBuffer2FragShaderCustomCode() + `
-
-        void main(){
-            mainImage(FragColor);
-        }
-    
-    `
+void main(){
+    mainImage(FragColor);
+}
+`
     );
   }
 
   getBuffer3FragShader() {
     return (
       `
-        precision highp float;
+precision highp float;
 
-        ` +
-      this.getCommonUniforms() +
-      `
-        
-        uniform sampler2D iBufferTexture1;
-        uniform sampler2D iBufferTexture2;
+` + this.getCommonUniforms() + `
+uniform sampler2D iBufferTexture1;
+uniform sampler2D iBufferTexture2;
 
-        uniform ` +
-      this.getChannelType(3, 0) +
-      ` iChannel0;
-        uniform ` +
-      this.getChannelType(3, 1) +
-      ` iChannel1;
-        uniform ` +
-      this.getChannelType(3, 2) +
-      ` iChannel2;
-        uniform ` +
-      this.getChannelType(3, 3) +
-      ` iChannel3;
+uniform ` + this.getChannelType(3, 0) + ` iChannel0;
+uniform ` + this.getChannelType(3, 1) + ` iChannel1;
+uniform ` + this.getChannelType(3, 2) + ` iChannel2;
+uniform ` + this.getChannelType(3, 3) + ` iChannel3;
 
-        out vec4 FragColor;
+out vec4 FragColor;
 
-        ` + this.getCommonFragCode() + `\n` + this.getBuffer3FragShaderCustomCode() + `
+` + this.getCommonFragCode() + `\n\n` + this.getBuffer3FragShaderCustomCode() + `
 
-        void main(){
-            mainImage(FragColor);
-        }
-    
-    `
+void main(){
+    mainImage(FragColor);
+}
+`
     );
   }
 
   getBuffer4FragShader() {
     return (
       `
-        precision highp float;
-
-        ` +
-      this.getCommonUniforms() +
+ precision highp float;
+ ` + this.getCommonUniforms() +
       `
-        
-        uniform sampler2D iBufferTexture1;
-        uniform sampler2D iBufferTexture2;
-        uniform sampler2D iBufferTexture3;
+uniform sampler2D iBufferTexture1;
+uniform sampler2D iBufferTexture2;
+uniform sampler2D iBufferTexture3;
 
-        uniform ` +
-      this.getChannelType(4, 0) +
-      ` iChannel0;
-        uniform ` +
-      this.getChannelType(4, 1) +
-      ` iChannel1;
-        uniform ` +
-      this.getChannelType(4, 2) +
-      ` iChannel2;
-        uniform ` +
-      this.getChannelType(4, 3) +
-      ` iChannel3;
+uniform ` + this.getChannelType(4, 0) + ` iChannel0;
+uniform ` + this.getChannelType(4, 1) + ` iChannel1;
+uniform ` + this.getChannelType(4, 2) + ` iChannel2;
+uniform ` + this.getChannelType(4, 3) + ` iChannel3;
 
-        out vec4 FragColor;
+out vec4 FragColor;
 
-        ` + this.getCommonFragCode() + `\n` + this.getBuffer4FragShaderCustomCode() + `
+` + this.getCommonFragCode() + `\n\n` + this.getBuffer4FragShaderCustomCode() + `
 
-        void main(){
-            mainImage(FragColor);
-        }
-    
-    `
+void main(){
+    mainImage(FragColor);
+}`
     );
   }
 

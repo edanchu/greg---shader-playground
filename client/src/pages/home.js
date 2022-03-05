@@ -3,6 +3,7 @@ import axios from 'axios';
 import HeroSection from '../components/HeroSection.js';
 import '../App.css';
 import BrowseCards from '../components/BrowseCards.js';
+import Search from '../components/Search.js';
 
 function Home() {
   const [projects, setProjects] = useState([]);
@@ -19,6 +20,7 @@ function Home() {
   return (
     <>
       <HeroSection />
+      <Search />
       <BrowseCards projects={projects} />
     </>
   );
