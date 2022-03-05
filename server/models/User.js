@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const findOrCreate = require('mongoose-findorcreate');
 
 const UserSchema = new mongoose.Schema({
   email: {
@@ -22,6 +23,8 @@ const UserSchema = new mongoose.Schema({
   projects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }],
   avatar: { type: String, default: 'default-avatar.png', required: true },
 });
+
+UserSchema.plugin(findOrCreate);
 
 UserSchema.pre('save', function (next) {
   if (!this.isModified('password')) return next();
