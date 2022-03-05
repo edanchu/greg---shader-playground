@@ -312,7 +312,7 @@ userRouter.put(
   }
 );
 
-userRouter.get("/search", async (req, res) => {
+userRouter.post("/search", async (req, res) => {
   Project.find({ public: true })
     .sort({ likes: -1 })
     .exec((err, projects) => {
@@ -320,8 +320,9 @@ userRouter.get("/search", async (req, res) => {
         console.log(err);
         res.status(500).send("Database error");
       }
+      console.log(req.body);
       filter = req.body.filter.toLowerCase();
-      const search_result = projects.find(
+      const search_result = projects.filter(
         (project) =>
           project.description.toLowerCase().includes(filter) ||
           project.title.toLowerCase().includes(filter) ||
