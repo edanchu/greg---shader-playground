@@ -4,16 +4,6 @@ import './browse.css';
 import Search from '../components/Search';
 
 function Browse() {
-  const [projects, setProjects] = useState([]);
-
-  useEffect(() => {
-    axios
-      .get('/api/user/get-projects')
-      .then((res) => {
-        setProjects(res.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
 
   return (
     <>
