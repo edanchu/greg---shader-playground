@@ -556,11 +556,12 @@ void main(){
   }
 
   mouseMoveCallback = (e) => {
-    this.mouse.y = Math.min(this.height - e.clientY - e.target.getBoundingClientRect().top, this.height);
-    this.mouse.x = Math.min(e.clientX - e.target.getBoundingClientRect().left, this.width);
+    const rect = e.target.getBoundingClientRect();
+    this.mouse.y = Math.min(rect.bottom - e.clientY, this.height);
+    this.mouse.x = Math.min(e.clientX - rect.left, this.width);
     if (this.mouseHeldDown === true) {
-      this.mouse.w = Math.min(this.height - e.clientY - e.target.getBoundingClientRect().top, this.height);
-      this.mouse.z = Math.min(e.clientX - e.target.getBoundingClientRect().left, this.width);
+      this.mouse.w = Math.min(rect.bottom - e.clientY, this.height);
+      this.mouse.z = Math.min(e.clientX - rect.left, this.width);
     }
   };
 
@@ -570,8 +571,9 @@ void main(){
 
   mouseUpCallback = (e) => {
     this.mouseHeldDown = false;
-    this.mouse.w = Math.min(this.height - e.clientY - e.target.getBoundingClientRect().top, this.height);
-    this.mouse.z = Math.min(e.clientX - e.target.getBoundingClientRect().left, this.width);
+    const rect = e.target.getBoundingClientRect();
+    this.mouse.w = Math.min(rect.bottom - e.clientY, this.height);
+    this.mouse.z = Math.min(e.clientX - rect.left, this.width);
   }
 
   keyDownCallback = (e) => {
