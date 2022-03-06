@@ -10,6 +10,7 @@ class GraphicsComponent extends Component {
     this.pause = false;
     this.startPaused = this.props.pause;
     this.mouse = new THREE.Vector4(0, 0, -1, -1);
+    this.mouseHeldDown = false;
     this.height = this.props.height ? this.props.height : 350;
     this.width = (this.height * 15) / 9;
     this.clock = new THREE.Clock();
@@ -555,20 +556,23 @@ void main(){
   }
 
   mouseMoveCallback = (e) => {
-    this.mouse.y = Math.min(
-      this.height - e.clientY - e.target.offsetTop,
-      this.height
-    );
-    this.mouse.x = Math.min(e.clientX - e.target.offsetLeft, this.width);
+    this.mouse.y = Math.min(this.height - e.clientY - e.target.getBoundingClientRect().top, this.height);
+    this.mouse.x = Math.min(e.clientX - e.target.getBoundingClientRect().left, this.width);
+    if (this.mouseHeldDown === true) {
+      this.mouse.w = Math.min(this.height - e.clientY - e.target.getBoundingClientRect().top, this.height);
+      this.mouse.z = Math.min(e.clientX - e.target.getBoundingClientRect().left, this.width);
+    }
   };
 
   mouseDownCallback = (e) => {
-    this.mouse.w = Math.min(
-      this.height - e.clientY - e.target.offsetTop,
-      this.height
-    );
-    this.mouse.z = Math.min(e.clientX - e.target.offsetLeft, this.width);
+    this.mouseHeldDown = true;
   };
+
+  mouseUpCallback = (e) => {
+    this.mouseHeldDown = false;
+    this.mouse.w = Math.min(this.height - e.clientY - e.target.getBoundingClientRect().top, this.height);
+    this.mouse.z = Math.min(e.clientX - e.target.getBoundingClientRect().left, this.width);
+  }
 
   keyDownCallback = (e) => {
     if (e.keyCode > 255) return;
@@ -614,6 +618,7 @@ void main(){
         <div
           onMouseMove={(e) => this.mouseMoveCallback(e)}
           onMouseDown={(e) => this.mouseDownCallback(e)}
+          onMouseUp={(e) => this.mouseUpCallback(e)}
           onMouseEnter={(e) => { this.props.playOnMouseOver ? this.pauseEndCallback(e) : <></>; }}
           onMouseLeave={(e) => { this.props.playOnMouseOver ? this.pauseStartCallback(e) : <></>; }}
           ref={(ref) => (this.mount = ref)}
