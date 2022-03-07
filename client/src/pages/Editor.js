@@ -31,6 +31,8 @@ export default function Editor({ user, setUser }) {
   const [errorModalIsOpen, setErrorModalIsOpen] = useState(false);
   const [compileErrors, setCompileErrors] = useState([]);
 
+  const [isFullScreen, setFullscreen] = useState(false);
+
   window.onbeforeunload = (e) => {
     if (project !== lastSaved) {
       e.preventDefault();
@@ -270,21 +272,23 @@ export default function Editor({ user, setUser }) {
             )}
           </div>
         </Col>
-        <Col style={{ marginTop: "0.5rem" }}>
-          <GraphicsComponent
-            height={pageWidth * 0.3}
-            pause={false}
-            playOnMouseOver={false}
-            showButtons={true}
-            commonFragShaderCustomCode={compiledCode[5]}
-            finalFragShaderCustomCode={compiledCode[0]}
-            buffer1FragShaderCustomCode={compiledCode[1]}
-            buffer2FragShaderCustomCode={compiledCode[2]}
-            buffer3FragShaderCustomCode={compiledCode[3]}
-            buffer4FragShaderCustomCode={compiledCode[4]}
-            channels={project.channelUniforms}
-            handleErrors={handleErrorMessages}
-          />
+        <Col style={{ marginTop: "0.5rem" }} >
+          {isFullScreen ? <></> :
+            <GraphicsComponent
+              height={pageWidth * 0.3}
+              pause={false}
+              playOnMouseOver={false}
+              showButtons={true}
+              commonFragShaderCustomCode={compiledCode[5]}
+              finalFragShaderCustomCode={compiledCode[0]}
+              buffer1FragShaderCustomCode={compiledCode[1]}
+              buffer2FragShaderCustomCode={compiledCode[2]}
+              buffer3FragShaderCustomCode={compiledCode[3]}
+              buffer4FragShaderCustomCode={compiledCode[4]}
+              channels={project.channelUniforms}
+              handleErrors={handleErrorMessages}
+              toggleFullscreen={() => setFullscreen(!isFullScreen)}
+            />}
           <div>
             <button
               style={{
@@ -403,7 +407,7 @@ export default function Editor({ user, setUser }) {
               </Button>
             </Modal.Footer>
           </Modal>
-          <Modal show={errorModalIsOpen} onAfterClose={() => { setErrorModalIsOpen(false) }}>
+          <Modal show={errorModalIsOpen} onHide={() => { setErrorModalIsOpen(false) }} dialogClassName='error-modal'>
             <Modal.Header className='modal-header'>Shader Compile Errors</Modal.Header>
             <Modal.Body>
               <Tabs id="Compile Errors">
@@ -444,6 +448,22 @@ export default function Editor({ user, setUser }) {
         onSignLogIn={onSignLogIn}
       />
       <ToastContainer />
+      <Modal show={isFullScreen} onHide={() => { setFullscreen(false) }} fullscreen centered dialogClassName='fullscreen-modal' backdrop={true} backdropClassName='fullscreen-modal-backdrop'>
+        <GraphicsComponent
+          height={window.innerHeight * 0.92}
+          pause={false}
+          playOnMouseOver={false}
+          showButtons={true}
+          commonFragShaderCustomCode={compiledCode[5]}
+          finalFragShaderCustomCode={compiledCode[0]}
+          buffer1FragShaderCustomCode={compiledCode[1]}
+          buffer2FragShaderCustomCode={compiledCode[2]}
+          buffer3FragShaderCustomCode={compiledCode[3]}
+          buffer4FragShaderCustomCode={compiledCode[4]}
+          channels={project.channelUniforms}
+          toggleFullscreen={() => setFullscreen(!isFullScreen)}
+        />
+      </Modal>
     </div>
   );
 }

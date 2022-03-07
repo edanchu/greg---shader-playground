@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import * as THREE from 'three';
+import { Button } from 'react-bootstrap'
 
 class GraphicsComponent extends Component {
   componentDidMount() {
@@ -625,8 +626,10 @@ void main(){
           onMouseLeave={(e) => { this.props.playOnMouseOver ? this.pauseStartCallback(e) : <></>; }}
           ref={(ref) => (this.mount = ref)}
         />
-        {this.props.showButtons ? (<button onClick={(e) => this.restartCallback(e)}>{'\u23ee'}</button>) : (<></>)}
-        {this.props.showButtons ? (<button onClick={(e) => !this.pause ? this.pauseStartCallback(e) : this.pauseEndCallback(e)}>{'\u23ef'}</button>) : (<></>)}
+        {this.props.showButtons ? (<Button onClick={(e) => this.restartCallback(e)}>{'\u23ee'}</Button>) : (<></>)}
+        {this.props.showButtons ? (<Button onClick={(e) => !this.pause ? this.pauseStartCallback(e) : this.pauseEndCallback(e)}>{'\u23ef'}</Button>) : (<></>)}
+        {this.props.showButtons ? (<Button style={{ float: 'right' }} onClick={(e) => { (this.props.toggleFullscreen != undefined) ? this.props.toggleFullscreen() : <></> }}>{'\u26F6'}</Button>) : (<></>)
+        }
       </div>
     );
   }
