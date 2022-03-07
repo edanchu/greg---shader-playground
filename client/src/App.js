@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SignUp from './pages/Sign-up';
 import UserPage from './pages/UserPage';
 import Editor from './pages/Editor';
+import Tutorial from './pages/tutorial';
 import PrivateRoute from './routeWrappers/PrivateRoute';
 import UnprivateRoute from './routeWrappers/UnprivateRoute';
 import axios from 'axios';
@@ -60,6 +61,10 @@ function App() {
           <Route
             path='/Editor/'
             element={<Editor user={user} setUser={setUser} />}
+          />
+           <Route
+            path='/Tutorial'
+            element={<Tutorial user={user} setUser={setUser} />}
           />
           <Route path='/Browse' element={<Browse />} />
         </Routes>

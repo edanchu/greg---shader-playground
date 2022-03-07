@@ -59,6 +59,15 @@ function Navbar({ user, setUser }) {
                 New Shader
               </Link>
             </li>
+            <li className='nav-item'>
+              <Link
+                to='/Tutorial'
+                className='nav-links'
+                onClick={closeMobileMenu}
+              >
+                Tutorial
+              </Link>
+            </li>
             <li>
               <Link
                 to='/Login'
