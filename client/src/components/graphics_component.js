@@ -3,6 +3,11 @@ import * as THREE from 'three';
 import { Button } from 'react-bootstrap'
 
 class GraphicsComponent extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { time: 0, fps: 0 };
+  }
+
   componentDidMount() {
     this.sceneSetup = this.sceneSetup.bind(this);
     this.renderLoop = this.renderLoop.bind(this);
@@ -36,6 +41,7 @@ class GraphicsComponent extends Component {
     );
     this.loader = new THREE.TextureLoader();
     this.cubeLoader = new THREE.CubeTextureLoader();
+    this.frameTimes = [];
 
     document.addEventListener('keydown', this.keyDownCallback);
     document.addEventListener('keyup', this.keyUpCallback);
@@ -364,6 +370,9 @@ class GraphicsComponent extends Component {
         tempDate.getMinutes() * 60 +
         tempDate.getSeconds() +
         tempDate.getMilliseconds / 1000;
+      this.frameTimes.push(this.bufferMat1.uniforms.iDeltaTime.value);
+      if (this.frameTimes.length > 100) delete this.frameTimes[0];
+      this.setState({ time: this.bufferMat1.uniforms.iTime.value, fps: 1 / (this.frameTimes.reduce((a, b) => a + b) / this.frameTimes.length) })
     }
   }
 
@@ -628,6 +637,8 @@ void main(){
         />
         {this.props.showButtons ? (<Button variant='dark' onClick={(e) => this.restartCallback(e)}>{'\u23ee'}</Button>) : (<></>)}
         {this.props.showButtons ? (<Button variant='dark' onClick={(e) => !this.pause ? this.pauseStartCallback(e) : this.pauseEndCallback(e)}>{'\u23ef'}</Button>) : (<></>)}
+        {this.props.showButtons ? (<Button variant='dark' disabled >{this.state.time.toFixed(2)}</Button>) : (<></>)}
+        {this.props.showButtons ? (<Button variant='dark' disabled >{this.state.fps.toFixed(0)}</Button>) : (<></>)}
         {this.props.showButtons ? (<Button variant='dark' style={{ float: 'right' }} onClick={(e) => { (this.props.toggleFullscreen != undefined) ? this.props.toggleFullscreen() : <></> }}>{'\u26F6'}</Button>) : (<></>)
         }
       </div>
