@@ -6,18 +6,11 @@ import { Nav } from 'react-bootstrap';
 import 'react-dropdown/style.css';
 import { Button } from 'react-bootstrap';
 import './EditorText.css';
-import 'codemirror/addon/search/search';
-import 'codemirror/addon/search/matchesonscrollbar'
-import 'codemirror/addon/search/searchcursor';
 import 'codemirror/addon/comment/comment';
-import 'codemirror/addon/dialog/dialog';
 import 'codemirror/addon/edit/matchbrackets';
 import 'codemirror/addon/edit/closebrackets';
 import 'codemirror/addon/wrap/hardwrap';
-import 'codemirror/addon/fold/foldcode';
-import 'codemirror/addon/fold/foldgutter';
-import 'codemirror/addon/fold/indent-fold';
-import 'codemirror/keymap/sublime.js';
+import 'codemirror/keymap/sublime';
 
 const buffers = [
   'Main',
@@ -64,7 +57,6 @@ export default function EditorText({
             lineNumbers: true,
             matchBrackets: true,
             mode: 'x-shader/x-fragment',
-            gutters: 'CodeMirror-foldgutter',
             autoCloseBrackets: true,
             showCursorWhenSelecting: true,
             theme: 'yonce',
@@ -74,7 +66,7 @@ export default function EditorText({
             tabSize: 4,
             indentWithTabs: true,
             lineWrapping: true,
-            autofocus: true,
+            autofocus: false,
           }}
         />
       </div>

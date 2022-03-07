@@ -270,7 +270,7 @@ export default function Editor({ user, setUser }) {
             )}
           </div>
         </Col>
-        <Col>
+        <Col style={{ marginTop: "0.5rem" }}>
           <GraphicsComponent
             height={pageWidth * 0.3}
             pause={false}
