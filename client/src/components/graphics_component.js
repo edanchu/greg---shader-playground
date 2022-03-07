@@ -300,7 +300,7 @@ class GraphicsComponent extends Component {
 
       console.error = holder;
 
-      if (this.errorMessages.length > 0) {
+      if (this.errorMessages.length > 0 && this.props.handleErrors != undefined) {
         this.props.handleErrors(this.errorMessages);
         this.errorMessages = [];
       }
