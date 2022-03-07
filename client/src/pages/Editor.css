@@ -19,3 +19,7 @@ body {
 .input {
   background-color: #ccc6c6;
 }
+
+.modal-content{
+  width: fit-content;
+}

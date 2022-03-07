@@ -403,7 +403,7 @@ export default function Editor({ user, setUser }) {
               </Button>
             </Modal.Footer>
           </Modal>
-          <Modal show={errorModalIsOpen}>
+          <Modal show={errorModalIsOpen} onAfterClose={() => { setErrorModalIsOpen(false) }}>
             <Modal.Header className='modal-header'>Shader Compile Errors</Modal.Header>
             <Modal.Body>
               <Tabs id="Compile Errors">
