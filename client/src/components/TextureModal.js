@@ -16,7 +16,16 @@ const TextureModal = ({
   }, [chanIdx]);
 
   const getTexturePaths = (dir) => {
-    return dir.keys().map((item) => item.slice(2));
+    let textures = dir.keys().map((item) => item.slice(2));
+    textures.push('ForbiddenCity 2048x2048/posz.jpg',
+      'GamlaStan 2048x2048/posz.jpg',
+      'Kastellholmen 2048x2048/posz.jpg',
+      'Langholmen 2048x2048/posz.jpg',
+      'Langholmen3 2048x2048/posz.jpg',
+      'SaintLazarusChurch2 2048x2048/posz.jpg',
+      'Skinnarviksberget 2048x2048/posz.jpg',
+      'UnionSquare 2048x2048/posz.jpg');
+    return textures;
   };
 
   const getCubemapPaths = () => {
@@ -75,79 +84,79 @@ const TextureModal = ({
         <Row>
           {showTextures
             ? imagePaths.map((i, index) => (
-                <Col
-                  style={{
-                    width: '50%',
-                    flexBasis: 'auto',
-                  }}
-                  key={index}
-                >
-                  <img
-                    src={window.location.origin + '/textures/' + i}
-                    alt='texture-img'
-                    style={
-                      selected?.path === i
-                        ? {
-                            width: '100%',
-                            margin: '2%',
-                            borderRadius: '5%',
-                            cursor: 'pointer',
-                            border: '7px solid red',
-                          }
-                        : {
-                            width: '100%',
-                            margin: '2%',
-                            borderRadius: '5%',
-                            cursor: 'pointer',
-                          }
-                    }
-                    onClick={() =>
-                      setSelected({
-                        genType: 'sampler2D',
-                        path: i,
-                      })
-                    }
-                  />
-                </Col>
-              ))
+              <Col
+                style={{
+                  width: '50%',
+                  flexBasis: 'auto',
+                }}
+                key={index}
+              >
+                <img
+                  src={window.location.origin + '/textures/' + i}
+                  alt='texture-img'
+                  style={
+                    selected?.path === i
+                      ? {
+                        width: '100%',
+                        margin: '2%',
+                        borderRadius: '5%',
+                        cursor: 'pointer',
+                        border: '7px solid red',
+                      }
+                      : {
+                        width: '100%',
+                        margin: '2%',
+                        borderRadius: '5%',
+                        cursor: 'pointer',
+                      }
+                  }
+                  onClick={() =>
+                    setSelected({
+                      genType: 'sampler2D',
+                      path: i,
+                    })
+                  }
+                />
+              </Col>
+            ))
             : cubemapPaths.map((c, index) => (
-                <Col
-                  style={{
-                    width: '50%',
-                    flexBasis: 'auto',
-                  }}
-                  key={index}
-                >
-                  <img
-                    src={
-                      window.location.origin + '/textures/' + c + '/posz.jpg'
-                    }
-                    alt='texture-img'
-                    style={
-                      selected?.path === c
-                        ? {
-                            width: '100%',
-                            margin: '2%',
-                            borderRadius: '5%',
-                            cursor: 'pointer',
-                            border: '7px solid red',
-                          }
-                        : {
-                            width: '100%',
-                            margin: '2%',
-                            borderRadius: '5%',
-                            cursor: 'pointer',
-                          }
-                    }
-                    onClick={() =>
-                      setSelected({
-                        genType: 'samplerCube',
-                        path: c,
-                      })
-                    }
-                  />
-                </Col>
-              ))}
+              <Col
+                style={{
+                  width: '50%',
+                  flexBasis: 'auto',
+                }}
+                key={index}
+              >
+                <img
+                  src={
+                    window.location.origin + '/textures/' + c + '/posz.jpg'
+                  }
+                  alt='texture-img'
+                  style={
+                    selected?.path === c
+                      ? {
+                        width: '100%',
+                        margin: '2%',
+                        borderRadius: '5%',
+                        cursor: 'pointer',
+                        border: '7px solid red',
+                      }
+                      : {
+                        width: '100%',
+                        margin: '2%',
+                        borderRadius: '5%',
+                        cursor: 'pointer',
+                      }
+                  }
+                  onClick={() =>
+                    setSelected({
+                      genType: 'samplerCube',
+                      path: c,
+                    })
+                  }
+                />
+              </Col>
+            ))}
         </Row>
       </Modal.Body>
       <Modal.Footer>
