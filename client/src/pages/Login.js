@@ -81,28 +81,6 @@ export default function Login({
               onChange={(e) => setPassword(e.target.value)}
             />
           </Form.Group>
-          <Button
-            variant='danger'
-            className='google'
-            type='submit'
-            onClick={(e) => {
-              e.preventDefault();
-              console.log('clicked');
-              window.open(
-                'http://localhost:8888/api/user/auth/google',
-                '_self'
-              );
-            }}
-          >
-            {/* <a
-              href='#!'
-              onClick={() => {
-                window.open('http://localhost:8888/user/auth/google', '_self');
-              }}
-            > */}
-            <i className='fab fa-google' /> &nbsp; Sign in with Google
-            {/* </a> */}
-          </Button>
           <Button className='login-button' type='submit'>
             Login
           </Button>
@@ -117,6 +95,17 @@ export default function Login({
             </Button>
           </Link>
         </Form>
+        <Button
+          variant='danger'
+          className='google'
+          type='submit'
+          onClick={(e) => {
+            e.preventDefault();
+            window.open('http://localhost:8888/api/user/auth/google', '_self');
+          }}
+        >
+          <i className='fab fa-google' /> &nbsp; Sign in with Google
+        </Button>
       </div>
     </div>
   );
