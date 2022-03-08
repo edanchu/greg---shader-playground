@@ -637,12 +637,15 @@ void main(){
           onMouseLeave={(e) => { this.props.playOnMouseOver ? this.pauseStartCallback(e) : <></>; }}
           ref={(ref) => (this.mount = ref)}
         />
-        {this.props.showButtons ? (<Button variant='dark' onClick={(e) => this.restartCallback(e)}>{'\u23ee'}</Button>) : (<></>)}
-        {this.props.showButtons ? (<Button variant='dark' onClick={(e) => !this.pause ? this.pauseStartCallback(e) : this.pauseEndCallback(e)}>{'\u23ef'}</Button>) : (<></>)}
+        {this.props.showButtons ? (<Button variant='dark' onClick={(e) => this.restartCallback(e)}>
+          <i class="fa fa-backward" aria-hidden='true'></i></Button>) : (<></>)}
+        {this.props.showButtons ? (<Button variant='dark' onClick={(e) => !this.pause ? this.pauseStartCallback(e) : this.pauseEndCallback(e)}>
+          <i class="fa fa-pause" aria-hidden='true'></i></Button>) : (<></>)}
         {this.props.showButtons ? (<Button variant='dark' disabled >{this.state.time.toFixed(1)}</Button>) : (<></>)}
         {this.props.showButtons ? (<Button variant='dark' disabled >{this.state.fps.toFixed(0)}</Button>) : (<></>)}
-        {this.props.showButtons ? (<Button variant='dark' style={{ float: 'right' }} onClick={(e) => { (this.props.toggleFullscreen != undefined) ? this.props.toggleFullscreen() : <></> }}>{'\u26F6'}</Button>) : (<></>)
-        }
+        {this.props.showButtons ? (<Button variant='dark' style={{ float: 'right' }} onClick={(e) => {
+          (this.props.toggleFullscreen != undefined) ? this.props.toggleFullscreen() : <></>
+        }}><i class="fa fa-expand" aria-hidden='true'></i></Button>) : (<></>)}
       </div>
     );
   }
