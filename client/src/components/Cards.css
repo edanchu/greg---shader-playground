@@ -112,8 +112,9 @@ h1 {
 
 .browse-row {
   margin: auto;
+  justify-content: center;
   display: flex;
-  justify-content: space-around;
+  flex-wrap: wrap;
   max-width: 2200px;
 }
 
