@@ -73,12 +73,13 @@ userRouter.post(
   passport.authenticate('local', { session: false }),
   (req, res) => {
     if (req.isAuthenticated()) {
-      const { _id, email, username } = req.user;
+      const { _id, email, username, avatar } = req.user;
       const token = signToken(_id);
       res.cookie('access_token', token, { httpOnly: true, sameSite: true });
-      res
-        .status(200)
-        .json({ isAuthenticated: true, user: { _id, email, username } });
+      res.status(200).json({
+        isAuthenticated: true,
+        user: { _id, email, username, avatar },
+      });
     }
   }
 );
@@ -88,7 +89,7 @@ userRouter.post(
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     res.clearCookie('access_token');
-    res.json({ user: { email: '', name: '' }, success: true });
+    res.json({ user: { email: '', name: '', avatar: '' }, success: true });
   }
 );
 
