@@ -310,7 +310,7 @@ export default function Editor({ user, setUser }) {
             >
               <i className='fas fa-thumbs-up'></i> {project.likes.length}
             </Button>
-            {user?._id === project._id && (
+            {user && user._id === project._id && (
               <Button
                 variant='outline-danger'
                 style={{
