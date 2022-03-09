@@ -62,7 +62,7 @@ export default function UserPage({ currUser }) {
     return dir.keys().map((item) => item.slice(2));
   };
 
-  const dir = require.context('../../public/avatars', false);
+  const dir = require.context('../../public/avatars');
   let imagePaths = getAvatarPaths(dir);
 
   if (!user) return <></>;
@@ -110,18 +110,18 @@ export default function UserPage({ currUser }) {
                         style={
                           selected === a
                             ? {
-                                width: '100%',
-                                margin: '2%',
-                                borderRadius: '5%',
-                                cursor: 'pointer',
-                                border: '7px solid red',
-                              }
+                              width: '100%',
+                              margin: '2%',
+                              borderRadius: '5%',
+                              cursor: 'pointer',
+                              border: '7px solid red',
+                            }
                             : {
-                                width: '100%',
-                                margin: '2%',
-                                borderRadius: '5%',
-                                cursor: 'pointer',
-                              }
+                              width: '100%',
+                              margin: '2%',
+                              borderRadius: '5%',
+                              cursor: 'pointer',
+                            }
                         }
                         onClick={() => setSelected(a)}
                       />
