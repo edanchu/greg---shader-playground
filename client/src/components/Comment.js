@@ -38,7 +38,7 @@ function Comment(props) {
   return (
     <>
       <Row className='comment-existing-container'>
-        <Col xs={2}>
+        <Col xs={3} xl={2}>
           <h5>
             <a style={{ color: 'inherit' }} href={'/UserPage/' + comment.owner}>
               {comment.ownerName}
@@ -50,12 +50,12 @@ function Comment(props) {
             height={60}
           />
         </Col>
-        <Col xs={10}>
+        <Col xs={9} xl={10}>
           <p className='comment-existing'>{comment.content}</p>
         </Col>
         <Col>
           <Button
-            variant='outline-primary'
+            variant='outline-dark'
             style={{ float: 'right', color: liked ? 'aqua' : 'lightgrey' }}
             onClick={handleLike}
           >
