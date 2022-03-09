@@ -46,3 +46,7 @@
         background-position: 100%;
     }
 }
+
+.selector-modal{
+    max-width: 50%;
+}
