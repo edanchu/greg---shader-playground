@@ -110,7 +110,7 @@ h1 {
   line-height: 20px;
 }
 
-.row {
+.browse-row {
   margin: auto;
   display: flex;
   justify-content: space-around;

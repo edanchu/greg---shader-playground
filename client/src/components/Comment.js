@@ -39,7 +39,11 @@ function Comment(props) {
     <>
       <Row className='comment-existing-container'>
         <Col xs={2}>
-          <h5><a style={{ color: "inherit" }} href={'/UserPage/' + comment.owner}>{comment.ownerName}</a></h5>
+          <h5>
+            <a style={{ color: 'inherit' }} href={'/UserPage/' + comment.owner}>
+              {comment.ownerName}
+            </a>
+          </h5>
           <Figure.Image
             src={'/avatars/' + comment.ownerAvatar}
             width={60}
@@ -50,7 +54,11 @@ function Comment(props) {
           <p className='comment-existing'>{comment.content}</p>
         </Col>
         <Col>
-          <Button style={{ float: 'right', color: liked ? 'aqua' : 'lightgrey' }} onClick={handleLike}>
+          <Button
+            variant='outline-primary'
+            style={{ float: 'right', color: liked ? 'aqua' : 'lightgrey' }}
+            onClick={handleLike}
+          >
             <i className='fas fa-thumbs-up' /> {comment.likes.length}
           </Button>
         </Col>

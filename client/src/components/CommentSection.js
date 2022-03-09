@@ -32,12 +32,17 @@ function CommentSection(props) {
       <Row className='comment-form'>
         {props.user ? (
           <>
-            <Col xs={1}>
+            <Col xs={2} xl={1}>
               <img
-                width={70}
-                height={70}
+                // width={70}
+                width={'100%'}
                 src={'/avatars/' + props.user.avatar}
                 alt='user-avatar'
+                style={{
+                  minWidth: '50px',
+                  width: '120%',
+                  margin: 'auto',
+                }}
               />
             </Col>
             <Col>
