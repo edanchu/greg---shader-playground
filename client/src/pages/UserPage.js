@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import CardItem from '../components/CardItem';
 import './UserPage.css';
 
-export default function UserPage({ currUser }) {
+export default function UserPage({ currUser, setUser: setGlobalUser }) {
   let { id } = useParams();
 
   const [user, setUser] = useState(null);
@@ -54,6 +54,7 @@ export default function UserPage({ currUser }) {
           .then((res) => {
             setModalIsOpen(false);
             setUser({ ...res.data.user });
+            if (isCurrUser) setGlobalUser({ ...res.data.user });
           })
           .catch((err) => console.log(err));
       })
