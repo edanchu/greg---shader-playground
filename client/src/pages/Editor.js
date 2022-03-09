@@ -121,16 +121,18 @@ export default function Editor({ user, setUser }) {
     }
   };
 
-  const handleDelete = (event) => {
-    if (user) {
-      axios
-        .delete('/api/user/delete-project/' + id)
-        .then((res) => {
-          toast('Project deleted successfully');
-        })
-        .catch((err) => console.log(err));
-    } else {
-      toast.error('Must be signed in to delete project');
+  const handleDelete = (confirmation) => {
+    if (confirmation === true) {
+      if (user) {
+        axios
+          .delete('/api/user/delete-project/' + id)
+          .then((res) => {
+            toast('Project deleted successfully');
+          })
+          .catch((err) => console.log(err));
+      } else {
+        toast.error('Must be signed in to delete project');
+      }
     }
   };
 
@@ -290,40 +292,34 @@ export default function Editor({ user, setUser }) {
               toggleFullscreen={() => setFullscreen(!isFullScreen)}
             />}
           <div>
-            <button
+            <Button variant='dark'
               style={{
                 position: 'float',
                 top: '625px',
                 left: '15px',
                 color: liked ? 'aqua' : 'lightgrey',
+                marginTop: '0.5rem',
+                marginBottom: '0.5rem'
               }}
               onClick={() => handleLike()}
             >
-              <i className='fas fa-thumbs-up'></i>
-            </button>
-            <button
+              <i className='fas fa-thumbs-up'></i>  {project.likes.length}
+            </Button>
+            <Button variant='outline-danger'
               style={{
                 position: 'float',
                 top: '625px',
                 left: '105px',
                 color: 'red',
+                marginTop: '0.5rem',
+                marginBottom: '0.5rem'
               }}
-              onClick={(e) => handleDelete()}
+              onClick={(e) => handleDelete(window.confirm("Are you sure you want to delete this project?"))}
             >
               <i className='fa fa-trash' aria-hidden='true'></i>
-            </button>
-            <h6
-              style={{
-                position: 'float',
-                top: '628px',
-                left: '55px',
-                color: 'white',
-              }}
-            >
-              {project.likes.length}
-            </h6>
+            </Button>
           </div>
-          <button
+          <Button variant='dark'
             className='fa fa-edit'
             style={{ position: 'float', top: '705px', left: '275px' }}
             onClick={() => {
@@ -332,17 +328,22 @@ export default function Editor({ user, setUser }) {
               setDescriptionInfo(project.description);
               setPublicInfo(project.public);
             }}
-          ></button>
-          <button
+          ></Button>
+          <Button variant='dark'
             className='fa fa-public'
-            style={{ position: 'float', top: '705px', left: '295px' }}
+            style={{
+              position: 'float',
+              top: '705px',
+              left: '295px',
+              marginLeft: '0.5rem'
+            }}
             onClick={() => {
               setPublicInfo(!project.public);
               project.public = !project.public;
             }}
           >
             {project.public ? 'Set Private' : 'Set Public'}
-          </button>
+          </Button>
           <Modal show={modalIsOpen}>
             <Modal.Header className='modal-header'>
               Update Project Information

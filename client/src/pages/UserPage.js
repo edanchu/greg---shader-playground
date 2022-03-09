@@ -85,7 +85,7 @@ export default function UserPage({ currUser }) {
             >
               Edit picture
             </button>
-            <Modal show={modalIsOpen} onHide={() => setModalIsOpen(false)}>
+            <Modal show={modalIsOpen} onHide={() => setModalIsOpen(false)} dialogClassName="selector-modal">
               <Modal.Header closeButton>
                 <Modal.Title> Select new Profile Image</Modal.Title>
               </Modal.Header>
@@ -99,10 +99,12 @@ export default function UserPage({ currUser }) {
                   {imagePaths.map((a, index) => (
                     <Col
                       style={{
-                        width: '50%',
                         flexBasis: 'auto',
                       }}
                       key={index}
+                      md={4}
+                      lg={3}
+                      xs={6}
                     >
                       <img
                         src={window.location.origin + '/avatars/' + a}
@@ -111,6 +113,7 @@ export default function UserPage({ currUser }) {
                           selected === a
                             ? {
                               width: '100%',
+                              maxWidth: '200px',
                               margin: '2%',
                               borderRadius: '5%',
                               cursor: 'pointer',
@@ -118,6 +121,7 @@ export default function UserPage({ currUser }) {
                             }
                             : {
                               width: '100%',
+                              maxWidth: '200px',
                               margin: '2%',
                               borderRadius: '5%',
                               cursor: 'pointer',
@@ -146,7 +150,7 @@ export default function UserPage({ currUser }) {
                 </Button>
                 <Button
                   variant='primary'
-                  style={{ position: 'absolute', left: '40%', right: '40%' }}
+                  style={{ position: 'absolute', left: '45%', right: '45%' }}
                   onClick={handleChangeAvatar}
                 >
                   Confirm
