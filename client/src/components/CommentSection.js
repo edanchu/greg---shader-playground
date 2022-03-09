@@ -10,7 +10,6 @@ function CommentSection(props) {
   const [commentText, setCommentText] = useState('');
 
   useEffect(() => {
-    console.log(props.user.avatar);
     axios.get('/api/user/get-comments/' + props.projectId).then((res) => {
       setComments(res.data);
     });

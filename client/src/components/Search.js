@@ -8,6 +8,7 @@ import BrowseCards from './BrowseCards';
 function Search() {
   const [projects, setProjects] = useState([]);
   const [projectName, setProjectName] = useState('');
+
   useEffect(() => {
     axios
       .post('/api/user/search', { filter: projectName })
@@ -28,7 +29,13 @@ function Search() {
 
   return (
     <>
-      <Form className='search-box'>
+      <Form
+        className='search-box'
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit();
+        }}
+      >
         <Form.Group>
           <Form.Control
             className='search'
