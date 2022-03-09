@@ -1,25 +1,24 @@
 .search-box {
-    background: rgb(24, 22, 22);
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    padding-top: 20px;
+  background: rgb(24, 22, 22);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  margin-top: 30px;
 }
 
 .search {
-    padding: 5px 10px;
-    text-align: start;
-    width: 300px;
+  padding: 5px 10px;
+  text-align: start;
+  width: 300px;
 }
 
 .search-button {
-    padding: 8px 20px;
-    border-radius: 5px;
-    outline: darkblue;
-    border: none;
-    cursor: pointer;
-    background-color: rgba(122, 122, 115, 0.329);
-    color: aliceblue;
+  padding: 8px 20px;
+  border-radius: 5px;
+  outline: darkblue;
+  border: none;
+  cursor: pointer;
+  background-color: rgba(122, 122, 115, 0.329);
+  color: aliceblue;
 }
-

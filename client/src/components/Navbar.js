@@ -9,6 +9,7 @@ function Navbar({ user, setUser }) {
   const showButton = () => {
     if (window.innerWidth <= 960) {
       setButton(false);
+      console.log('TOO SMALL!!!');
     } else {
       setButton(true);
     }
@@ -43,18 +44,12 @@ function Navbar({ user, setUser }) {
               </Link>
             </li>
             <li className='nav-item'>
-              <Link
-                to='/Editor'
-                className='nav-links'
-              >
+              <Link to='/Editor' className='nav-links'>
                 New Shader
               </Link>
             </li>
             <li className='nav-item'>
-              <Link
-                to='/Tutorial'
-                className='nav-links'
-              >
+              <Link to='/Tutorial' className='nav-links'>
                 Tutorial
               </Link>
             </li>
