@@ -28,7 +28,13 @@ function Search() {
 
   return (
     <>
-      <Form className='search-box'>
+      <Form
+        className='search-box'
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit();
+        }}
+      >
         <Form.Group>
           <Form.Control
             className='search'
