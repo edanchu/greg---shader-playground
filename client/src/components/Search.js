@@ -8,6 +8,7 @@ import BrowseCards from './BrowseCards';
 function Search() {
   const [projects, setProjects] = useState([]);
   const [projectName, setProjectName] = useState('');
+
   useEffect(() => {
     axios
       .post('/api/user/search', { filter: projectName })
