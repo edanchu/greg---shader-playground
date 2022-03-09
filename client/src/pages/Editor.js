@@ -177,11 +177,11 @@ export default function Editor({ user, setUser }) {
               project.owner
                 ? {
                     ...project,
-                    title: "Copy of: " + project.title,
+                    title: 'Copy of: ' + project.title,
                     description:
-                      "This is a copy of " +
+                      'This is a copy of ' +
                       project.title +
-                      " by " +
+                      ' by ' +
                       project.ownerName,
                     owner: res.data.user._id,
                     ownerName: res.data.user.username,
@@ -226,11 +226,11 @@ export default function Editor({ user, setUser }) {
           project.owner
             ? {
                 ...project,
-                title: "Copy of: " + project.title,
+                title: 'Copy of: ' + project.title,
                 description:
-                  "This is a copy of " +
+                  'This is a copy of ' +
                   project.title +
-                  " by " +
+                  ' by ' +
                   project.ownerName,
                 owner: user._id,
                 ownerName: user.username,
@@ -275,8 +275,10 @@ export default function Editor({ user, setUser }) {
             )}
           </div>
         </Col>
-        <Col style={{ marginTop: "0.5rem" }} >
-          {isFullScreen ? <></> :
+        <Col style={{ marginTop: '0.5rem' }}>
+          {isFullScreen ? (
+            <></>
+          ) : (
             <GraphicsComponent
               height={pageWidth * 0.3}
               pause={false}
@@ -291,36 +293,48 @@ export default function Editor({ user, setUser }) {
               channels={project.channelUniforms}
               handleErrors={handleErrorMessages}
               toggleFullscreen={() => setFullscreen(!isFullScreen)}
-            />}
+            />
+          )}
           <div>
-            <Button variant='dark'
+            <Button
+              variant='dark'
               style={{
                 position: 'float',
                 top: '625px',
                 left: '15px',
                 color: liked ? 'aqua' : 'lightgrey',
                 marginTop: '0.5rem',
-                marginBottom: '0.5rem'
+                marginBottom: '0.5rem',
               }}
               onClick={() => handleLike()}
             >
-              <i className='fas fa-thumbs-up'></i>  {project.likes.length}
+              <i className='fas fa-thumbs-up'></i> {project.likes.length}
             </Button>
-            <Button variant='outline-danger'
-              style={{
-                position: 'float',
-                top: '625px',
-                left: '105px',
-                color: 'red',
-                marginTop: '0.5rem',
-                marginBottom: '0.5rem'
-              }}
-              onClick={(e) => handleDelete(window.confirm("Are you sure you want to delete this project?"))}
-            >
-              <i className='fa fa-trash' aria-hidden='true'></i>
-            </Button>
+            {user?._id === project._id && (
+              <Button
+                variant='outline-danger'
+                style={{
+                  position: 'float',
+                  top: '625px',
+                  left: '105px',
+                  color: 'red',
+                  marginTop: '0.5rem',
+                  marginBottom: '0.5rem',
+                }}
+                onClick={(e) =>
+                  handleDelete(
+                    window.confirm(
+                      'Are you sure you want to delete this project?'
+                    )
+                  )
+                }
+              >
+                <i className='fa fa-trash' aria-hidden='true'></i>
+              </Button>
+            )}
           </div>
-          <Button variant='dark'
+          <Button
+            variant='dark'
             className='fa fa-edit'
             style={{ position: 'float', top: '705px', left: '275px' }}
             onClick={() => {
@@ -330,13 +344,14 @@ export default function Editor({ user, setUser }) {
               setPublicInfo(project.public);
             }}
           ></Button>
-          <Button variant='dark'
+          <Button
+            variant='dark'
             className='fa fa-public'
             style={{
               position: 'float',
               top: '705px',
               left: '295px',
-              marginLeft: '0.5rem'
+              marginLeft: '0.5rem',
             }}
             onClick={() => {
               setPublicInfo(!project.public);
@@ -349,16 +364,18 @@ export default function Editor({ user, setUser }) {
             <Modal.Header className='modal-header'>
               Update Project Information
             </Modal.Header>
-            <Modal.Body
-            >
+            <Modal.Body>
               <label className='modal-body-header' htmlFor='name'>
                 Title:
               </label>
               <br />
               <input
                 style={{
-                  width: '30%', border: '3px solid rgb(74, 70, 70)',
-                  padding: '5px', fontFamily: 'consolas', backgroundColor: '#ffff'
+                  width: '30%',
+                  border: '3px solid rgb(74, 70, 70)',
+                  padding: '5px',
+                  fontFamily: 'consolas',
+                  backgroundColor: '#ffff',
                 }}
                 className='input'
                 type='text'
@@ -374,8 +391,14 @@ export default function Editor({ user, setUser }) {
               <br />
               <textarea
                 style={{
-                  resize: 'none', width: '100%', maxWidth: '100%', border: '3px solid rgb(74, 70, 70)',
-                  padding: '5px', fontFamily: 'consolas', height: '700px', backgroundColor: '#ffff'
+                  resize: 'none',
+                  width: '100%',
+                  maxWidth: '100%',
+                  border: '3px solid rgb(74, 70, 70)',
+                  padding: '5px',
+                  fontFamily: 'consolas',
+                  height: '700px',
+                  backgroundColor: '#ffff',
                 }}
                 className='input'
                 type='text'
@@ -418,14 +441,22 @@ export default function Editor({ user, setUser }) {
               </Button>
             </Modal.Footer>
           </Modal>
-          <Modal show={errorModalIsOpen} onHide={() => { setErrorModalIsOpen(false) }} dialogClassName='error-modal'>
-            <Modal.Header className='modal-header'>Shader Compile Errors</Modal.Header>
+          <Modal
+            show={errorModalIsOpen}
+            onHide={() => {
+              setErrorModalIsOpen(false);
+            }}
+            dialogClassName='error-modal'
+          >
+            <Modal.Header className='modal-header'>
+              Shader Compile Errors
+            </Modal.Header>
             <Modal.Body>
-              <Tabs id="Compile Errors">
+              <Tabs id='Compile Errors'>
                 {errorModalIsOpen ? (
                   compileErrors.map((error, index) => {
                     return (
-                      <Tab eventKey={index} title={"Error " + (index + 1)}>
+                      <Tab eventKey={index} title={'Error ' + (index + 1)}>
                         <pre>{error}</pre>
                       </Tab>
                     );
@@ -470,11 +501,17 @@ export default function Editor({ user, setUser }) {
         onSignLogIn={onSignLogIn}
       />
       <ToastContainer />
-      <Modal show={isFullScreen}
-        onHide={() => { setFullscreen(false) }}
-        fullscreen centered dialogClassName='fullscreen-modal'
+      <Modal
+        show={isFullScreen}
+        onHide={() => {
+          setFullscreen(false);
+        }}
+        fullscreen
+        centered
+        dialogClassName='fullscreen-modal'
         backdrop={true}
-        backdropClassName='fullscreen-modal-backdrop'>
+        backdropClassName='fullscreen-modal-backdrop'
+      >
         <GraphicsComponent
           height={window.innerHeight * 0.92}
           pause={false}
