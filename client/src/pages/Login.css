@@ -31,7 +31,8 @@
 .google {
   color: white;
   font-weight: bold;
-  width: 100%;
+  width: 320px;
+  text-align: center;
 }
 
 .top-header {

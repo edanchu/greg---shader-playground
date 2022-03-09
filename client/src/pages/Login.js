@@ -94,8 +94,7 @@ export default function Login({
               Don't have an account? Sign up!
             </Button>
           </Link>
-        </Form>
-        <Button
+          <Button
           variant='danger'
           className='google'
           type='submit'
@@ -103,9 +102,10 @@ export default function Login({
             e.preventDefault();
             window.open('http://localhost:8888/api/user/auth/google', '_self');
           }}
-        >
-          <i className='fab fa-google' /> &nbsp; Sign in with Google
-        </Button>
+          >
+            <i className='fab fa-google' /> &nbsp; Sign in with Google
+          </Button>
+        </Form>
       </div>
     </div>
   );
