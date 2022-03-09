@@ -16,7 +16,7 @@ function Comment(props) {
   return (
     <>
       <Row className='comment-existing-container'>
-        <Col xs={'auto'}>
+        <Col xs={2}>
           <h4>{props.comment.ownerName}</h4>
           <Figure.Image
             src={"/avatars/" + props.comment.ownerAvatar}
@@ -24,14 +24,8 @@ function Comment(props) {
             height={60}
           />
         </Col>
-        <Col xs={'auto'}>
-          <textarea
-            type="text"
-            value={props.comment.content}
-            className='comment-existing'
-            disabled
-            style={{ resize: 'none', marginTop: '1rem' }}
-          />
+        <Col xs={10}>
+          <p className='comment-existing'>{props.comment.content}</p>
         </Col>
         <Col>
           <Button style={{ float: 'right' }}>

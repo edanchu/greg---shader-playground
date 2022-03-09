@@ -2,13 +2,13 @@
 .comment-box {
   max-width: '100%';
   color: #fff;
-  background-color: #909090;
+  background-color: #424242;
   border-radius: 0.875rem;
   padding: 0.2rem 1rem 2rem;
 }
 
 .comment-form {
-  background-color: #fff;
+  background-color: rgba(28,28,28);
   border-radius: 0.25rem;
   margin-bottom: 2rem;
   padding: 1rem;  
@@ -17,16 +17,19 @@
 .comment-form-input{
   margin-bottom: 0.25rem;
   border: none;
-  border-bottom: 1px solid #404040;
-  border-top: 1px solid #404040;
+  border-bottom: 1px solid #747474;
+  border-top: 1px solid #747474;
   font-size: 0.85rem;
   padding: 0.25rem;
   width: 99%;
+  min-height: 45px;
+  max-height: 150px;
+  background-color: inherit;
+  color: #bbc2d4;
 }
 
 .comment-form-input:focus{
   outline: none;
-  border-bottom-color: #00BDFC;
 }
 
 .comment-existing{
@@ -35,16 +38,22 @@
   border: none;
   font-size: 1.0rem;
   padding: 0.25rem;
-  width: 99%;
   background-color: inherit;
+  resize: none;
+  margin-top: 1rem;
+  width: 100%;
+  min-height: 45px;
+  max-height: 900px;
+  height: auto;
+  color: inherit;
 }
 
 .comment-existing-container{
   margin-bottom: 0.25rem;
   margin-left: 0.25rem;
   border: none;
-  border-bottom: 1px solid #404040;
-  border-top: 1px solid #404040;
   padding: 0.50rem;
   width: 99%;
+  height: fit-content;
+  color: #bbc2d4;
 }

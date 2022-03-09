@@ -28,9 +28,8 @@ function CommentSection(props) {
   }
 
   return (
-    <Container className='comment-box'>
-      <h2>Comments</h2>
-      <Row style={{ backgroundColor: '#ffff' }} className='comment-form'>
+    <Container className='comment-box' style={{ paddingTop: '30px' }} >
+      <Row className='comment-form'>
         {props.user ? (<>
           <Col xs={1}>
             <Figure.Image
@@ -40,24 +39,20 @@ function CommentSection(props) {
             />
           </Col>
           <Col>
-            <Row>
-              <textarea
-                type="text"
-                placeholder="Comment..."
-                value={commentText}
-                onChange={(e) => setCommentText(e.target.value)}
-                id="comment"
-                name="configname"
-                className='comment-form-input'
-              />
-            </Row>
-            <Row>
-              <Button onClick={() => { addComment(commentText); }}>Submit Comment</Button>
-            </Row>
+            <textarea
+              type="text"
+              placeholder="Comment..."
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
+              id="comment"
+              name="configname"
+              className='comment-form-input'
+            />
+            <Button style={{ float: 'left' }} onClick={() => { addComment(commentText); }}>Submit Comment</Button>
           </Col>
         </>
         ) : (
-          <textarea disabled style={{ float: 'right', flex: "1", resize: 'none', }}>Sign In To Comment</textarea>
+          <textarea disabled style={{ float: 'right', flex: "1", resize: 'none', }} value="Sign In To Comment" />
         )}</Row>
       {comments.map(
         (comment) =>
