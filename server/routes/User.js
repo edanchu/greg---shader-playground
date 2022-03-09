@@ -21,23 +21,23 @@ const signToken = (userID) => {
 };
 
 userRouter.get(
-  '/auth/google',
-  passport.authenticate('google', { scope: ['email'], session: false })
+  "/auth/google",
+  passport.authenticate("google", { scope: ["email"], session: false })
 );
 
 userRouter.get(
-  '/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: '/', session: false }),
+  "/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "/", session: false }),
   function (req, res) {
     if (req.isAuthenticated()) {
       const { _id } = req.user;
       const token = signToken(_id);
-      res.redirect('http://localhost:3000/GoogleCB/' + token);
+      res.redirect("http://localhost:3000/GoogleCB/" + token);
     }
   }
 );
 
-userRouter.post('/register', (req, res) => {
+userRouter.post("/register", (req, res) => {
   const { email, username, password } = req.body;
   User.findOne({ email }, (err, user) => {
     if (err)
@@ -246,30 +246,43 @@ userRouter.delete(
   "/delete-project/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Project.findOneAndDelete(
+    Project.findById(
       { _id: new mongoose.Types.ObjectId(req.params.id) },
       (err, project) => {
         if (err) {
           console.log(err);
-          res.status(500).send("Database error");
+          res.status(500).send("database error");
         }
-        console.log("succesfully deleted project " + req.params.id);
-      }
-    );
-
-    User.updateOne(
-      { _id: req.user._id },
-      {
-        $pullAll: {
-          projects: [{ _id: new mongoose.Types.ObjectId(req.params.id) }],
-        },
-      },
-      (err, deletedProject) => {
-        if (err) {
-          console.log(err);
-          res.status(500).send("Database error");
+        if (project.owner !== req.user._id) {
+          res.send("you don't own this project!");
+          return;
+        } else {
+          Project.findOneAndDelete(
+            { _id: new mongoose.Types.ObjectId(req.params.id) },
+            (err, project) => {
+              if (err) {
+                console.log(err);
+                res.status(500).send("Database error");
+              }
+              console.log("succesfully deleted project " + req.params.id);
+            }
+          );
+          User.updateOne(
+            { _id: req.user._id },
+            {
+              $pullAll: {
+                projects: [{ _id: new mongoose.Types.ObjectId(req.params.id) }],
+              },
+            },
+            (err, deletedProject) => {
+              if (err) {
+                console.log(err);
+                res.status(500).send("Database error");
+              }
+              res.send(deletedProject);
+            }
+          );
         }
-        res.send(deletedProject);
       }
     );
   }
@@ -281,6 +294,8 @@ userRouter.post(
   (req, res) => {
     var newComment = new Comment({
       owner: req.user._id,
+      ownerName: req.user.username,
+      ownerAvatar: req.user.avatar,
       content: req.body.content,
     });
 
@@ -307,25 +322,58 @@ userRouter.post(
   }
 );
 
+userRouter.get("/get-comments/:id", (req, res) => {
+  Project.findById(req.params.id, async (err, project) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send("database error");
+    }
+
+    await Promise.all(
+      project.comments.map((commentID) => Comment.findById(commentID))
+    ).then((comments) => {
+      res.send(comments);
+    });
+  });
+});
+
 userRouter.put(
-  "/update-comment/:id",
+  "/like-comment/:commentId",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    filter = { _id: new mongoose.Types.ObjectId(req.params.id) };
-    update = req.body;
-    Comment.findOneAndUpdate(
-      filter,
-      update,
-      { new: true },
-      (err, updatedComment) => {
-        if (err) {
-          console.log(err);
-          res.status(500).send("Database error");
-        }
-        console.log("updated");
-        res.send(updatedComment);
+    filter = { _id: new mongoose.Types.ObjectId(req.params.commentId) };
+    Comment.findById(filter, (err, comment) => {
+      if (err) {
+        console.log(err);
       }
-    );
+      if (!comment.likes.includes(req.user._id)) {
+        Comment.findByIdAndUpdate(
+          filter,
+          { $push: { likes: req.user._id } },
+          { safe: true, upsert: true, new: true },
+          (err, updatedComment) => {
+            if (err) {
+              console.log(err);
+              res.status(500).send("database error");
+            }
+            res.send(updatedComment);
+          }
+        );
+      } else {
+        Comment.updateOne(
+          filter,
+          { $pull: { likes: req.user._id } },
+          // { $pull: { fruits: { $in: [ "apples", "oranges" ] }, vegetables: "carrots" } }
+          (err, newLikes) => {
+            if (err) {
+              console.log(err);
+              res.status(500).send("Database error");
+            }
+            res.send(newLikes);
+          }
+        );
+      }
+    });
   }
 );
 
