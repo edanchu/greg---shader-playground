@@ -110,6 +110,13 @@ h1 {
   line-height: 20px;
 }
 
+.row {
+  margin: auto;
+  display: flex;
+  justify-content: space-around;
+  max-width: 2200px;
+}
+
 @media only screen and (min-width: 1200px) {
   .content__blog__container {
     width: 84%;

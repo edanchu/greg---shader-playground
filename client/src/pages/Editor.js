@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { Button, Col, Modal, Row, Tab, Tabs } from 'react-bootstrap';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import CommentSection from '../components/CommentSection';
 import EditorText from '../components/EditorText';
+import GraphicsComponent from '../components/graphics_component';
+import SignLogInModal from '../components/SignLogInModal';
 import TextureSelector from '../components/TextureSelector';
 import './Editor.css';
-import GraphicsComponent from '../components/graphics_component';
-import { Row, Col, Modal, Button, Tab, Tabs } from 'react-bootstrap';
-import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
-import SignLogInModal from '../components/SignLogInModal';
-
 export default function Editor({ user, setUser }) {
   let { id } = useParams();
   let navigate = useNavigate();
@@ -160,16 +160,13 @@ export default function Editor({ user, setUser }) {
       .get('/api/user/authenticated')
       .then((res) => {
         if (project.owner === res.data.user._id) {
-          console.log('saving project...', project);
           axios
             .put('/api/user/update-project/' + project._id, project)
             .then((res) => {
-              console.log('successful save!');
               setLastSaved(project);
             })
             .catch((err) => console.log(err));
         } else {
-          console.log('forking/adding project...');
           axios
             .post(
               '/api/user/add-project/',
@@ -194,7 +191,6 @@ export default function Editor({ user, setUser }) {
                 }
             )
             .then((res) => {
-              console.log('successfully added/forked project');
               return navigate('/Editor/' + res.data._id);
             })
             .catch((err) => console.log(err));
@@ -202,23 +198,19 @@ export default function Editor({ user, setUser }) {
       })
       .catch((err) => {
         console.log(err);
-        console.log('sign up/in to save this project');
         setShowSignLogInModal(true);
       });
   }
 
   function onSignLogIn(user) {
     if (project.owner === user._id) {
-      console.log('saving project...', project);
       axios
         .put('/api/user/update-project/' + project._id, project)
         .then((res) => {
-          console.log('successful save!');
           setLastSaved(project);
         })
         .catch((err) => console.log(err));
     } else {
-      console.log('forking/adding project...');
       axios
         .post(
           '/api/user/add-project/',
@@ -243,7 +235,6 @@ export default function Editor({ user, setUser }) {
             }
         )
         .then((res) => {
-          console.log('successfully added/forked project');
           return navigate('/Editor/' + res.data._id);
         })
         .catch((err) => console.log(err));
@@ -265,6 +256,7 @@ export default function Editor({ user, setUser }) {
               language='glsl'
               handleCompile={handleCompile}
               handleSave={handleSave}
+              user={user}
             />
             {bufferIdx !== 5 && (
               <TextureSelector
@@ -274,8 +266,10 @@ export default function Editor({ user, setUser }) {
             )}
           </div>
         </Col>
-        <Col style={{ marginTop: "0.5rem" }} >
-          {isFullScreen ? <></> :
+        <Col style={{ marginTop: '0.5rem' }}>
+          {isFullScreen ? (
+            <></>
+          ) : (
             <GraphicsComponent
               height={pageWidth * 0.3}
               pause={false}
@@ -290,61 +284,78 @@ export default function Editor({ user, setUser }) {
               channels={project.channelUniforms}
               handleErrors={handleErrorMessages}
               toggleFullscreen={() => setFullscreen(!isFullScreen)}
-            />}
+            />
+          )}
           <div>
-            <Button variant='dark'
+            <Button
+              variant='dark'
               style={{
                 position: 'float',
                 top: '625px',
                 left: '15px',
                 color: liked ? 'aqua' : 'lightgrey',
                 marginTop: '0.5rem',
-                marginBottom: '0.5rem'
+                marginBottom: '0.5rem',
               }}
               onClick={() => handleLike()}
             >
-              <i className='fas fa-thumbs-up'></i>  {project.likes.length}
+              <i className='fas fa-thumbs-up'></i> {project.likes.length}
             </Button>
-            <Button variant='outline-danger'
-              style={{
-                position: 'float',
-                top: '625px',
-                left: '105px',
-                color: 'red',
-                marginTop: '0.5rem',
-                marginBottom: '0.5rem'
-              }}
-              onClick={(e) => handleDelete(window.confirm("Are you sure you want to delete this project?"))}
-            >
-              <i className='fa fa-trash' aria-hidden='true'></i>
-            </Button>
+            {user && user._id === project.owner && (
+              <Button
+                variant='outline-danger'
+                style={{
+                  position: 'float',
+                  top: '625px',
+                  left: '105px',
+                  color: 'red',
+                  marginTop: '0.5rem',
+                  marginBottom: '0.5rem',
+                }}
+                onClick={(e) =>
+                  handleDelete(
+                    window.confirm(
+                      'Are you sure you want to delete this project?'
+                    )
+                  )
+                }
+              >
+                <i className='fa fa-trash' aria-hidden='true'></i>
+              </Button>
+            )}
           </div>
-          <Button variant='dark'
-            className='fa fa-edit'
-            style={{ position: 'float', top: '705px', left: '275px' }}
-            onClick={() => {
-              setModalIsOpen(true);
-              setTitleInfo(project.title);
-              setDescriptionInfo(project.description);
-              setPublicInfo(project.public);
-            }}
-          ></Button>
-          <Button variant='dark'
-            className='fa fa-public'
-            style={{
-              position: 'float',
-              top: '705px',
-              left: '295px',
-              marginLeft: '0.5rem'
-            }}
-            onClick={() => {
-              setPublicInfo(!project.public);
-              project.public = !project.public;
-            }}
-          >
-            {project.public ? 'Set Private' : 'Set Public'}
-          </Button>
-          <Modal show={modalIsOpen}>
+          {(!project.owner || user?._id === project.owner) && (
+            <>
+              <Button
+                variant='dark'
+                className='fa fa-edit'
+                style={{ position: 'float', top: '705px', left: '275px' }}
+                onClick={() => {
+                  setModalIsOpen(true);
+                  setTitleInfo(project.title);
+                  setDescriptionInfo(project.description);
+                  setPublicInfo(project.public);
+                }}
+              ></Button>
+              <Button
+                variant='dark'
+                className='fa fa-public'
+                style={{
+                  position: 'float',
+                  top: '705px',
+                  left: '295px',
+                  marginLeft: '0.5rem',
+                }}
+                onClick={() => {
+                  setPublicInfo(!project.public);
+                  project.public = !project.public;
+                }}
+              >
+                {project.public ? 'Set Private' : 'Set Public'}
+              </Button>
+            </>
+          )}
+          <Modal show={modalIsOpen} dialogClassName='selector-modal'>
             <Modal.Header className='modal-header'>
               Update Project Information
             </Modal.Header>
@@ -354,6 +365,13 @@ export default function Editor({ user, setUser }) {
               </label>
               <br />
               <input
+                style={{
+                  width: '30%',
+                  border: '3px solid rgb(74, 70, 70)',
+                  padding: '5px',
+                  fontFamily: 'consolas',
+                  backgroundColor: '#ffff',
+                }}
                 className='input'
                 type='text'
                 id='name'
@@ -367,6 +385,16 @@ export default function Editor({ user, setUser }) {
               </label>
               <br />
               <textarea
+                style={{
+                  resize: 'none',
+                  width: '100%',
+                  maxWidth: '100%',
+                  border: '3px solid rgb(74, 70, 70)',
+                  padding: '5px',
+                  fontFamily: 'consolas',
+                  height: '700px',
+                  backgroundColor: '#ffff',
+                }}
                 className='input'
                 type='text'
                 id='decription'
@@ -408,11 +436,29 @@ export default function Editor({ user, setUser }) {
               </Button>
             </Modal.Footer>
           </Modal>
-          <Modal show={errorModalIsOpen} onHide={() => { setErrorModalIsOpen(false) }} dialogClassName='error-modal'>
-            <Modal.Header className='modal-header'>Shader Compile Errors</Modal.Header>
+          <Modal
+            show={errorModalIsOpen}
+            onHide={() => {
+              setErrorModalIsOpen(false);
+            }}
+            dialogClassName='error-modal'
+          >
+            <Modal.Header className='modal-header'>
+              Shader Compile Errors
+            </Modal.Header>
             <Modal.Body>
-              <Tabs id="Compile Errors">
-                {errorModalIsOpen ? (compileErrors.map((error, index) => { return <Tab eventKey={index} title={"Error " + (index + 1)}><pre>{error}</pre></Tab> })) : (<></>)}
+              <Tabs id='Compile Errors'>
+                {errorModalIsOpen ? (
+                  compileErrors.map((error, index) => {
+                    return (
+                      <Tab eventKey={index} title={'Error ' + (index + 1)}>
+                        <pre>{error}</pre>
+                      </Tab>
+                    );
+                  })
+                ) : (
+                  <></>
+                )}
               </Tabs>
             </Modal.Body>
             <Modal.Footer>
@@ -437,9 +483,10 @@ export default function Editor({ user, setUser }) {
             {project.ownerName}
           </Link>
           <br></br>
-          <p style={{ position: 'float', top: '780px', left: '20px' }}>
+          <p style={{ position: 'float', top: '780px', left: '20px', color: '#97a2be' }}>
             {project.description}
           </p>
+          <CommentSection projectId={project._id} user={user} />
         </Col>
       </Row>
       <SignLogInModal
@@ -449,11 +496,17 @@ export default function Editor({ user, setUser }) {
         onSignLogIn={onSignLogIn}
       />
       <ToastContainer />
-      <Modal show={isFullScreen}
-        onHide={() => { setFullscreen(false) }}
-        fullscreen centered dialogClassName='fullscreen-modal'
+      <Modal
+        show={isFullScreen}
+        onHide={() => {
+          setFullscreen(false);
+        }}
+        fullscreen
+        centered
+        dialogClassName='fullscreen-modal'
         backdrop={true}
-        backdropClassName='fullscreen-modal-backdrop'>
+        backdropClassName='fullscreen-modal-backdrop'
+      >
         <GraphicsComponent
           height={window.innerHeight * 0.92}
           pause={false}

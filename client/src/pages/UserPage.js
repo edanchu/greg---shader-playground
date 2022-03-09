@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { Button, Col, Modal, Row } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
-import './UserPage.css';
-
 import CardItem from '../components/CardItem';
-import { Row, Col, Modal, Button } from 'react-bootstrap';
+import './UserPage.css';
 
 export default function UserPage({ currUser }) {
   let { id } = useParams();
@@ -12,6 +11,7 @@ export default function UserPage({ currUser }) {
   const [user, setUser] = useState(null);
   const [isCurrUser, setIsCurrUser] = useState(false);
   const [projects, setProjects] = useState([]);
+  const [loadingProjects, setLoadingProjects] = useState(true);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selected, setSelected] = useState();
 
@@ -31,6 +31,7 @@ export default function UserPage({ currUser }) {
           .get('/api/user/get-self-projects')
           .then((res) => {
             setProjects(res.data);
+            setLoadingProjects(false);
           })
           .catch((err) => console.log(err));
       else
@@ -38,6 +39,7 @@ export default function UserPage({ currUser }) {
           .get('/api/user/get-user-projects/' + user?._id)
           .then((res) => {
             setProjects(res.data);
+            setLoadingProjects(false);
           })
           .catch((err) => console.log(err));
     }
@@ -71,21 +73,27 @@ export default function UserPage({ currUser }) {
     <>
       <div className='Profile'>
         <img
+          width={'300px'}
           src={'/avatars/' + user.avatar}
           alt='avatar-img'
           className='profileImage'
         />
         {isCurrUser && (
           <>
-            <button
+            <Button
+              variant='outline-dark'
               onClick={(e) => {
                 setSelected(user.avatar);
                 setModalIsOpen(true);
               }}
             >
               Edit picture
-            </button>
-            <Modal show={modalIsOpen} onHide={() => setModalIsOpen(false)} dialogClassName="selector-modal">
+            </Button>
+            <Modal
+              show={modalIsOpen}
+              onHide={() => setModalIsOpen(false)}
+              dialogClassName='selector-modal'
+            >
               <Modal.Header closeButton>
                 <Modal.Title> Select new Profile Image</Modal.Title>
               </Modal.Header>
@@ -112,20 +120,20 @@ export default function UserPage({ currUser }) {
                         style={
                           selected === a
                             ? {
-                              width: '100%',
-                              maxWidth: '200px',
-                              margin: '2%',
-                              borderRadius: '5%',
-                              cursor: 'pointer',
-                              border: '7px solid red',
-                            }
+                                width: '100%',
+                                maxWidth: '200px',
+                                margin: '2%',
+                                borderRadius: '5%',
+                                cursor: 'pointer',
+                                border: '7px solid red',
+                              }
                             : {
-                              width: '100%',
-                              maxWidth: '200px',
-                              margin: '2%',
-                              borderRadius: '5%',
-                              cursor: 'pointer',
-                            }
+                                width: '100%',
+                                maxWidth: '200px',
+                                margin: '2%',
+                                borderRadius: '5%',
+                                cursor: 'pointer',
+                              }
                         }
                         onClick={() => setSelected(a)}
                       />
@@ -160,36 +168,40 @@ export default function UserPage({ currUser }) {
           </>
         )}
         <div className='description'>
-          <h4 style={{ marginBottom: '0' }} className='username'>{user.username}</h4>
+          <h4 style={{ marginBottom: '0' }} className='username'>
+            {user.username}
+          </h4>
         </div>
       </div>
       <div className='card-body'>
         <h1 className='title'>Projects</h1>
       </div>
-      <div className='cards'>
-        <div className='cards__container'>
-          <div className='cards__wrapper'>
-            <ul className='cards__items'>
-              {projects.map((project) => (
-                <CardItem
-                  key={project._id}
-                  project={project}
-                  pause={true}
-                  playOnMouseOver={true}
-                  showButtons={false}
-                  commonFragShaderCustomCode={project.code[5]}
-                  finalFragShaderCustomCode={project.code[0]}
-                  buffer1FragShaderCustomCode={project.code[1]}
-                  buffer2FragShaderCustomCode={project.code[2]}
-                  buffer3FragShaderCustomCode={project.code[3]}
-                  buffer4FragShaderCustomCode={project.code[4]}
-                  channels={project.channelUniforms}
-                />
-              ))}
-            </ul>
+      {projects.length > 0 && (
+        <div className='cards'>
+          <div className='cards__container'>
+            <div className='cards__wrapper'>
+              <ul className='cards__items'>
+                {projects.map((project) => (
+                  <CardItem
+                    key={project._id}
+                    project={project}
+                    pause={true}
+                    playOnMouseOver={true}
+                    showButtons={false}
+                    commonFragShaderCustomCode={project.code[5]}
+                    finalFragShaderCustomCode={project.code[0]}
+                    buffer1FragShaderCustomCode={project.code[1]}
+                    buffer2FragShaderCustomCode={project.code[2]}
+                    buffer3FragShaderCustomCode={project.code[3]}
+                    buffer4FragShaderCustomCode={project.code[4]}
+                    channels={project.channelUniforms}
+                  />
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 }

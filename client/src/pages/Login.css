@@ -13,7 +13,7 @@
 
 .login-box {
   width: 380px;
-  height: 390px;
+  height: 400px;
   padding: 10px;
   border: 5px solid gray;
   background-color: rgb(255, 255, 255);
@@ -31,8 +31,8 @@
 .google {
   color: white;
   font-weight: bold;
-  width: 320px;
-  text-align: center;
+  width: 100%;
+  margin-top: 10px;
 }
 
 .top-header {

@@ -29,6 +29,7 @@ export default function EditorText({
   value,
   handleCompile,
   handleSave,
+  user,
   ...props
 }) {
   return (
@@ -36,16 +37,40 @@ export default function EditorText({
       <div className='editor-container'>
         <button onClick={(e) => handleCompile()}>{'\u25B6'}</button>
         <div className='editor-title'>
-          <Nav variant="pills" defaultActiveKey="Main" onSelect={(selectedKey) => { setBufferIdx(buffers.findIndex((b) => b === selectedKey)); }}>
-            <Nav.Item> <Nav.Link eventKey="Common"> Common </Nav.Link> </Nav.Item>
-            <Nav.Item> <Nav.Link eventKey="Main"> Main </Nav.Link> </Nav.Item>
-            <Nav.Item> <Nav.Link eventKey="Buffer 1"> Buffer 1 </Nav.Link> </Nav.Item>
-            <Nav.Item> <Nav.Link eventKey="Buffer 2"> Buffer 2 </Nav.Link> </Nav.Item>
-            <Nav.Item> <Nav.Link eventKey="Buffer 3"> Buffer 3 </Nav.Link> </Nav.Item>
-            <Nav.Item> <Nav.Link eventKey="Buffer 4"> Buffer 4 </Nav.Link> </Nav.Item>
+          <Nav
+            variant='pills'
+            defaultActiveKey='Main'
+            onSelect={(selectedKey) => {
+              setBufferIdx(buffers.findIndex((b) => b === selectedKey));
+            }}
+          >
+            <Nav.Item>
+              {' '}
+              <Nav.Link eventKey='Common'> Common </Nav.Link>{' '}
+            </Nav.Item>
+            <Nav.Item>
+              {' '}
+              <Nav.Link eventKey='Main'> Main </Nav.Link>{' '}
+            </Nav.Item>
+            <Nav.Item>
+              {' '}
+              <Nav.Link eventKey='Buffer 1'> Buffer 1 </Nav.Link>{' '}
+            </Nav.Item>
+            <Nav.Item>
+              {' '}
+              <Nav.Link eventKey='Buffer 2'> Buffer 2 </Nav.Link>{' '}
+            </Nav.Item>
+            <Nav.Item>
+              {' '}
+              <Nav.Link eventKey='Buffer 3'> Buffer 3 </Nav.Link>{' '}
+            </Nav.Item>
+            <Nav.Item>
+              {' '}
+              <Nav.Link eventKey='Buffer 4'> Buffer 4 </Nav.Link>{' '}
+            </Nav.Item>
           </Nav>
-          <Button variant='secondary' onClick={handleSave}>
-            SAVE
+          <Button variant='secondary' onClick={handleSave} style={{ marginRight: '10px' }}>
+            {!project.owner || user?._id === project.owner ? 'SAVE' : 'FORK'}
           </Button>
         </div>
         <ControlledEditor

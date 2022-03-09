@@ -25,9 +25,7 @@ export default function Login({
           password: password,
         })
         .then((res) => {
-          console.log(res);
           setUser(res.data.user);
-          //return navigate('/UserPage');
           onSignLogIn(res.data.user);
         })
         .catch((err) => {
@@ -95,13 +93,16 @@ export default function Login({
             </Button>
           </Link>
           <Button
-          variant='danger'
-          className='google'
-          type='submit'
-          onClick={(e) => {
-            e.preventDefault();
-            window.open('http://localhost:8888/api/user/auth/google', '_self');
-          }}
+            variant='danger'
+            className='google'
+            type='submit'
+            onClick={(e) => {
+              e.preventDefault();
+              window.open(
+                'http://localhost:8888/api/user/auth/google',
+                '_self'
+              );
+            }}
           >
             <i className='fab fa-google' /> &nbsp; Sign in with Google
           </Button>
