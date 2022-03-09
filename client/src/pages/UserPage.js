@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
-import './UserPage.css';
-
-import CardItem from '../components/CardItem';
-import { Row, Col, Modal, Button } from 'react-bootstrap';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Button, Col, Modal, Row } from "react-bootstrap";
+import { useParams } from "react-router-dom";
+import CardItem from "../components/CardItem";
+import "./UserPage.css";
 
 export default function UserPage({ currUser }) {
   let { id } = useParams();
@@ -17,7 +16,7 @@ export default function UserPage({ currUser }) {
 
   useEffect(() => {
     if (!user)
-      axios.get('/api/user/find-by-id/' + id).then((res) => {
+      axios.get("/api/user/find-by-id/" + id).then((res) => {
         setUser(res.data);
         setSelected(res.data.avatar);
       });
@@ -28,14 +27,14 @@ export default function UserPage({ currUser }) {
       setIsCurrUser(currUser?._id === user._id);
       if (currUser?._id === user._id)
         axios
-          .get('/api/user/get-self-projects')
+          .get("/api/user/get-self-projects")
           .then((res) => {
             setProjects(res.data);
           })
           .catch((err) => console.log(err));
       else
         axios
-          .get('/api/user/get-user-projects/' + user?._id)
+          .get("/api/user/get-user-projects/" + user?._id)
           .then((res) => {
             setProjects(res.data);
           })
@@ -45,10 +44,10 @@ export default function UserPage({ currUser }) {
 
   const handleChangeAvatar = () => {
     axios
-      .put('/api/user/update-avatar', { avatar: selected })
+      .put("/api/user/update-avatar", { avatar: selected })
       .then((res) => {
         axios
-          .get('/api/user/authenticated')
+          .get("/api/user/authenticated")
           .then((res) => {
             setModalIsOpen(false);
             setUser({ ...res.data.user });
@@ -62,6 +61,7 @@ export default function UserPage({ currUser }) {
     return dir.keys().map((item) => item.slice(2));
   };
 
+
   const dir = require.context('../../public/avatars');
   let imagePaths = getAvatarPaths(dir);
 
@@ -69,11 +69,12 @@ export default function UserPage({ currUser }) {
 
   return (
     <>
-      <div className='Profile'>
+      <div className="Profile">
         <img
-          src={'/avatars/' + user.avatar}
-          alt='avatar-img'
-          className='profileImage'
+          width={"300px"}
+          src={"/avatars/" + user.avatar}
+          alt="avatar-img"
+          className="profileImage"
         />
         {isCurrUser && (
           <>
@@ -85,14 +86,18 @@ export default function UserPage({ currUser }) {
             >
               Edit picture
             </button>
-            <Modal show={modalIsOpen} onHide={() => setModalIsOpen(false)} dialogClassName="selector-modal">
+            <Modal
+              show={modalIsOpen}
+              onHide={() => setModalIsOpen(false)}
+              dialogClassName='selector-modal'
+            >
               <Modal.Header closeButton>
                 <Modal.Title> Select new Profile Image</Modal.Title>
               </Modal.Header>
               <Modal.Body
                 style={{
-                  maxHeight: 'calc(100vh - 300px)',
-                  overflowY: 'auto',
+                  maxHeight: "calc(100vh - 300px)",
+                  overflowY: "auto",
                 }}
               >
                 <Row>
@@ -107,25 +112,25 @@ export default function UserPage({ currUser }) {
                       xs={6}
                     >
                       <img
-                        src={window.location.origin + '/avatars/' + a}
-                        alt='texture-img'
+                        src={window.location.origin + "/avatars/" + a}
+                        alt="texture-img"
                         style={
                           selected === a
                             ? {
-                              width: '100%',
-                              maxWidth: '200px',
-                              margin: '2%',
-                              borderRadius: '5%',
-                              cursor: 'pointer',
-                              border: '7px solid red',
-                            }
+                                width: '100%',
+                                maxWidth: '200px',
+                                margin: '2%',
+                                borderRadius: '5%',
+                                cursor: 'pointer',
+                                border: '7px solid red',
+                              }
                             : {
-                              width: '100%',
-                              maxWidth: '200px',
-                              margin: '2%',
-                              borderRadius: '5%',
-                              cursor: 'pointer',
-                            }
+                                width: '100%',
+                                maxWidth: '200px',
+                                margin: '2%',
+                                borderRadius: '5%',
+                                cursor: 'pointer',
+                              }
                         }
                         onClick={() => setSelected(a)}
                       />
@@ -135,15 +140,15 @@ export default function UserPage({ currUser }) {
               </Modal.Body>
               <Modal.Footer>
                 <Button
-                  variant='outline-danger'
-                  style={{ position: 'absolute', right: '0' }}
+                  variant="outline-danger"
+                  style={{ position: "absolute", right: "0" }}
                   onClick={() => setSelected(null)}
                 >
                   Clear
                 </Button>
                 <Button
-                  variant='outline-danger'
-                  style={{ position: 'absolute', left: '0' }}
+                  variant="outline-danger"
+                  style={{ position: "absolute", left: "0" }}
                   onClick={(e) => setModalIsOpen(false)}
                 >
                   Close
@@ -160,32 +165,38 @@ export default function UserPage({ currUser }) {
           </>
         )}
         <div className='description'>
-          <h4 style={{ marginBottom: '0' }} className='username'>{user.username}</h4>
+          <h4 style={{ marginBottom: '0' }} className='username'>
+            {user.username}
+          </h4>
         </div>
       </div>
-      <div className='card-body'>
-        <h1 className='title'>Projects</h1>
+      <div className="card-body">
+        <h1 className="title">Projects</h1>
       </div>
       <div className='cards'>
         <div className='cards__container'>
           <div className='cards__wrapper'>
             <ul className='cards__items'>
-              {projects.map((project) => (
-                <CardItem
-                  key={project._id}
-                  project={project}
-                  pause={true}
-                  playOnMouseOver={true}
-                  showButtons={false}
-                  commonFragShaderCustomCode={project.code[5]}
-                  finalFragShaderCustomCode={project.code[0]}
-                  buffer1FragShaderCustomCode={project.code[1]}
-                  buffer2FragShaderCustomCode={project.code[2]}
-                  buffer3FragShaderCustomCode={project.code[3]}
-                  buffer4FragShaderCustomCode={project.code[4]}
-                  channels={project.channelUniforms}
-                />
-              ))}
+              {projects.length > 0 ? (
+                projects.map((project) => (
+                  <CardItem
+                    key={project._id}
+                    project={project}
+                    pause={true}
+                    playOnMouseOver={true}
+                    showButtons={false}
+                    commonFragShaderCustomCode={project.code[5]}
+                    finalFragShaderCustomCode={project.code[0]}
+                    buffer1FragShaderCustomCode={project.code[1]}
+                    buffer2FragShaderCustomCode={project.code[2]}
+                    buffer3FragShaderCustomCode={project.code[3]}
+                    buffer4FragShaderCustomCode={project.code[4]}
+                    channels={project.channelUniforms}
+                  />
+                ))
+              ) : (
+                <h1>Click New Shader to begin!</h1>
+              )}
             </ul>
           </div>
         </div>
