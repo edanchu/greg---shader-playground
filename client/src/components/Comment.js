@@ -50,7 +50,7 @@ function Comment(props) {
           <p className='comment-existing'>{props.comment.content}</p>
         </Col>
         <Col>
-          <Button style={{ float: 'right' }} onClick={handleLike}>
+          <Button style={{ float: 'right', color: liked ? 'aqua' : 'lightgrey' }} onClick={handleLike}>
             <i className='fas fa-thumbs-up' /> {comment.likes.length}
           </Button>
         </Col>
