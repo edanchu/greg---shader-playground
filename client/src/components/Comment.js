@@ -39,7 +39,7 @@ function Comment(props) {
     <>
       <Row className='comment-existing-container'>
         <Col xs={2}>
-          <h4>{props.comment.ownerName}</h4>
+          <a href={'/UserPage/' + comment.owner}>{comment.ownerName}</a>
           <Figure.Image
             src={'/avatars/' + comment.ownerAvatar}
             width={60}
@@ -47,7 +47,7 @@ function Comment(props) {
           />
         </Col>
         <Col xs={10}>
-          <p className='comment-existing'>{props.comment.content}</p>
+          <p className='comment-existing'>{comment.content}</p>
         </Col>
         <Col>
           <Button style={{ float: 'right' }} onClick={handleLike}>
