@@ -39,7 +39,7 @@ function Comment(props) {
     <>
       <Row className='comment-existing-container'>
         <Col xs={2}>
-          <a href={'/UserPage/' + comment.owner}>{comment.ownerName}</a>
+          <h5><a style={{ color: "inherit" }} href={'/UserPage/' + comment.owner}>{comment.ownerName}</a></h5>
           <Figure.Image
             src={'/avatars/' + comment.ownerAvatar}
             width={60}

@@ -483,7 +483,7 @@ export default function Editor({ user, setUser }) {
             {project.ownerName}
           </Link>
           <br></br>
-          <p style={{ position: 'float', top: '780px', left: '20px' }}>
+          <p style={{ position: 'float', top: '780px', left: '20px', color: '#97a2be' }}>
             {project.description}
           </p>
           <CommentSection projectId={project._id} user={user} />
