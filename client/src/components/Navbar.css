@@ -115,14 +115,6 @@
       transition: all 0.5s ease;
     }
   
-    .nav-menu.active {
-      background: #242222;
-      left: 0;
-      opacity: 1;
-      transition: all 0.5s ease;
-      z-index: 1;
-    }
-  
     .nav-links {
       text-align: center;
       padding: 2rem;
@@ -141,16 +133,6 @@
       top: 0;
       left: 0;
       transform: translate(25%, 50%);
-    }
-  
-    .menu-icon {
-      display: block;
-      position: absolute;
-      top: 0;
-      right: 0;
-      transform: translate(-100%, 60%);
-      font-size: 1.8rem;
-      cursor: pointer;
     }
   
     .fa-times {
