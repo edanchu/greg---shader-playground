@@ -94,18 +94,21 @@ export default function Login({
               Don't have an account? Sign up!
             </Button>
           </Link>
+          <Button
+            variant='danger'
+            className='google'
+            type='submit'
+            onClick={(e) => {
+              e.preventDefault();
+              window.open(
+                'http://localhost:8888/api/user/auth/google',
+                '_self'
+              );
+            }}
+          >
+            <i className='fab fa-google' /> &nbsp; Sign in with Google
+          </Button>
         </Form>
-        <Button
-          variant='danger'
-          className='google'
-          type='submit'
-          onClick={(e) => {
-            e.preventDefault();
-            window.open('http://localhost:8888/api/user/auth/google', '_self');
-          }}
-        >
-          <i className='fab fa-google' /> &nbsp; Sign in with Google
-        </Button>
       </div>
     </div>
   );
