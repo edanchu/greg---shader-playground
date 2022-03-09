@@ -28,7 +28,7 @@
 }
 .card-body{
     height: 90%;
-    background-image: linear-gradient(#9596A3, #424242);
+    background-image: linear-gradient(#9596A3, #9596A3);
 }
 .title{
     text-transform: uppercase;

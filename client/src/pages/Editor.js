@@ -449,7 +449,11 @@ export default function Editor({ user, setUser }) {
         onSignLogIn={onSignLogIn}
       />
       <ToastContainer />
-      <Modal show={isFullScreen} onHide={() => { setFullscreen(false) }} fullscreen centered dialogClassName='fullscreen-modal' backdrop={true} backdropClassName='fullscreen-modal-backdrop'>
+      <Modal show={isFullScreen}
+        onHide={() => { setFullscreen(false) }}
+        fullscreen centered dialogClassName='fullscreen-modal'
+        backdrop={true}
+        backdropClassName='fullscreen-modal-backdrop'>
         <GraphicsComponent
           height={window.innerHeight * 0.92}
           pause={false}

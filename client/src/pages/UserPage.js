@@ -160,7 +160,7 @@ export default function UserPage({ currUser }) {
           </>
         )}
         <div className='description'>
-          <h4 className='username'>{user.username}</h4>
+          <h4 style={{ marginBottom: '0' }} className='username'>{user.username}</h4>
         </div>
       </div>
       <div className='card-body'>
