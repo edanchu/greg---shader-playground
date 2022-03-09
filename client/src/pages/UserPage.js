@@ -85,7 +85,11 @@ export default function UserPage({ currUser }) {
             >
               Edit picture
             </button>
-            <Modal show={modalIsOpen} onHide={() => setModalIsOpen(false)} dialogClassName="selector-modal">
+            <Modal
+              show={modalIsOpen}
+              onHide={() => setModalIsOpen(false)}
+              dialogClassName='selector-modal'
+            >
               <Modal.Header closeButton>
                 <Modal.Title> Select new Profile Image</Modal.Title>
               </Modal.Header>
@@ -112,20 +116,20 @@ export default function UserPage({ currUser }) {
                         style={
                           selected === a
                             ? {
-                              width: '100%',
-                              maxWidth: '200px',
-                              margin: '2%',
-                              borderRadius: '5%',
-                              cursor: 'pointer',
-                              border: '7px solid red',
-                            }
+                                width: '100%',
+                                maxWidth: '200px',
+                                margin: '2%',
+                                borderRadius: '5%',
+                                cursor: 'pointer',
+                                border: '7px solid red',
+                              }
                             : {
-                              width: '100%',
-                              maxWidth: '200px',
-                              margin: '2%',
-                              borderRadius: '5%',
-                              cursor: 'pointer',
-                            }
+                                width: '100%',
+                                maxWidth: '200px',
+                                margin: '2%',
+                                borderRadius: '5%',
+                                cursor: 'pointer',
+                              }
                         }
                         onClick={() => setSelected(a)}
                       />
@@ -160,7 +164,9 @@ export default function UserPage({ currUser }) {
           </>
         )}
         <div className='description'>
-          <h4 style={{ marginBottom: '0' }} className='username'>{user.username}</h4>
+          <h4 style={{ marginBottom: '0' }} className='username'>
+            {user.username}
+          </h4>
         </div>
       </div>
       <div className='card-body'>
@@ -170,22 +176,26 @@ export default function UserPage({ currUser }) {
         <div className='cards__container'>
           <div className='cards__wrapper'>
             <ul className='cards__items'>
-              {projects.map((project) => (
-                <CardItem
-                  key={project._id}
-                  project={project}
-                  pause={true}
-                  playOnMouseOver={true}
-                  showButtons={false}
-                  commonFragShaderCustomCode={project.code[5]}
-                  finalFragShaderCustomCode={project.code[0]}
-                  buffer1FragShaderCustomCode={project.code[1]}
-                  buffer2FragShaderCustomCode={project.code[2]}
-                  buffer3FragShaderCustomCode={project.code[3]}
-                  buffer4FragShaderCustomCode={project.code[4]}
-                  channels={project.channelUniforms}
-                />
-              ))}
+              {projects.length > 0 ? (
+                projects.map((project) => (
+                  <CardItem
+                    key={project._id}
+                    project={project}
+                    pause={true}
+                    playOnMouseOver={true}
+                    showButtons={false}
+                    commonFragShaderCustomCode={project.code[5]}
+                    finalFragShaderCustomCode={project.code[0]}
+                    buffer1FragShaderCustomCode={project.code[1]}
+                    buffer2FragShaderCustomCode={project.code[2]}
+                    buffer3FragShaderCustomCode={project.code[3]}
+                    buffer4FragShaderCustomCode={project.code[4]}
+                    channels={project.channelUniforms}
+                  />
+                ))
+              ) : (
+                <h1>Click New Shader to begin!</h1>
+              )}
             </ul>
           </div>
         </div>
