@@ -9,21 +9,21 @@ function Browse() {
         setProjects([]);
         let exampleProjects = []
         axios.get('/api/user/get-user-projects/62254b96e11c11ac1b228c23')
-        .then((res) => {
-            setProjects(res.data);
-        })      
-        .catch((err) => console.log(err));
-      }, []);
+            .then((res) => {
+                setProjects(res.data);
+            })
+            .catch((err) => console.log(err));
+    }, []);
 
     useEffect(() => {
         console.log(projects)
     }, [projects]);
     return (
         <>
-            <div className='tut-main'>
+            <div className='tut-main' style={{ maxWidth: "1200px", margin: 'auto', fontSize: '30px', fontSize: '1.3rem' }}>
                 <h1 className='tut-header'>Tutorial</h1>
 
-                ``<h2 className='tut-header'>Fragment Shader Basics</h2>
+                <h2 className='tut-header'>Fragment Shader Basics</h2>
                 <p className='tut-p'>
                     Fragment shaders (also known as pixel shaders) are programs that are run for every fragment within an output image.
                     For our purposes, this means every pixel on the output canvas. Fragment shaders take input in the form of Uniforms,
@@ -65,17 +65,33 @@ function Browse() {
                 <p className='tut-p'>
                     Uniforms are read-only variables that are passed in to shaders. Greg provides a set of commonly used uniforms that
                     can be accessed from within each buffer:
+
                     <dl>
                         <dt><strong>float iTime</strong></dt>
-                        <dd>The time in ms that the shader has been running.</dd>
+                        <dd>The time in ms that the shader has been running.
+
+                        </dd>
+
                         <dt><strong>float iDeltaTime</strong></dt>
-                        <dd>The time in ms since the previous frame.</dd>
+                        <dd>The time in ms since the previous frame.
+
+                        </dd>
+
                         <dt><strong>int iFrame</strong></dt>
-                        <dd>The number of frames that have been rendered thus far.</dd>
+                        <dd>The number of frames that have been rendered thus far.
+
+                        </dd>
+
                         <dt><strong>vec2 iResolution</strong></dt>
-                        <dd>The canvas' resolution in pixels [x,y].</dd>
+                        <dd>The canvas' resolution in pixels [x,y].
+
+                        </dd>
+
                         <dt><strong>vec4 iMouse</strong></dt>
-                        <dd>The mouse location in pixels. [x, y, last click location x, last click location y].</dd>
+                        <dd>The mouse location in pixels. [x, y, last click location x, last click location y].
+
+                        </dd>
+
                         <dt><strong>sampler2D iKeyboard</strong></dt>
                         <dd>A 256x1 texture representing the keyboard's state. Each keyboard key is stored under it's ascii code and stores
                             information in a vec4 of floats.<br />
@@ -87,17 +103,23 @@ function Browse() {
                             3 is
                             unused.
                         </dd>
+
                         <dt><strong>vec4 iDate</strong></dt>
                         <dd>A vector of 4 elements representing the current date. [year, month, day, seconds]</dd>
                         <dt><strong>sampler2D iBufferTexture1-4</strong></dt>
                         <dd>Textures storing the output from each Buffer. Each Buffer has access to the output of every previous Buffer,
-                            Main has all of them. Resolution of iResolution
+                            Main has all of them. Resolution of iResolution.
                         </dd>
+
                         <dt><strong>sampler2D or samplerCube iChannel0-3</strong></dt>
                         <dd>Textures or Cubemaps containing user defined data chosen from a pre-existing pool. Each Buffer has access to its
-                            own set of channels. Each channel's resolution depends on the chosen data.</dd>
+                            own set of channels. Each channel's resolution depends on the chosen data.
+                        </dd>
+
                         <dt><strong>vec2 iChannel0-3Resolution</strong></dt>
-                        <dd>Vec2 Containing the x and y resolution of the chosen iChannel. Defaults to 2048x2048</dd>
+                        <dd>Vec2 Containing the x and y resolution of the chosen iChannel. Defaults to 2048x2048
+                        </dd>
+
                     </dl>
                 </p>
             </div>
