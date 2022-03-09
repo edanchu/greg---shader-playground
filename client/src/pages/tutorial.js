@@ -4,14 +4,27 @@ import './tutorial.css';
 import BrowseCards from '../components/BrowseCards.js';
 
 function Browse() {
+    const [projects, setProjects] = useState([]);
+    useEffect(() => {
+        setProjects([]);
+        let exampleProjects = []
+        axios.get('/api/user/get-user-projects/62254b96e11c11ac1b228c23')
+        .then((res) => {
+            setProjects(res.data);
+        })      
+        .catch((err) => console.log(err));
+      }, []);
 
+    useEffect(() => {
+        console.log(projects)
+    }, [projects]);
     return (
         <>
-            <div className='main'>
-                <h1 className='header'>Tutorial</h1>
+            <div className='tut-main'>
+                <h1 className='tut-header'>Tutorial</h1>
 
-                ``<h2 className='header'>Fragment Shader Basics</h2>
-                <p>
+                ``<h2 className='tut-header'>Fragment Shader Basics</h2>
+                <p className='tut-p'>
                     Fragment shaders (also known as pixel shaders) are programs that are run for every fragment within an output image.
                     For our purposes, this means every pixel on the output canvas. Fragment shaders take input in the form of Uniforms,
                     perform calculations based on these inputs, and then output a color in RGBA format. Within GLSL ES 3.0 (the shader
@@ -21,9 +34,9 @@ function Browse() {
                     is a great resource.
                 </p>
 
-                <h2 className='header'>Our Implementation</h2>
+                <h2 className='tut-header'>Our Implementation</h2>
 
-                <p>
+                <p className='tut-p'>
                     The fragment shaders that can be written on Greg all implement the
                     <code> void mainImage(out vec4 FragColor) </code> method
                     as an entry point. This is called once per pixel and is responsible for the final output color to the screen. Our
@@ -35,9 +48,9 @@ function Browse() {
                     calculations).
                 </p>
 
-                <h2 className='header'>Basic GLSL</h2>
+                <h2 className='tut-header'>Basic GLSL</h2>
 
-                <p>
+                <p className='tut-p'>
                     GLSL is a strongly typed c-like language that is specifically designed for use with graphics shaders. Fragment
                     shaders in GLSL have access to a large set of built in functions that are useful for graphics calculations such as
                     <code> dot(vec3 a, vec3 b), sin(float a), reflect(vec2-4 I, vec 2-4 N), distance(vec2-4 a, vec2-4 b) </code> as well
@@ -47,9 +60,9 @@ function Browse() {
                         href="https://www.khronos.org/registry/OpenGL-Refpages/es3.0/">check out the GLSL ES 3.0 Docs</a>.
                 </p>
 
-                <h2 className='header'>Uniforms</h2>
+                <h2 className='tut-header'>Uniforms</h2>
 
-                <p>
+                <p className='tut-p'>
                     Uniforms are read-only variables that are passed in to shaders. Greg provides a set of commonly used uniforms that
                     can be accessed from within each buffer:
                     <dl>
@@ -87,6 +100,10 @@ function Browse() {
                         <dd>Vec2 Containing the x and y resolution of the chosen iChannel. Defaults to 2048x2048</dd>
                     </dl>
                 </p>
+            </div>
+            <div>
+                <h1 className='tut-header'>Examples</h1>
+                <BrowseCards projects={projects} />
             </div>
         </>
     );

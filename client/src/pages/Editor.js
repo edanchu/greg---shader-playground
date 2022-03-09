@@ -31,6 +31,8 @@ export default function Editor({ user, setUser }) {
   const [errorModalIsOpen, setErrorModalIsOpen] = useState(false);
   const [compileErrors, setCompileErrors] = useState([]);
 
+  const [isFullScreen, setFullscreen] = useState(false);
+
   window.onbeforeunload = (e) => {
     if (project !== lastSaved) {
       e.preventDefault();
@@ -119,16 +121,19 @@ export default function Editor({ user, setUser }) {
     }
   };
 
-  const handleDelete = (event) => {
-    if (user) {
-      axios
-        .delete("/api/user/delete-project/" + id)
-        .then((res) => {
-          toast("Project deleted successfully");
-        })
-        .catch((err) => console.log(err));
-    } else {
-      toast.error("Must be signed in to delete project");
+
+  const handleDelete = (confirmation) => {
+    if (confirmation === true) {
+      if (user) {
+        axios
+          .delete('/api/user/delete-project/' + id)
+          .then((res) => {
+            toast('Project deleted successfully');
+          })
+          .catch((err) => console.log(err));
+      } else {
+        toast.error('Must be signed in to delete project');
+      }
     }
   };
 
@@ -270,89 +275,95 @@ export default function Editor({ user, setUser }) {
             )}
           </div>
         </Col>
-        <Col style={{ marginTop: "0.5rem" }}>
-          <GraphicsComponent
-            height={pageWidth * 0.3}
-            pause={false}
-            playOnMouseOver={false}
-            showButtons={true}
-            commonFragShaderCustomCode={compiledCode[5]}
-            finalFragShaderCustomCode={compiledCode[0]}
-            buffer1FragShaderCustomCode={compiledCode[1]}
-            buffer2FragShaderCustomCode={compiledCode[2]}
-            buffer3FragShaderCustomCode={compiledCode[3]}
-            buffer4FragShaderCustomCode={compiledCode[4]}
-            channels={project.channelUniforms}
-            handleErrors={handleErrorMessages}
-          />
+        <Col style={{ marginTop: "0.5rem" }} >
+          {isFullScreen ? <></> :
+            <GraphicsComponent
+              height={pageWidth * 0.3}
+              pause={false}
+              playOnMouseOver={false}
+              showButtons={true}
+              commonFragShaderCustomCode={compiledCode[5]}
+              finalFragShaderCustomCode={compiledCode[0]}
+              buffer1FragShaderCustomCode={compiledCode[1]}
+              buffer2FragShaderCustomCode={compiledCode[2]}
+              buffer3FragShaderCustomCode={compiledCode[3]}
+              buffer4FragShaderCustomCode={compiledCode[4]}
+              channels={project.channelUniforms}
+              handleErrors={handleErrorMessages}
+              toggleFullscreen={() => setFullscreen(!isFullScreen)}
+            />}
           <div>
-            <button
+            <Button variant='dark'
               style={{
-                position: "float",
-                top: "625px",
-                left: "15px",
-                color: liked ? "aqua" : "lightgrey",
+                position: 'float',
+                top: '625px',
+                left: '15px',
+                color: liked ? 'aqua' : 'lightgrey',
+                marginTop: '0.5rem',
+                marginBottom: '0.5rem'
               }}
               onClick={() => handleLike()}
             >
-              <i className="fas fa-thumbs-up"></i>
-            </button>
-            <button
+              <i className='fas fa-thumbs-up'></i>  {project.likes.length}
+            </Button>
+            <Button variant='outline-danger'
               style={{
-                position: "float",
-                top: "625px",
-                left: "105px",
-                color: "red",
+                position: 'float',
+                top: '625px',
+                left: '105px',
+                color: 'red',
+                marginTop: '0.5rem',
+                marginBottom: '0.5rem'
               }}
-              onClick={(e) => handleDelete()}
+              onClick={(e) => handleDelete(window.confirm("Are you sure you want to delete this project?"))}
             >
-              <i className="fa fa-trash" aria-hidden="true"></i>
-            </button>
-            <h6
-              style={{
-                position: "float",
-                top: "628px",
-                left: "55px",
-                color: "white",
-              }}
-            >
-              {project.likes.length}
-            </h6>
+              <i className='fa fa-trash' aria-hidden='true'></i>
+            </Button>
           </div>
-          <button
-            className="fa fa-edit"
-            style={{ position: "float", top: "705px", left: "275px" }}
+          <Button variant='dark'
+            className='fa fa-edit'
+            style={{ position: 'float', top: '705px', left: '275px' }}
             onClick={() => {
               setModalIsOpen(true);
               setTitleInfo(project.title);
               setDescriptionInfo(project.description);
               setPublicInfo(project.public);
             }}
-          ></button>
-          <button
-            className="fa fa-public"
-            style={{ position: "float", top: "705px", left: "295px" }}
+          ></Button>
+          <Button variant='dark'
+            className='fa fa-public'
+            style={{
+              position: 'float',
+              top: '705px',
+              left: '295px',
+              marginLeft: '0.5rem'
+            }}
             onClick={() => {
               setPublicInfo(!project.public);
               project.public = !project.public;
             }}
           >
-            {project.public ? "Set Private" : "Set Public"}
-          </button>
-          <Modal show={modalIsOpen}>
-            <Modal.Header className="modal-header">
+            {project.public ? 'Set Private' : 'Set Public'}
+          </Button>
+          <Modal show={modalIsOpen} dialogClassName='selector-modal'>
+            <Modal.Header className='modal-header'>
               Update Project Information
             </Modal.Header>
-            <Modal.Body>
-              <label className="modal-body-header" htmlFor="name">
+            <Modal.Body
+            >
+              <label className='modal-body-header' htmlFor='name'>
                 Title:
               </label>
               <br />
               <input
-                className="input"
-                type="text"
-                id="name"
-                name="name"
+                style={{
+                  width: '30%', border: '3px solid rgb(74, 70, 70)',
+                  padding: '5px', fontFamily: 'consolas', backgroundColor: '#ffff'
+                }}
+                className='input'
+                type='text'
+                id='name'
+                name='name'
                 value={titleInfo}
                 onChange={(e) => setTitleInfo(e.target.value)}
               />
@@ -362,10 +373,14 @@ export default function Editor({ user, setUser }) {
               </label>
               <br />
               <textarea
-                className="input"
-                type="text"
-                id="decription"
-                name="decription"
+                style={{
+                  resize: 'none', width: '100%', maxWidth: '100%', border: '3px solid rgb(74, 70, 70)',
+                  padding: '5px', fontFamily: 'consolas', height: '700px', backgroundColor: '#ffff'
+                }}
+                className='input'
+                type='text'
+                id='decription'
+                name='decription'
                 value={descriptionInfo}
                 onChange={(e) => setDescriptionInfo(e.target.value)}
               />
@@ -403,10 +418,8 @@ export default function Editor({ user, setUser }) {
               </Button>
             </Modal.Footer>
           </Modal>
-          <Modal show={errorModalIsOpen}>
-            <Modal.Header className="modal-header">
-              Shader Compile Errors
-            </Modal.Header>
+          <Modal show={errorModalIsOpen} onHide={() => { setErrorModalIsOpen(false) }} dialogClassName='error-modal'>
+            <Modal.Header className='modal-header'>Shader Compile Errors</Modal.Header>
             <Modal.Body>
               <Tabs id="Compile Errors">
                 {errorModalIsOpen ? (
@@ -457,6 +470,26 @@ export default function Editor({ user, setUser }) {
         onSignLogIn={onSignLogIn}
       />
       <ToastContainer />
+      <Modal show={isFullScreen}
+        onHide={() => { setFullscreen(false) }}
+        fullscreen centered dialogClassName='fullscreen-modal'
+        backdrop={true}
+        backdropClassName='fullscreen-modal-backdrop'>
+        <GraphicsComponent
+          height={window.innerHeight * 0.92}
+          pause={false}
+          playOnMouseOver={false}
+          showButtons={true}
+          commonFragShaderCustomCode={compiledCode[5]}
+          finalFragShaderCustomCode={compiledCode[0]}
+          buffer1FragShaderCustomCode={compiledCode[1]}
+          buffer2FragShaderCustomCode={compiledCode[2]}
+          buffer3FragShaderCustomCode={compiledCode[3]}
+          buffer4FragShaderCustomCode={compiledCode[4]}
+          channels={project.channelUniforms}
+          toggleFullscreen={() => setFullscreen(!isFullScreen)}
+        />
+      </Modal>
     </div>
   );
 }

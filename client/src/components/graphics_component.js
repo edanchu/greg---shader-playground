@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
 import * as THREE from 'three';
+import { Button } from 'react-bootstrap'
 
 class GraphicsComponent extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { time: 0, fps: 0 };
+  }
+
   componentDidMount() {
     this.sceneSetup = this.sceneSetup.bind(this);
     this.renderLoop = this.renderLoop.bind(this);
@@ -35,6 +41,7 @@ class GraphicsComponent extends Component {
     );
     this.loader = new THREE.TextureLoader();
     this.cubeLoader = new THREE.CubeTextureLoader();
+    this.frameTimes = [];
 
     document.addEventListener('keydown', this.keyDownCallback);
     document.addEventListener('keyup', this.keyUpCallback);
@@ -50,6 +57,7 @@ class GraphicsComponent extends Component {
       this.renderer.setSize(this.width, this.height);
       this.createRenderBuffers();
       this.createMaterials();
+      this.frameTimes = [];
     }
     else if (
       this.props.finalFragShaderCustomCode !== prevProps.finalFragShaderCustomCode ||
@@ -363,6 +371,9 @@ class GraphicsComponent extends Component {
         tempDate.getMinutes() * 60 +
         tempDate.getSeconds() +
         tempDate.getMilliseconds / 1000;
+      this.frameTimes.push(this.bufferMat1.uniforms.iDeltaTime.value);
+      if (this.frameTimes.length > 100) delete this.frameTimes[0];
+      this.setState({ time: this.bufferMat1.uniforms.iTime.value, fps: 1 / (this.frameTimes.reduce((a, b) => a + b) / this.frameTimes.length) })
     }
   }
 
@@ -604,6 +615,7 @@ void main(){
   restartCallback = (e) => {
     this.clock.stop();
     this.clock.start();
+    this.frameTimes = [];
     this.frameNumber = 0;
     this.pauseStartTime = 0;
     this.timePaused = 0;
@@ -613,7 +625,7 @@ void main(){
   render() {
     const style = {
       float: 'left',
-      backgroundColor: 'gray',
+      backgroundColor: '#343A40',
     };
     return (
       <div style={style}>
@@ -625,8 +637,15 @@ void main(){
           onMouseLeave={(e) => { this.props.playOnMouseOver ? this.pauseStartCallback(e) : <></>; }}
           ref={(ref) => (this.mount = ref)}
         />
-        {this.props.showButtons ? (<button onClick={(e) => this.restartCallback(e)}>{'\u23ee'}</button>) : (<></>)}
-        {this.props.showButtons ? (<button onClick={(e) => !this.pause ? this.pauseStartCallback(e) : this.pauseEndCallback(e)}>{'\u23ef'}</button>) : (<></>)}
+        {this.props.showButtons ? (<Button variant='dark' onClick={(e) => this.restartCallback(e)}>
+          <i className="fa fa-backward" aria-hidden='true'></i></Button>) : (<></>)}
+        {this.props.showButtons ? (<Button variant='dark' onClick={(e) => !this.pause ? this.pauseStartCallback(e) : this.pauseEndCallback(e)}>
+          <i className="fa fa-pause" aria-hidden='true'></i></Button>) : (<></>)}
+        {this.props.showButtons ? (<Button variant='dark' disabled >{this.state.time.toFixed(1)}</Button>) : (<></>)}
+        {this.props.showButtons ? (<Button variant='dark' disabled >{this.state.fps.toFixed(0)}</Button>) : (<></>)}
+        {this.props.showButtons ? (<Button variant='dark' style={{ float: 'right' }} onClick={(e) => {
+          (this.props.toggleFullscreen != undefined) ? this.props.toggleFullscreen() : <></>
+        }}><i className="fa fa-expand" aria-hidden='true'></i></Button>) : (<></>)}
       </div>
     );
   }

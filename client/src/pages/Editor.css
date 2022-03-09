@@ -17,5 +17,27 @@ body {
 }
 
 .input {
-  background-color: #ccc6c6;
+  background-color: #ffff;
+}
+
+.input:focus-visible{
+  outline: none;
+}
+
+.error-modal{
+  max-width: fit-content;
+}
+
+.fullscreen-modal{
+  max-width: fit-content;
+}
+
+.fullscreen-modal-backdrop.show {
+  background-color: rgb(0, 0, 0);
+  opacity: 1;
+}
+
+.btn:focus{
+  outline: 0 !important;
+  box-shadow: none !important;
 }

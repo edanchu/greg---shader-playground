@@ -52,6 +52,7 @@ const TextureModal = ({
         setShow(false);
         setSelected(chanUniforms[chanIdx]);
       }}
+      dialogClassName='selector-modal'
     >
       <Modal.Header closeButton>
         <Modal.Title>Select input for Channel {chanIdx}</Modal.Title>
@@ -90,6 +91,9 @@ const TextureModal = ({
                   flexBasis: 'auto',
                 }}
                 key={index}
+                md={4}
+                lg={3}
+                xs={6}
               >
                 <img
                   src={window.location.origin + '/textures/' + i}
@@ -126,6 +130,9 @@ const TextureModal = ({
                   flexBasis: 'auto',
                 }}
                 key={index}
+                md={4}
+                lg={3}
+                xs={6}
               >
                 <img
                   src={
