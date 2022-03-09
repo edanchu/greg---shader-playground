@@ -25,9 +25,7 @@ export default function Login({
           password: password,
         })
         .then((res) => {
-          console.log(res);
           setUser(res.data.user);
-          //return navigate('/UserPage');
           onSignLogIn(res.data.user);
         })
         .catch((err) => {

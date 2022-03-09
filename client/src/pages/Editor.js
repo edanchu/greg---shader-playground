@@ -160,16 +160,13 @@ export default function Editor({ user, setUser }) {
       .get('/api/user/authenticated')
       .then((res) => {
         if (project.owner === res.data.user._id) {
-          console.log('saving project...', project);
           axios
             .put('/api/user/update-project/' + project._id, project)
             .then((res) => {
-              console.log('successful save!');
               setLastSaved(project);
             })
             .catch((err) => console.log(err));
         } else {
-          console.log('forking/adding project...');
           axios
             .post(
               '/api/user/add-project/',
@@ -194,7 +191,6 @@ export default function Editor({ user, setUser }) {
                   }
             )
             .then((res) => {
-              console.log('successfully added/forked project');
               return navigate('/Editor/' + res.data._id);
             })
             .catch((err) => console.log(err));
@@ -202,23 +198,19 @@ export default function Editor({ user, setUser }) {
       })
       .catch((err) => {
         console.log(err);
-        console.log('sign up/in to save this project');
         setShowSignLogInModal(true);
       });
   }
 
   function onSignLogIn(user) {
     if (project.owner === user._id) {
-      console.log('saving project...', project);
       axios
         .put('/api/user/update-project/' + project._id, project)
         .then((res) => {
-          console.log('successful save!');
           setLastSaved(project);
         })
         .catch((err) => console.log(err));
     } else {
-      console.log('forking/adding project...');
       axios
         .post(
           '/api/user/add-project/',
@@ -243,16 +235,11 @@ export default function Editor({ user, setUser }) {
               }
         )
         .then((res) => {
-          console.log('successfully added/forked project');
           return navigate('/Editor/' + res.data._id);
         })
         .catch((err) => console.log(err));
     }
   }
-
-  useEffect(() => {
-    console.log(user, project);
-  }, [user, project]);
 
   if (!project || !compiledCode) return <></>;
 
