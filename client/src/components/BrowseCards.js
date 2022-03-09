@@ -1,6 +1,5 @@
 import React from 'react';
 import CardItem from './CardItem.js';
-import { Container, Row, Col } from 'react-bootstrap';
 import './Cards.css';
 
 function BrowseCards({ projects }) {

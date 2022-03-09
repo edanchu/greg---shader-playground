@@ -7,7 +7,6 @@ function Browse() {
   const [projects, setProjects] = useState([]);
   useEffect(() => {
     setProjects([]);
-    let exampleProjects = [];
     axios
       .get('/api/user/get-user-projects/62254b96e11c11ac1b228c23')
       .then((res) => {
@@ -23,7 +22,6 @@ function Browse() {
         style={{
           maxWidth: '1200px',
           margin: 'auto',
-          fontSize: '30px',
           fontSize: '1.3rem',
         }}
       >
