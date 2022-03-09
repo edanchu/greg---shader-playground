@@ -47,13 +47,10 @@ function App() {
           >
             <Route path='' element={<SignUp setUser={setUser} />} />
           </Route>
-          {/* <Route
+          <Route
             path='/UserPage/:id'
-            element={<PrivateRoute user={user} setUser={setUser} />}
-          > */}
-          {/* <Route path='' element={<UserPage currUser={user} />} /> */}
-          <Route path='/UserPage/:id' element={<UserPage currUser={user} />} />
-          {/* </Route> */}
+            element={<UserPage currUser={user} setUser={setUser} />}
+          />
           <Route
             path='/Editor/:id'
             element={<Editor user={user} setUser={setUser} />}
@@ -62,7 +59,7 @@ function App() {
             path='/Editor/'
             element={<Editor user={user} setUser={setUser} />}
           />
-           <Route
+          <Route
             path='/Tutorial'
             element={<Tutorial user={user} setUser={setUser} />}
           />
