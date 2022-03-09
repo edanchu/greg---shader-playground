@@ -9,13 +9,17 @@ const GoogleCB = ({ setUser }) => {
   cookies.set('access_token', tok, { path: '/' });
 
   useEffect(() => {
-    axios
-      .get('/api/user/authenticated')
-      .then((res) => {
-        setUser(res.data.user);
-      })
-      .catch((err) => console.log(err));
-  });
+    const interval = setInterval(() => {
+      axios
+        .get('/api/user/authenticated')
+        .then((res) => {
+          setUser(res.data.user);
+        })
+        .catch((err) => console.log(err));
+    }, 500);
+    return () => clearInterval(interval);
+  }, []);
+
   return <></>;
 };
 
