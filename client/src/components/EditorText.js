@@ -69,7 +69,7 @@ export default function EditorText({
               <Nav.Link eventKey='Buffer 4'> Buffer 4 </Nav.Link>{' '}
             </Nav.Item>
           </Nav>
-          <Button variant='secondary' onClick={handleSave}>
+          <Button variant='secondary' onClick={handleSave} style={{ marginRight: '10px' }}>
             {!project.owner || user?._id === project.owner ? 'SAVE' : 'FORK'}
           </Button>
         </div>
