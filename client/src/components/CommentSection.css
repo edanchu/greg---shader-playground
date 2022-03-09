@@ -1,3 +1,50 @@
-.avatar {
-  width: "150px";
+
+.comment-box {
+  max-width: '100%';
+  color: #fff;
+  background-color: #909090;
+  border-radius: 0.875rem;
+  padding: 0.2rem 1rem 2rem;
+}
+
+.comment-form {
+  background-color: #fff;
+  border-radius: 0.25rem;
+  margin-bottom: 2rem;
+  padding: 1rem;  
+}
+
+.comment-form-input{
+  margin-bottom: 0.25rem;
+  border: none;
+  border-bottom: 1px solid #404040;
+  border-top: 1px solid #404040;
+  font-size: 0.85rem;
+  padding: 0.25rem;
+  width: 99%;
+}
+
+.comment-form-input:focus{
+  outline: none;
+  border-bottom-color: #00BDFC;
+}
+
+.comment-existing{
+  border-radius: 0.875rem;
+  margin-bottom: 0.25rem;
+  border: none;
+  font-size: 1.0rem;
+  padding: 0.25rem;
+  width: 99%;
+  background-color: inherit;
+}
+
+.comment-existing-container{
+  margin-bottom: 0.25rem;
+  margin-left: 0.25rem;
+  border: none;
+  border-bottom: 1px solid #404040;
+  border-top: 1px solid #404040;
+  padding: 0.50rem;
+  width: 99%;
 }

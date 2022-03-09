@@ -1,42 +1,46 @@
 import axios from "axios";
 import React from "react";
-import { Col, Row } from "react-bootstrap";
+import { Col, Row, Figure, Button } from "react-bootstrap";
 import { toast } from "react-toastify";
+import './CommentSection.css'
 
 function Comment(props) {
   function handleLike() {
     if (!props.user) {
       toast.error("Must be signed in to like");
     } else {
-      console.log("here");
       axios.put("/api/user/like-comment/" + props.comment._id);
     }
   }
 
   return (
     <>
-      <Row>
-        <Col xs={2}>
-          <img
+      <Row className='comment-existing-container'>
+        <Col xs={'auto'}>
+          <h4>{props.comment.ownerName}</h4>
+          <Figure.Image
             src={"/avatars/" + props.comment.ownerAvatar}
-            alt="avatar-img"
-            width="40"
-            height="40"
-            className="profileImage"
+            width={60}
+            height={60}
+          />
+        </Col>
+        <Col xs={'auto'}>
+          <textarea
+            type="text"
+            value={props.comment.content}
+            className='comment-existing'
+            disabled
+            style={{ resize: 'none', marginTop: '1rem' }}
           />
         </Col>
         <Col>
-          <h3>{props.comment.ownerName}</h3>
-          <p>{props.comment.content}</p>
+          <Button style={{ float: 'right' }}>
+            <i className="fas fa-thumbs-up" onClick={handleLike} />  {props.comment.likes.length}
+          </Button>
         </Col>
       </Row>
-      <button>
-        <i className="fas fa-thumbs-up" onClick={handleLike} />
-      </button>
-      <p>{props.comment.likes.length}</p>
     </>
   );
 }
-// add link to profile
 
 export default Comment;
