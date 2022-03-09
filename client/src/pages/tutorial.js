@@ -4,7 +4,20 @@ import './tutorial.css';
 import BrowseCards from '../components/BrowseCards.js';
 
 function Browse() {
+    const [projects, setProjects] = useState([]);
+    useEffect(() => {
+        setProjects([]);
+        let exampleProjects = []
+        axios.get('/api/user/get-user-projects/62254b96e11c11ac1b228c23')
+        .then((res) => {
+            setProjects(res.data);
+        })      
+        .catch((err) => console.log(err));
+      }, []);
 
+    useEffect(() => {
+        console.log(projects)
+    }, [projects]);
     return (
         <>
             <div className='tut-main'>
@@ -87,6 +100,10 @@ function Browse() {
                         <dd>Vec2 Containing the x and y resolution of the chosen iChannel. Defaults to 2048x2048</dd>
                     </dl>
                 </p>
+            </div>
+            <div>
+                <h1 className='tut-header'>Examples</h1>
+                <BrowseCards projects={projects} />
             </div>
         </>
     );
