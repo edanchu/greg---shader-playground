@@ -269,6 +269,7 @@ export default function Editor({ user, setUser }) {
               language='glsl'
               handleCompile={handleCompile}
               handleSave={handleSave}
+              user={user}
             />
             {bufferIdx !== 5 && (
               <TextureSelector
@@ -336,33 +337,37 @@ export default function Editor({ user, setUser }) {
               </Button>
             )}
           </div>
-          <Button
-            variant='dark'
-            className='fa fa-edit'
-            style={{ position: 'float', top: '705px', left: '275px' }}
-            onClick={() => {
-              setModalIsOpen(true);
-              setTitleInfo(project.title);
-              setDescriptionInfo(project.description);
-              setPublicInfo(project.public);
-            }}
-          ></Button>
-          <Button
-            variant='dark'
-            className='fa fa-public'
-            style={{
-              position: 'float',
-              top: '705px',
-              left: '295px',
-              marginLeft: '0.5rem',
-            }}
-            onClick={() => {
-              setPublicInfo(!project.public);
-              project.public = !project.public;
-            }}
-          >
-            {project.public ? 'Set Private' : 'Set Public'}
-          </Button>
+          {(!project.owner || user?._id === project.owner) && (
+            <>
+              <Button
+                variant='dark'
+                className='fa fa-edit'
+                style={{ position: 'float', top: '705px', left: '275px' }}
+                onClick={() => {
+                  setModalIsOpen(true);
+                  setTitleInfo(project.title);
+                  setDescriptionInfo(project.description);
+                  setPublicInfo(project.public);
+                }}
+              ></Button>
+              <Button
+                variant='dark'
+                className='fa fa-public'
+                style={{
+                  position: 'float',
+                  top: '705px',
+                  left: '295px',
+                  marginLeft: '0.5rem',
+                }}
+                onClick={() => {
+                  setPublicInfo(!project.public);
+                  project.public = !project.public;
+                }}
+              >
+                {project.public ? 'Set Private' : 'Set Public'}
+              </Button>
+            </>
+          )}
           <Modal show={modalIsOpen} dialogClassName='selector-modal'>
             <Modal.Header className='modal-header'>
               Update Project Information
