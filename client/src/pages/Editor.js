@@ -121,16 +121,18 @@ export default function Editor({ user, setUser }) {
     }
   };
 
-  const handleDelete = (event) => {
-    if (user) {
-      axios
-        .delete('/api/user/delete-project/' + id)
-        .then((res) => {
-          toast('Project deleted successfully');
-        })
-        .catch((err) => console.log(err));
-    } else {
-      toast.error('Must be signed in to delete project');
+  const handleDelete = (confirmation) => {
+    if (confirmation === true) {
+      if (user) {
+        axios
+          .delete('/api/user/delete-project/' + id)
+          .then((res) => {
+            toast('Project deleted successfully');
+          })
+          .catch((err) => console.log(err));
+      } else {
+        toast.error('Must be signed in to delete project');
+      }
     }
   };
 
@@ -275,6 +277,7 @@ export default function Editor({ user, setUser }) {
         <Col style={{ marginTop: "0.5rem" }} >
           {isFullScreen ? <></> :
             <GraphicsComponent
+              style={{ marginBottom: "0.5rem" }}
               height={pageWidth * 0.3}
               pause={false}
               playOnMouseOver={false}
@@ -290,7 +293,7 @@ export default function Editor({ user, setUser }) {
               toggleFullscreen={() => setFullscreen(!isFullScreen)}
             />}
           <div>
-            <button
+            <button variant='dark'
               style={{
                 position: 'float',
                 top: '625px',
@@ -299,29 +302,19 @@ export default function Editor({ user, setUser }) {
               }}
               onClick={() => handleLike()}
             >
-              <i className='fas fa-thumbs-up'></i>
+              <i className='fas fa-thumbs-up'></i>  {project.likes.length}
             </button>
-            <button
+            <button variant='outline-danger'
               style={{
                 position: 'float',
                 top: '625px',
                 left: '105px',
                 color: 'red',
               }}
-              onClick={(e) => handleDelete()}
+              onClick={(e) => handleDelete(window.confirm("Are you sure you want to delete this project?"))}
             >
               <i className='fa fa-trash' aria-hidden='true'></i>
             </button>
-            <h6
-              style={{
-                position: 'float',
-                top: '628px',
-                left: '55px',
-                color: 'white',
-              }}
-            >
-              {project.likes.length}
-            </h6>
           </div>
           <button
             className='fa fa-edit'
