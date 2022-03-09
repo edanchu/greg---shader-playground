@@ -344,16 +344,21 @@ export default function Editor({ user, setUser }) {
           >
             {project.public ? 'Set Private' : 'Set Public'}
           </Button>
-          <Modal show={modalIsOpen}>
+          <Modal show={modalIsOpen} dialogClassName='selector-modal'>
             <Modal.Header className='modal-header'>
               Update Project Information
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body
+            >
               <label className='modal-body-header' htmlFor='name'>
                 Title:
               </label>
               <br />
               <input
+                style={{
+                  width: '30%', border: '3px solid rgb(74, 70, 70)',
+                  padding: '5px', fontFamily: 'consolas', backgroundColor: '#ffff'
+                }}
                 className='input'
                 type='text'
                 id='name'
@@ -367,6 +372,10 @@ export default function Editor({ user, setUser }) {
               </label>
               <br />
               <textarea
+                style={{
+                  resize: 'none', width: '100%', maxWidth: '100%', border: '3px solid rgb(74, 70, 70)',
+                  padding: '5px', fontFamily: 'consolas', height: '700px', backgroundColor: '#ffff'
+                }}
                 className='input'
                 type='text'
                 id='decription'

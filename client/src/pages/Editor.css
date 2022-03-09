@@ -17,16 +17,16 @@ body {
 }
 
 .input {
-  background-color: #ccc6c6;
+  background-color: #ffff;
+}
+
+.input:focus-visible{
+  outline: none;
 }
 
 .error-modal{
   max-width: fit-content;
 }
-
-/* .modal-dialog{
-  max-width: 50rem;
-} */
 
 .fullscreen-modal{
   max-width: fit-content;
