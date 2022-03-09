@@ -338,42 +338,23 @@ userRouter.get('/get-comments/:id', (req, res) => {
 });
 
 userRouter.put(
-  '/like-comment/:commentId',
+  '/update-comment/:id',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    filter = { _id: new mongoose.Types.ObjectId(req.params.commentId) };
-    Comment.findById(filter, (err, comment) => {
-      if (err) {
-        console.log(err);
+    filter = { _id: new mongoose.Types.ObjectId(req.params.id) };
+    update = req.body;
+    Comment.findOneAndUpdate(
+      filter,
+      update,
+      { new: true },
+      (err, updatedComment) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send('Database error');
+        }
+        res.send(updatedComment);
       }
-      if (!comment.likes.includes(req.user._id)) {
-        Comment.findByIdAndUpdate(
-          filter,
-          { $push: { likes: req.user._id } },
-          { safe: true, upsert: true, new: true },
-          (err, updatedComment) => {
-            if (err) {
-              console.log(err);
-              res.status(500).send('database error');
-            }
-            res.send(updatedComment);
-          }
-        );
-      } else {
-        Comment.updateOne(
-          filter,
-          { $pull: { likes: req.user._id } },
-          // { $pull: { fruits: { $in: [ "apples", "oranges" ] }, vegetables: "carrots" } }
-          (err, newLikes) => {
-            if (err) {
-              console.log(err);
-              res.status(500).send('Database error');
-            }
-            res.send(newLikes);
-          }
-        );
-      }
-    });
+    );
   }
 );
 

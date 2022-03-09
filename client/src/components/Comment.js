@@ -1,15 +1,37 @@
-import axios from "axios";
-import React from "react";
-import { Col, Row, Figure, Button } from "react-bootstrap";
-import { toast } from "react-toastify";
-import './CommentSection.css'
+import axios from 'axios';
+import React, { useState } from 'react';
+import { Col, Row, Figure, Button } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import './CommentSection.css';
 
 function Comment(props) {
+  const [comment, setComment] = useState(props.comment);
+  const [liked, setLiked] = useState(
+    props.comment.likes.includes(props.user?._id)
+  );
+
   function handleLike() {
     if (!props.user) {
       toast.error('Must be signed in to like');
     } else {
-      axios.put("/api/user/like-comment/" + props.comment._id);
+      let newLikes = comment.likes;
+      let likeStatus;
+      if (comment.likes.indexOf(props.user._id) === -1) {
+        newLikes.push(props.user._id);
+        likeStatus = true;
+      } else {
+        newLikes = newLikes.filter((id) => id !== props.user._id);
+        likeStatus = false;
+      }
+      axios
+        .put('/api/user/update-comment/' + comment._id, {
+          ...comment,
+          likes: newLikes,
+        })
+        .then((res) => {
+          setComment({ ...comment, likes: newLikes });
+          setLiked(likeStatus);
+        });
     }
   }
 
@@ -19,7 +41,7 @@ function Comment(props) {
         <Col xs={2}>
           <h4>{props.comment.ownerName}</h4>
           <Figure.Image
-            src={"/avatars/" + props.comment.ownerAvatar}
+            src={'/avatars/' + comment.ownerAvatar}
             width={60}
             height={60}
           />
@@ -28,8 +50,8 @@ function Comment(props) {
           <p className='comment-existing'>{props.comment.content}</p>
         </Col>
         <Col>
-          <Button style={{ float: 'right' }}>
-            <i className="fas fa-thumbs-up" onClick={handleLike} />  {props.comment.likes.length}
+          <Button style={{ float: 'right' }} onClick={handleLike}>
+            <i className='fas fa-thumbs-up' /> {comment.likes.length}
           </Button>
         </Col>
       </Row>
