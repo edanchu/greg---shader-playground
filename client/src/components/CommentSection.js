@@ -7,21 +7,21 @@ import { Figure, Button } from 'react-bootstrap'
 
 function CommentSection(props) {
   const [comments, setComments] = useState([]);
-  const [commentText, setCommentText] = useState("");
+  const [commentText, setCommentText] = useState('');
 
   useEffect(() => {
-    axios.get("/api/user/get-comments/" + props.projectId).then((res) => {
+    axios.get('/api/user/get-comments/' + props.projectId).then((res) => {
       setComments(res.data);
     });
   }, []);
 
   function addComment(comment) {
     axios
-      .post("/api/user/add-comment/" + props.projectId, {
+      .post('/api/user/add-comment/' + props.projectId, {
         content: comment,
       })
       .then((res) => {
-        axios.get("/api/user/get-comments/" + props.projectId).then((res) => {
+        axios.get('/api/user/get-comments/' + props.projectId).then((res) => {
           setComments(res.data);
         });
       });

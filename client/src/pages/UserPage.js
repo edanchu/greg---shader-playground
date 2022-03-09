@@ -78,14 +78,15 @@ export default function UserPage({ currUser }) {
         />
         {isCurrUser && (
           <>
-            <button
+            <Button
+              variant='outline-dark'
               onClick={(e) => {
                 setSelected(user.avatar);
                 setModalIsOpen(true);
               }}
             >
               Edit picture
-            </button>
+            </Button>
             <Modal
               show={modalIsOpen}
               onHide={() => setModalIsOpen(false)}

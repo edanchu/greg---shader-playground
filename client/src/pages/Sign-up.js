@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import './Sign-Up.css';
 import { ToastContainer, toast } from 'react-toastify';
@@ -17,8 +17,6 @@ export default function SignUp({
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-
-  let navigate = useNavigate();
 
   function validateForm() {
     if (email.length <= 0 || password.length <= 0) {
@@ -47,15 +45,12 @@ export default function SignUp({
           password: password,
         })
         .then((res) => {
-          console.log(res);
-          console.log(`Success: ${username} created`);
           axios
             .post('/api/user/login', {
               email: email,
               password: password,
             })
             .then((res) => {
-              console.log('& Logged in');
               setUser(res.data.user);
               onSignLogIn(res.data.user);
             })
@@ -79,55 +74,55 @@ export default function SignUp({
     <div className='SignUp' style={isNested ? { height: '100%' } : {}}>
       <div className='signup-box'>
         <h1 className='top-header'> Sign Up </h1>
-      <Form onSubmit={handleSubmit}>
-        <p className='header'> Email </p>
-        <Form.Group controlId='email' className='signup-input-box'>
-          <Form.Control
-            className='signup-input-box2'
-            autoFocus
-            type='email'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </Form.Group>
-        <p className='header'> Username </p>
-        <Form.Group controlId='email' className='signup-input-box'>
-          <Form.Control
-            className='signup-input-box2'
-            autoFocus
-            type='username'
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </Form.Group>
-        <p className='header'> Password </p>
-        <Form.Group controlId='password' className='signup-input-box'>
-          <Form.Control
-            className='signup-input-box2'
-            type='password'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </Form.Group>
-        <p className='header'> Confirm Password </p>
-        <Form.Group controlId='password' className='signup-input-box'>
-          <Form.Control
-            className='signup-input-box2'
-            type='password'
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-        </Form.Group>
-        <Button className='login-button' type='submit'>
-          Create Account
-        </Button>
-        <ToastContainer />
-        <Link onClick={handleClickLogin} to='/Login' className='login-link'>
-          <Button className='SignUp-button' type='submit'>
-            Have an account? Sign in!
+        <Form onSubmit={handleSubmit}>
+          <p className='header'> Email </p>
+          <Form.Group controlId='email' className='signup-input-box'>
+            <Form.Control
+              className='signup-input-box2'
+              autoFocus
+              type='email'
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </Form.Group>
+          <p className='header'> Username </p>
+          <Form.Group controlId='email' className='signup-input-box'>
+            <Form.Control
+              className='signup-input-box2'
+              autoFocus
+              type='username'
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </Form.Group>
+          <p className='header'> Password </p>
+          <Form.Group controlId='password' className='signup-input-box'>
+            <Form.Control
+              className='signup-input-box2'
+              type='password'
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </Form.Group>
+          <p className='header'> Confirm Password </p>
+          <Form.Group controlId='password' className='signup-input-box'>
+            <Form.Control
+              className='signup-input-box2'
+              type='password'
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+          </Form.Group>
+          <Button className='login-button' type='submit'>
+            Create Account
           </Button>
-        </Link>
-      </Form>
+          <ToastContainer />
+          <Link onClick={handleClickLogin} to='/Login' className='login-link'>
+            <Button className='SignUp-button' type='submit'>
+              Have an account? Sign in!
+            </Button>
+          </Link>
+        </Form>
       </div>
     </div>
   );

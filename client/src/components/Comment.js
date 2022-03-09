@@ -7,7 +7,7 @@ import './CommentSection.css'
 function Comment(props) {
   function handleLike() {
     if (!props.user) {
-      toast.error("Must be signed in to like");
+      toast.error('Must be signed in to like');
     } else {
       axios.put("/api/user/like-comment/" + props.comment._id);
     }
