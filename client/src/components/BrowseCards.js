@@ -11,7 +11,7 @@ function BrowseCards({ projects }) {
       <div className='cards__wrapper'>
         <ul className='cards__items'>
           <div className='container-fluid'>
-            <div className='row'>
+            <div className='browse-row'>
               {projects.slice(pageNum * 6, pageNum * 6 + 6).map((project) => (
                 <CardItem
                   project={project}
