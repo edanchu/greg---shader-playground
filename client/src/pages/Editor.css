@@ -36,3 +36,8 @@ body {
   background-color: rgb(0, 0, 0);
   opacity: 1;
 }
+
+.btn:focus{
+  outline: 0 !important;
+  box-shadow: 0 !important;
+}
