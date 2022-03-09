@@ -45,15 +45,12 @@ export default function SignUp({
           password: password,
         })
         .then((res) => {
-          console.log(res);
-          console.log(`Success: ${username} created`);
           axios
             .post('/api/user/login', {
               email: email,
               password: password,
             })
             .then((res) => {
-              console.log('& Logged in');
               setUser(res.data.user);
               onSignLogIn(res.data.user);
             })

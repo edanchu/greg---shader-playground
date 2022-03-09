@@ -8,13 +8,11 @@ import BrowseCards from './BrowseCards';
 function Search() {
   const [projects, setProjects] = useState([]);
   const [projectName, setProjectName] = useState('');
-  console.log(projects);
   useEffect(() => {
     axios
       .post('/api/user/search', { filter: projectName })
       .then((res) => {
         setProjects(res.data);
-        console.log(res.data);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -24,7 +22,6 @@ function Search() {
       .post('/api/user/search', { filter: projectName })
       .then((res) => {
         setProjects(res.data);
-        console.log(res.data);
       })
       .catch((err) => console.log(err));
   }
