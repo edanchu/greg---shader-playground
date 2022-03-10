@@ -184,23 +184,23 @@ export default function Editor({ user, setUser }) {
               '/api/user/add-project/',
               project.owner
                 ? {
-                  ...project,
-                  title: 'Copy of: ' + project.title,
-                  description:
-                    'This is a copy of ' +
-                    project.title +
-                    ' by ' +
-                    project.ownerName,
-                  owner: res.data.user._id,
-                  ownerName: res.data.user.username,
-                  likes: !id ? project.likes : [],
-                }
+                    ...project,
+                    title: 'Copy of: ' + project.title,
+                    description:
+                      'This is a copy of ' +
+                      project.title +
+                      ' by ' +
+                      project.ownerName,
+                    owner: res.data.user._id,
+                    ownerName: res.data.user.username,
+                    likes: !id ? project.likes : [],
+                  }
                 : {
-                  ...project,
-                  owner: res.data.user._id,
-                  ownerName: res.data.user.username,
-                  likes: !id ? project.likes : [],
-                }
+                    ...project,
+                    owner: res.data.user._id,
+                    ownerName: res.data.user.username,
+                    likes: !id ? project.likes : [],
+                  }
             )
             .then((res) => {
               return navigate('/Editor/' + res.data._id);
@@ -228,23 +228,23 @@ export default function Editor({ user, setUser }) {
           '/api/user/add-project/',
           project.owner
             ? {
-              ...project,
-              title: 'Copy of: ' + project.title,
-              description:
-                'This is a copy of ' +
-                project.title +
-                ' by ' +
-                project.ownerName,
-              owner: user._id,
-              ownerName: user.username,
-              likes: [],
-            }
+                ...project,
+                title: 'Copy of: ' + project.title,
+                description:
+                  'This is a copy of ' +
+                  project.title +
+                  ' by ' +
+                  project.ownerName,
+                owner: user._id,
+                ownerName: user.username,
+                likes: [],
+              }
             : {
-              ...project,
-              owner: user._id,
-              ownerName: user.username,
-              likes: [],
-            }
+                ...project,
+                owner: user._id,
+                ownerName: user.username,
+                likes: [],
+              }
         )
         .then((res) => {
           return navigate('/Editor/' + res.data._id);
@@ -263,7 +263,9 @@ export default function Editor({ user, setUser }) {
             <EditorText
               project={project}
               bufferIdx={bufferIdx}
-              edited={project.code.map((c, i) => { return defaultProject.code[i] != c; })}
+              edited={project.code.map((c, i) => {
+                return defaultProject.code[i] != c;
+              })}
               setBufferIdx={setBufferIdx}
               updateBufferCode={updateBufferCode}
               language='glsl'
@@ -577,6 +579,7 @@ const defaultProject = {
   title: 'New Project',
   description: 'Welcome to your new project!',
   likes: [],
+  comments: [],
   public: false,
   code: [
     'void mainImage(out vec4 FragColor) {\n\tfloat color = (1.0 + sin(iTime)) / 2.0;\n\tFragColor = vec4(color, 1.0 - color, cos(color), 1.0);\n}',
