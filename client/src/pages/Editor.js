@@ -175,6 +175,7 @@ export default function Editor({ user, setUser }) {
             .put('/api/user/update-project/' + project._id, project)
             .then((res) => {
               setLastSaved(project);
+              toast('Project saved successfully!');
             })
             .catch((err) => console.log(err));
         } else {
@@ -375,7 +376,6 @@ export default function Editor({ user, setUser }) {
                   color: 'white',
                 }}
                 onClick={() => {
-                  console.log('copying');
                   navigator.clipboard.writeText(window.location.href);
                   setCopied(true);
                   toast('Project link copied to clipboard!', {
