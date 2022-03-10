@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import Comment from '../components/Comment';
 import './CommentSection.css';
-import { Figure, Button } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 
 function CommentSection(props) {
   const [comments, setComments] = useState([]);
@@ -15,6 +15,7 @@ function CommentSection(props) {
         setComments(res.data);
       });
     }
+    else (setComments([]));
   }, []);
 
   function addComment(comment) {

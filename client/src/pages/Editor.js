@@ -184,23 +184,23 @@ export default function Editor({ user, setUser }) {
               '/api/user/add-project/',
               project.owner
                 ? {
-                    ...project,
-                    title: 'Copy of: ' + project.title,
-                    description:
-                      'This is a copy of ' +
-                      project.title +
-                      ' by ' +
-                      project.ownerName,
-                    owner: res.data.user._id,
-                    ownerName: res.data.user.username,
-                    likes: !id ? project.likes : [],
-                  }
+                  ...project,
+                  title: 'Copy of: ' + project.title,
+                  description:
+                    'This is a copy of ' +
+                    project.title +
+                    ' by ' +
+                    project.ownerName,
+                  owner: res.data.user._id,
+                  ownerName: res.data.user.username,
+                  likes: !id ? project.likes : [],
+                }
                 : {
-                    ...project,
-                    owner: res.data.user._id,
-                    ownerName: res.data.user.username,
-                    likes: !id ? project.likes : [],
-                  }
+                  ...project,
+                  owner: res.data.user._id,
+                  ownerName: res.data.user.username,
+                  likes: !id ? project.likes : [],
+                }
             )
             .then((res) => {
               return navigate('/Editor/' + res.data._id);
@@ -228,23 +228,23 @@ export default function Editor({ user, setUser }) {
           '/api/user/add-project/',
           project.owner
             ? {
-                ...project,
-                title: 'Copy of: ' + project.title,
-                description:
-                  'This is a copy of ' +
-                  project.title +
-                  ' by ' +
-                  project.ownerName,
-                owner: user._id,
-                ownerName: user.username,
-                likes: [],
-              }
+              ...project,
+              title: 'Copy of: ' + project.title,
+              description:
+                'This is a copy of ' +
+                project.title +
+                ' by ' +
+                project.ownerName,
+              owner: user._id,
+              ownerName: user.username,
+              likes: [],
+            }
             : {
-                ...project,
-                owner: user._id,
-                ownerName: user.username,
-                likes: [],
-              }
+              ...project,
+              owner: user._id,
+              ownerName: user.username,
+              likes: [],
+            }
         )
         .then((res) => {
           return navigate('/Editor/' + res.data._id);
@@ -314,6 +314,33 @@ export default function Editor({ user, setUser }) {
             >
               <i className='fas fa-thumbs-up'></i> {project.likes.length}
             </Button>
+            <Button
+              variant='dark'
+              className='fa fa-public'
+              style={{
+                position: 'float',
+                top: '705px',
+                left: '315px',
+                marginLeft: '0.5rem',
+                marginRight: '0.5rem',
+                color: 'white',
+              }}
+              onClick={() => {
+                navigator.clipboard.writeText(window.location.href);
+                setCopied(true);
+                toast('Project link copied to clipboard!', {
+                  onClose: () => setCopied(false),
+                });
+              }}
+            >
+              {copied ? (
+                'Copied!'
+              ) : (
+                <>
+                  Share <i className='fa fa-share-alt fa-xs' />
+                </>
+              )}
+            </Button>
             {user && user._id === project.owner && (
               <Button
                 variant='outline-danger'
@@ -365,32 +392,6 @@ export default function Editor({ user, setUser }) {
                 }}
               >
                 {project.public ? 'Set Private' : 'Set Public'}
-              </Button>
-              <Button
-                variant='dark'
-                className='fa fa-public'
-                style={{
-                  position: 'float',
-                  top: '705px',
-                  left: '315px',
-                  marginLeft: '0.5rem',
-                  color: 'white',
-                }}
-                onClick={() => {
-                  navigator.clipboard.writeText(window.location.href);
-                  setCopied(true);
-                  toast('Project link copied to clipboard!', {
-                    onClose: () => setCopied(false),
-                  });
-                }}
-              >
-                {copied ? (
-                  'Copied!'
-                ) : (
-                  <>
-                    Share <i className='fa fa-share-alt fa-xs' />
-                  </>
-                )}
               </Button>
             </>
           )}
