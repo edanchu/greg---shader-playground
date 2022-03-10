@@ -59,6 +59,7 @@ function CommentSection(props) {
                 style={{ float: 'left' }}
                 onClick={() => {
                   addComment(commentText);
+                  setCommentText('');
                 }}
               >
                 Submit Comment

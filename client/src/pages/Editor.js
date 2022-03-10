@@ -32,6 +32,7 @@ export default function Editor({ user, setUser }) {
   const [compileErrors, setCompileErrors] = useState([]);
 
   const [isFullScreen, setFullscreen] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   window.onbeforeunload = (e) => {
     if (project !== lastSaved) {
@@ -49,6 +50,16 @@ export default function Editor({ user, setUser }) {
     setCompileErrors(messages);
     setErrorModalIsOpen(true);
   }
+
+  useEffect(() => {
+    setLastSaved({ ...lastSaved, title: titleInfo });
+  }, [titleInfo]);
+  useEffect(() => {
+    setLastSaved({ ...lastSaved, description: descriptionInfo });
+  }, [descriptionInfo]);
+  useEffect(() => {
+    setLastSaved({ ...lastSaved, title: publicInfo });
+  }, [publicInfo]);
 
   useEffect(() => {
     if (id) {
@@ -164,6 +175,7 @@ export default function Editor({ user, setUser }) {
             .put('/api/user/update-project/' + project._id, project)
             .then((res) => {
               setLastSaved(project);
+              toast('Project saved successfully!');
             })
             .catch((err) => console.log(err));
         } else {
@@ -172,23 +184,23 @@ export default function Editor({ user, setUser }) {
               '/api/user/add-project/',
               project.owner
                 ? {
-                  ...project,
-                  title: 'Copy of: ' + project.title,
-                  description:
-                    'This is a copy of ' +
-                    project.title +
-                    ' by ' +
-                    project.ownerName,
-                  owner: res.data.user._id,
-                  ownerName: res.data.user.username,
-                  likes: !id ? project.likes : [],
-                }
+                    ...project,
+                    title: 'Copy of: ' + project.title,
+                    description:
+                      'This is a copy of ' +
+                      project.title +
+                      ' by ' +
+                      project.ownerName,
+                    owner: res.data.user._id,
+                    ownerName: res.data.user.username,
+                    likes: !id ? project.likes : [],
+                  }
                 : {
-                  ...project,
-                  owner: res.data.user._id,
-                  ownerName: res.data.user.username,
-                  likes: !id ? project.likes : [],
-                }
+                    ...project,
+                    owner: res.data.user._id,
+                    ownerName: res.data.user.username,
+                    likes: !id ? project.likes : [],
+                  }
             )
             .then((res) => {
               return navigate('/Editor/' + res.data._id);
@@ -216,23 +228,23 @@ export default function Editor({ user, setUser }) {
           '/api/user/add-project/',
           project.owner
             ? {
-              ...project,
-              title: 'Copy of: ' + project.title,
-              description:
-                'This is a copy of ' +
-                project.title +
-                ' by ' +
-                project.ownerName,
-              owner: user._id,
-              ownerName: user.username,
-              likes: [],
-            }
+                ...project,
+                title: 'Copy of: ' + project.title,
+                description:
+                  'This is a copy of ' +
+                  project.title +
+                  ' by ' +
+                  project.ownerName,
+                owner: user._id,
+                ownerName: user.username,
+                likes: [],
+              }
             : {
-              ...project,
-              owner: user._id,
-              ownerName: user.username,
-              likes: [],
-            }
+                ...project,
+                owner: user._id,
+                ownerName: user.username,
+                likes: [],
+              }
         )
         .then((res) => {
           return navigate('/Editor/' + res.data._id);
@@ -354,6 +366,32 @@ export default function Editor({ user, setUser }) {
               >
                 {project.public ? 'Set Private' : 'Set Public'}
               </Button>
+              <Button
+                variant='dark'
+                className='fa fa-public'
+                style={{
+                  position: 'float',
+                  top: '705px',
+                  left: '315px',
+                  marginLeft: '0.5rem',
+                  color: 'white',
+                }}
+                onClick={() => {
+                  navigator.clipboard.writeText(window.location.href);
+                  setCopied(true);
+                  toast('Project link copied to clipboard!', {
+                    onClose: () => setCopied(false),
+                  });
+                }}
+              >
+                {copied ? (
+                  'Copied!'
+                ) : (
+                  <>
+                    Share <i className='fa fa-share-alt fa-xs' />
+                  </>
+                )}
+              </Button>
             </>
           )}
           <Modal show={modalIsOpen} dialogClassName='selector-modal'>
@@ -474,9 +512,7 @@ export default function Editor({ user, setUser }) {
               </Button>
             </Modal.Footer>
           </Modal>
-          <h1 style={{ position: 'float', top: '700px', left: '20px' }}>
-            {project.title}
-          </h1>
+          <h1 style={{ marginTop: '1.5rem' }}>{project.title}</h1>
           <Link
             style={{ position: 'float', top: '740px', left: '20px' }}
             to={'/UserPage/' + project.owner}
@@ -484,7 +520,14 @@ export default function Editor({ user, setUser }) {
             {project.ownerName}
           </Link>
           <br></br>
-          <p style={{ position: 'float', top: '780px', left: '20px', color: '#97a2be' }}>
+          <p
+            style={{
+              position: 'float',
+              top: '780px',
+              left: '20px',
+              color: '#97a2be',
+            }}
+          >
             {project.description}
           </p>
           <CommentSection projectId={project._id} user={user} />

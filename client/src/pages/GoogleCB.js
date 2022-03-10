@@ -1,24 +1,22 @@
 import axios from 'axios';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 
 const GoogleCB = ({ setUser }) => {
   let { tok } = useParams();
   const cookies = new Cookies();
-  cookies.set('access_token', tok, { path: '/' });
-
-  useEffect(() => {
-    const interval = setInterval(() => {
+  cookies.addChangeListener((cookie) => {
+    if (cookie.name === 'access_token') {
       axios
         .get('/api/user/authenticated')
         .then((res) => {
           setUser(res.data.user);
         })
         .catch((err) => console.log(err));
-    }, 500);
-    return () => clearInterval(interval);
-  }, []);
+    }
+  });
+  cookies.set('access_token', tok, { path: '/' });
 
   return <></>;
 };
