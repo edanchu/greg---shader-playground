@@ -10,13 +10,12 @@ function CommentSection(props) {
   const [commentText, setCommentText] = useState('');
 
   useEffect(() => {
-    if (props.projectId !== undefined) {
+    if (props.projectId) {
       axios.get('/api/user/get-comments/' + props.projectId).then((res) => {
         setComments(res.data);
       });
-    }
-    else (setComments([]));
-  }, []);
+    } else setComments([]);
+  }, [props.projectId]);
 
   function addComment(comment) {
     axios
@@ -72,7 +71,14 @@ function CommentSection(props) {
         ) : (
           <textarea
             disabled
-            style={{ float: 'right', flex: '1', resize: 'none', backgroundColor: 'inherit', color: 'white', border: 'none' }}
+            style={{
+              float: 'right',
+              flex: '1',
+              resize: 'none',
+              backgroundColor: 'inherit',
+              color: 'white',
+              border: 'none',
+            }}
             value='Sign In To Comment'
           />
         )}
