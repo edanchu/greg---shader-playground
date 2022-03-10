@@ -30,6 +30,7 @@ export default function EditorText({
   handleCompile,
   handleSave,
   user,
+  edited,
   ...props
 }) {
   return (
@@ -46,27 +47,27 @@ export default function EditorText({
           >
             <Nav.Item>
               {' '}
-              <Nav.Link eventKey='Common'> Common </Nav.Link>{' '}
+              <Nav.Link eventKey='Common' className={'nav-pill ' + (edited[5] == true ? 'nav-pill-edited' : "nav-pill-unedited")}> Common </Nav.Link>{' '}
             </Nav.Item>
             <Nav.Item>
               {' '}
-              <Nav.Link eventKey='Main'> Main </Nav.Link>{' '}
+              <Nav.Link eventKey='Main' className={'nav-pill ' + (edited[0] == true ? 'nav-pill-edited' : "nav-pill-unedited")}> Main </Nav.Link>{' '}
             </Nav.Item>
             <Nav.Item>
               {' '}
-              <Nav.Link eventKey='Buffer 1'> Buffer 1 </Nav.Link>{' '}
+              <Nav.Link eventKey='Buffer 1' className={'nav-pill ' + (edited[1] == true ? 'nav-pill-edited' : "nav-pill-unedited")}> Buffer 1 </Nav.Link>{' '}
             </Nav.Item>
             <Nav.Item>
               {' '}
-              <Nav.Link eventKey='Buffer 2'> Buffer 2 </Nav.Link>{' '}
+              <Nav.Link eventKey='Buffer 2' className={'nav-pill ' + (edited[2] == true ? 'nav-pill-edited' : "nav-pill-unedited")}> Buffer 2 </Nav.Link>{' '}
             </Nav.Item>
             <Nav.Item>
               {' '}
-              <Nav.Link eventKey='Buffer 3'> Buffer 3 </Nav.Link>{' '}
+              <Nav.Link eventKey='Buffer 3' className={'nav-pill ' + (edited[3] == true ? 'nav-pill-edited' : "nav-pill-unedited")}> Buffer 3 </Nav.Link>{' '}
             </Nav.Item>
             <Nav.Item>
               {' '}
-              <Nav.Link eventKey='Buffer 4'> Buffer 4 </Nav.Link>{' '}
+              <Nav.Link eventKey='Buffer 4' className={'nav-pill ' + (edited[4] == true ? 'nav-pill-edited' : "nav-pill-unedited")}> Buffer 4 </Nav.Link>{' '}
             </Nav.Item>
           </Nav>
           <Button variant='secondary' onClick={handleSave} style={{ marginRight: '10px' }}>

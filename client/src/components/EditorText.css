@@ -30,3 +30,15 @@
   border-bottom-right-radius: 0.5rem;
   overflow: hidden;
 }
+
+.nav-pill:active{
+  color: white;
+}
+
+.nav-pill-edited{
+  color: #007bff;
+}
+
+.nav-pill-unedited{
+  color: gray;
+}

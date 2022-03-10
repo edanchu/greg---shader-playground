@@ -251,6 +251,7 @@ export default function Editor({ user, setUser }) {
             <EditorText
               project={project}
               bufferIdx={bufferIdx}
+              edited={project.code.map((c, i) => { return defaultProject.code[i] != c; })}
               setBufferIdx={setBufferIdx}
               updateBufferCode={updateBufferCode}
               language='glsl'
