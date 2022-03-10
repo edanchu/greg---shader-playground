@@ -2,7 +2,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Modal, Row } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
-import CardItem from '../components/CardItem';
+// import CardItem from '../components/CardItem';
+import BrowseCards from '../components/BrowseCards';
 import './UserPage.css';
 
 export default function UserPage({ currUser, setUser: setGlobalUser }) {
@@ -177,32 +178,7 @@ export default function UserPage({ currUser, setUser: setGlobalUser }) {
       <div className='card-body'>
         <h1 className='title'>Projects</h1>
       </div>
-      {projects.length > 0 && (
-        <div className='cards'>
-          <div className='cards__container'>
-            <div className='cards__wrapper'>
-              <ul className='cards__items'>
-                {projects.map((project) => (
-                  <CardItem
-                    key={project._id}
-                    project={project}
-                    pause={true}
-                    playOnMouseOver={true}
-                    showButtons={false}
-                    commonFragShaderCustomCode={project.code[5]}
-                    finalFragShaderCustomCode={project.code[0]}
-                    buffer1FragShaderCustomCode={project.code[1]}
-                    buffer2FragShaderCustomCode={project.code[2]}
-                    buffer3FragShaderCustomCode={project.code[3]}
-                    buffer4FragShaderCustomCode={project.code[4]}
-                    channels={project.channelUniforms}
-                  />
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      )}
+      {projects.length > 0 && <BrowseCards projects={projects} />}
     </>
   );
 }
