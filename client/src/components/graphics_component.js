@@ -8,6 +8,8 @@ class GraphicsComponent extends Component {
     this.state = { time: 0, fps: 0 };
   }
 
+
+
   componentDidMount() {
     this.sceneSetup = this.sceneSetup.bind(this);
     this.renderLoop = this.renderLoop.bind(this);
@@ -96,6 +98,7 @@ class GraphicsComponent extends Component {
   }
 
   createRenderBuffers() {
+
     const renderBufferSettings = {
       wrapS: THREE.RepeatWrapping,
       wrapT: THREE.RepeatWrapping,
@@ -125,6 +128,7 @@ class GraphicsComponent extends Component {
       this.height,
       renderBufferSettings
     );
+
   }
 
   createMaterials() {
@@ -302,13 +306,26 @@ class GraphicsComponent extends Component {
         this.errorMessages.push(messages[0])
       }
 
+      const tempConsole = console.warn;
+      let warnings = [];
+      console.warn = (...messages) => {
+        if (messages[1].indexOf("warning X3595: gradient instruction used in a loop with varying") === -1) {
+          warnings.push(messages);
+        }
+      }
+
+
       this.renderBufferTextures();
 
       this.renderFinalScene();
 
       console.error = holder;
+      console.warn = tempConsole;
+      if (warnings.length > 0) {
+        console.warn(warnings);
+      }
 
-      if (this.errorMessages.length > 0 && this.props.handleErrors != undefined) {
+      if (this.errorMessages.length > 0 && this.props.handleErrors !== undefined) {
         this.props.handleErrors(this.errorMessages);
         this.errorMessages = [];
       }
@@ -321,7 +338,6 @@ class GraphicsComponent extends Component {
         this.startPaused = false;
       }
     }
-
     this.requestID = window.requestAnimationFrame(this.renderLoop);
   }
 
@@ -644,7 +660,7 @@ void main(){
         {this.props.showButtons ? (<Button variant='dark' disabled >{this.state.time.toFixed(1)}</Button>) : (<></>)}
         {this.props.showButtons ? (<Button variant='dark' disabled >{this.state.fps.toFixed(0)}</Button>) : (<></>)}
         {this.props.showButtons ? (<Button variant='dark' style={{ float: 'right' }} onClick={(e) => {
-          (this.props.toggleFullscreen != undefined) ? this.props.toggleFullscreen() : <></>
+          (this.props.toggleFullscreen !== undefined) ? this.props.toggleFullscreen() : <></>
         }}><i className="fa fa-expand" aria-hidden='true'></i></Button>) : (<></>)}
       </div>
     );
