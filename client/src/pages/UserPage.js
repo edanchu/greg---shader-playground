@@ -2,7 +2,6 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Modal, Row } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
-// import CardItem from '../components/CardItem';
 import BrowseCards from '../components/BrowseCards';
 import './UserPage.css';
 
@@ -12,7 +11,6 @@ export default function UserPage({ currUser, setUser: setGlobalUser }) {
   const [user, setUser] = useState(null);
   const [isCurrUser, setIsCurrUser] = useState(false);
   const [projects, setProjects] = useState([]);
-  const [loadingProjects, setLoadingProjects] = useState(true);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selected, setSelected] = useState();
 
@@ -32,7 +30,6 @@ export default function UserPage({ currUser, setUser: setGlobalUser }) {
           .get('/api/user/get-self-projects')
           .then((res) => {
             setProjects(res.data);
-            setLoadingProjects(false);
           })
           .catch((err) => console.log(err));
       else
@@ -40,7 +37,6 @@ export default function UserPage({ currUser, setUser: setGlobalUser }) {
           .get('/api/user/get-user-projects/' + user?._id)
           .then((res) => {
             setProjects(res.data);
-            setLoadingProjects(false);
           })
           .catch((err) => console.log(err));
     }
