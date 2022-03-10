@@ -10,9 +10,11 @@ function CommentSection(props) {
   const [commentText, setCommentText] = useState('');
 
   useEffect(() => {
-    axios.get('/api/user/get-comments/' + props.projectId).then((res) => {
-      setComments(res.data);
-    });
+    if (props.projectId !== undefined) {
+      axios.get('/api/user/get-comments/' + props.projectId).then((res) => {
+        setComments(res.data);
+      });
+    }
   }, []);
 
   function addComment(comment) {
