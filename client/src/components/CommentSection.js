@@ -72,7 +72,7 @@ function CommentSection(props) {
         ) : (
           <textarea
             disabled
-            style={{ float: 'right', flex: '1', resize: 'none' }}
+            style={{ float: 'right', flex: '1', resize: 'none', backgroundColor: 'inherit', color: 'white', border: 'none' }}
             value='Sign In To Comment'
           />
         )}
