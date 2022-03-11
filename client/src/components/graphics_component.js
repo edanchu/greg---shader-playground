@@ -303,14 +303,18 @@ class GraphicsComponent extends Component {
 
       const holder = console.error;
       console.error = (...messages) => {
-        this.errorMessages.push(messages[0])
+        if (messages !== undefined && messages[0] !== undefined){
+          this.errorMessages.push(messages[0]);
+        }
       }
 
       const tempConsole = console.warn;
       let warnings = [];
       console.warn = (...messages) => {
-        if (messages[1].indexOf("warning X3595: gradient instruction used in a loop with varying") === -1) {
-          warnings.push(messages);
+        if (messages !== undefined && messages[1] !== undefined){
+          if (messages[1].indexOf("warning X3595: gradient instruction used in a loop with varying") === -1) {
+            warnings.push(messages);
+          }
         }
       }
 
