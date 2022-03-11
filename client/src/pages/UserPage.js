@@ -156,7 +156,7 @@ export default function UserPage({ currUser, setUser: setGlobalUser }) {
                 </Button>
                 <Button
                   variant='primary'
-                  style={{ position: 'absolute', left: '45%', right: '45%' }}
+                  style={{ margin: 'auto' }}
                   onClick={handleChangeAvatar}
                 >
                   Confirm
