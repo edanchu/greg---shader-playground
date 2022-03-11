@@ -11,10 +11,7 @@ Our website utilizes the MERN stack and implements a robust user system using JW
 
 * Clone the repo to the desired location on your machine by either using git on the commandline, or by downloading a compressed tarball from github.
 * Navigate to the installed directory and then to the client directory (greg/client). Run `npm i`. Then navigate to greg/server and run `npm i` again.
-* Navigate to greg/server and create a new file called .env and populate it with the following:
-```
-.env stuff
-```
+* Navigate to greg/server and create a new file called .env and populate it with the required variables (if you need them, email edanchu@g.ucla.edu).
 
 # Running
 * Open two terminal windows.
