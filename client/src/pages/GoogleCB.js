@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 
@@ -16,9 +16,20 @@ const GoogleCB = ({ setUser }) => {
         .catch((err) => console.log(err));
     }
   });
-  cookies.set('access_token', tok, { path: '/' });
+
+  useEffect(() => {
+    axios
+      .post('/api/user/logout')
+      .then((res) => {
+        setUser(null);
+        cookies.set('access_token', tok, { path: '/' });
+      })
+      .catch((err) => {
+        setUser(null);
+        cookies.set('access_token', tok, { path: '/' });
+      });
+  }, []);
 
   return <></>;
 };
-
 export default GoogleCB;

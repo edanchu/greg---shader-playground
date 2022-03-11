@@ -9,7 +9,7 @@ import SignUp from './pages/Sign-up';
 import UserPage from './pages/UserPage';
 import Editor from './pages/Editor';
 import Tutorial from './pages/tutorial';
-import PrivateRoute from './routeWrappers/PrivateRoute';
+// import PrivateRoute from './routeWrappers/PrivateRoute';
 import UnprivateRoute from './routeWrappers/UnprivateRoute';
 import axios from 'axios';
 
