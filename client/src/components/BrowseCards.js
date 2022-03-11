@@ -7,7 +7,7 @@ function BrowseCards({ projects }) {
   const [pageNum, setPageNum] = useState(0);
 
   return (
-    <div className='cards'>
+    <div className='cards' style={{ minHeight: '40vh' }}>
       <div className='cards__wrapper'>
         <ul className='cards__items'>
           <div className='container-fluid'>
