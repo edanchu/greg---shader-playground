@@ -1,0 +1,27 @@
+name: Github Pages Deploy
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [15.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Install and build
+        run: npm install && npm run build
+
+      - name: Deploy
+        uses: https://www.youtube.com/redirect?event=video_description&redir_token=QUFFLUhqbFVnWUNjenM1RHlBQ3VzSC1QVFRjV2FxZ2s4QXxBQ3Jtc0tuWFlRVWhzUS1yY2lHa1BzY0xfRWYwZzgtVDQ0S09tRHJta19qTjlHSW1rdWhpa0d6YjdsVVFKdm5fdm5IWFotUXJYY0lfeVp5Y0JCai16bXk5UG9QMDR1anN0cFU4cGZXTGJMRFh4Z2t4QkJjN3R1UQ&q=https%3A%2F%2Fgithub.com%2FJamesIves%2Fgithub-pages-deploy-action
+        with:
+          branch: gh-pages
+          folder: client/build
