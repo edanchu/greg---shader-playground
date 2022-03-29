@@ -25,7 +25,7 @@ function App() {
 
   return (
     <>
-      <Router>
+      <Router basename={'/greg'}>
         <Navbar user={user} setUser={setUser} />
         <Routes>
           <Route path='/' element={<Home />} />
