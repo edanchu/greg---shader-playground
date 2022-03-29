@@ -51,10 +51,5 @@
   },
   "devDependencies": {
     "gh-pages": "^3.2.3"
-  },
-  "proxies": {
-    "/api/": {
-      "origin": "https://g-r-e-g.herokuapp.com"
-    }
   }
 }
