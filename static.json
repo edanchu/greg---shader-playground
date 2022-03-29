@@ -4,7 +4,7 @@
     "/**": "index.html"
   },
   "proxies": {
-    "/api/": {
+    "/greg/api/": {
       "origin": "https://g-r-e-g.herokuapp.com"
     }
   }
