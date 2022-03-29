@@ -53,10 +53,10 @@
     "gh-pages": "^3.2.3"
   },
   "proxy": {
-    "/api": {
+    "/greg/api": {
       "target": "https://g-r-e-g.herokuapp.com",
       "pathRewrite": {
-        "^/api": "/"
+        "^/greg/api": "/"
       }
     }
   }
