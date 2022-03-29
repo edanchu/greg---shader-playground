@@ -4,7 +4,7 @@
     "/**": "index.html"
   },
   "proxies": {
-    "/greg/api/": {
+    "https://edanchu.github.io/greg/api/": {
       "origin": "https://g-r-e-g.herokuapp.com"
     }
   }
