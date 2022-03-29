@@ -24,7 +24,7 @@ export const ButtonLogin = ({
   const onClick = () => {
     if (user) {
       axios
-        .post('/api/user/logout')
+        .post('/greg/api/user/logout')
         .then((res) => {
           setUser(null);
           return navigate('/');

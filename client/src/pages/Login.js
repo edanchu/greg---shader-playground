@@ -20,7 +20,7 @@ export default function Login({
     event.preventDefault();
     if (validateForm())
       axios
-        .post('/api/user/login', {
+        .post('/greg/api/user/login', {
           email: email,
           password: password,
         })
@@ -99,7 +99,8 @@ export default function Login({
             onClick={(e) => {
               e.preventDefault();
               window.open(
-                'http://localhost:8888/api/user/auth/google',
+                //'http://localhost:8888/api/user/auth/google',
+                'https://g-r-e-g.herokuapp.com/user/auth/google',
                 '_self'
               );
             }}

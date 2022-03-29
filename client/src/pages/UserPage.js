@@ -16,7 +16,7 @@ export default function UserPage({ currUser, setUser: setGlobalUser }) {
 
   useEffect(() => {
     if (!user)
-      axios.get('/api/user/find-by-id/' + id).then((res) => {
+      axios.get('/greg/api/user/find-by-id/' + id).then((res) => {
         setUser(res.data);
         setSelected(res.data.avatar);
       });
@@ -27,14 +27,14 @@ export default function UserPage({ currUser, setUser: setGlobalUser }) {
       setIsCurrUser(currUser?._id === user._id);
       if (currUser?._id === user._id)
         axios
-          .get('/api/user/get-self-projects')
+          .get('/greg/api/user/get-self-projects')
           .then((res) => {
             setProjects(res.data);
           })
           .catch((err) => console.log(err));
       else
         axios
-          .get('/api/user/get-user-projects/' + user?._id)
+          .get('/greg/api/user/get-user-projects/' + user?._id)
           .then((res) => {
             setProjects(res.data);
           })
@@ -44,10 +44,10 @@ export default function UserPage({ currUser, setUser: setGlobalUser }) {
 
   const handleChangeAvatar = () => {
     axios
-      .put('/api/user/update-avatar', { avatar: selected })
+      .put('/greg/api/user/update-avatar', { avatar: selected })
       .then((res) => {
         axios
-          .get('/api/user/authenticated')
+          .get('/greg/api/user/authenticated')
           .then((res) => {
             setModalIsOpen(false);
             setUser({ ...res.data.user });

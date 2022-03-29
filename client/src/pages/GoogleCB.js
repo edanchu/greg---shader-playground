@@ -9,7 +9,7 @@ const GoogleCB = ({ setUser }) => {
   cookies.addChangeListener((cookie) => {
     if (cookie.name === 'access_token') {
       axios
-        .get('/api/user/authenticated')
+        .get('/greg/api/user/authenticated')
         .then((res) => {
           setUser(res.data.user);
         })
@@ -19,7 +19,7 @@ const GoogleCB = ({ setUser }) => {
 
   useEffect(() => {
     axios
-      .post('/api/user/logout')
+      .post('/greg/api/user/logout')
       .then((res) => {
         setUser(null);
         cookies.set('access_token', tok, { path: '/' });

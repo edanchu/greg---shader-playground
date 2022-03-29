@@ -18,7 +18,7 @@ function App() {
 
   useEffect(() => {
     axios
-      .get('/api/user/authenticated')
+      .get('/greg/api/user/authenticated')
       .then((res) => setUser(res.data.user))
       .catch((err) => setUser(null));
   }, []);

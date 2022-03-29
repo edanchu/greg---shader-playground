@@ -8,7 +8,7 @@ function Browse() {
   useEffect(() => {
     setProjects([]);
     axios
-      .get('/api/user/get-user-projects/62254b96e11c11ac1b228c23')
+      .get('/greg/api/user/get-user-projects/62254b96e11c11ac1b228c23')
       .then((res) => {
         setProjects(res.data);
       })

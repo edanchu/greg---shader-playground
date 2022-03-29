@@ -24,7 +24,7 @@ function Comment(props) {
         likeStatus = false;
       }
       axios
-        .put('/api/user/update-comment/' + comment._id, {
+        .put('/greg/api/user/update-comment/' + comment._id, {
           ...comment,
           likes: newLikes,
         })

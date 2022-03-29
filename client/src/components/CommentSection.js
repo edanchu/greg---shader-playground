@@ -11,21 +11,25 @@ function CommentSection(props) {
 
   useEffect(() => {
     if (props.projectId) {
-      axios.get('/api/user/get-comments/' + props.projectId).then((res) => {
-        setComments(res.data);
-      });
+      axios
+        .get('/greg/api/user/get-comments/' + props.projectId)
+        .then((res) => {
+          setComments(res.data);
+        });
     } else setComments([]);
   }, [props.projectId]);
 
   function addComment(comment) {
     axios
-      .post('/api/user/add-comment/' + props.projectId, {
+      .post('/greg/api/user/add-comment/' + props.projectId, {
         content: comment,
       })
       .then((res) => {
-        axios.get('/api/user/get-comments/' + props.projectId).then((res) => {
-          setComments(res.data);
-        });
+        axios
+          .get('/greg/api/user/get-comments/' + props.projectId)
+          .then((res) => {
+            setComments(res.data);
+          });
       });
   }
 

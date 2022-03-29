@@ -63,7 +63,7 @@ export default function Editor({ user, setUser }) {
 
   useEffect(() => {
     if (id) {
-      axios.get('/api/user/get-project/' + id).then((res) => {
+      axios.get('/greg/api/user/get-project/' + id).then((res) => {
         setProject(res.data);
         setLastSaved(res.data);
         setCompiledCode(res.data.code);
@@ -114,7 +114,7 @@ export default function Editor({ user, setUser }) {
       }
       if (id) {
         axios
-          .put('/api/user/update-project/' + id, {
+          .put('/greg/api/user/update-project/' + id, {
             ...project,
             likes: newLikes,
           })
@@ -136,7 +136,7 @@ export default function Editor({ user, setUser }) {
     if (confirmation === true) {
       if (user) {
         axios
-          .delete('/api/user/delete-project/' + id)
+          .delete('/greg/api/user/delete-project/' + id)
           .then((res) => {
             toast('Project deleted successfully');
           })
@@ -168,11 +168,11 @@ export default function Editor({ user, setUser }) {
 
   function handleSave() {
     axios
-      .get('/api/user/authenticated')
+      .get('/greg/api/user/authenticated')
       .then((res) => {
         if (project.owner === res.data.user._id) {
           axios
-            .put('/api/user/update-project/' + project._id, project)
+            .put('/greg/api/user/update-project/' + project._id, project)
             .then((res) => {
               setLastSaved(project);
               toast('Project saved successfully!');
@@ -181,26 +181,26 @@ export default function Editor({ user, setUser }) {
         } else {
           axios
             .post(
-              '/api/user/add-project/',
+              '/greg/api/user/add-project/',
               project.owner
                 ? {
-                  ...project,
-                  title: 'Copy of: ' + project.title,
-                  description:
-                    'This is a copy of ' +
-                    project.title +
-                    ' by ' +
-                    project.ownerName,
-                  owner: res.data.user._id,
-                  ownerName: res.data.user.username,
-                  likes: !id ? project.likes : [],
-                }
+                    ...project,
+                    title: 'Copy of: ' + project.title,
+                    description:
+                      'This is a copy of ' +
+                      project.title +
+                      ' by ' +
+                      project.ownerName,
+                    owner: res.data.user._id,
+                    ownerName: res.data.user.username,
+                    likes: !id ? project.likes : [],
+                  }
                 : {
-                  ...project,
-                  owner: res.data.user._id,
-                  ownerName: res.data.user.username,
-                  likes: !id ? project.likes : [],
-                }
+                    ...project,
+                    owner: res.data.user._id,
+                    ownerName: res.data.user.username,
+                    likes: !id ? project.likes : [],
+                  }
             )
             .then((res) => {
               return navigate('/Editor/' + res.data._id);
@@ -217,7 +217,7 @@ export default function Editor({ user, setUser }) {
   function onSignLogIn(user) {
     if (project.owner === user._id) {
       axios
-        .put('/api/user/update-project/' + project._id, project)
+        .put('/greg/api/user/update-project/' + project._id, project)
         .then((res) => {
           setLastSaved(project);
         })
@@ -225,26 +225,26 @@ export default function Editor({ user, setUser }) {
     } else {
       axios
         .post(
-          '/api/user/add-project/',
+          '/greg/api/user/add-project/',
           project.owner
             ? {
-              ...project,
-              title: 'Copy of: ' + project.title,
-              description:
-                'This is a copy of ' +
-                project.title +
-                ' by ' +
-                project.ownerName,
-              owner: user._id,
-              ownerName: user.username,
-              likes: [],
-            }
+                ...project,
+                title: 'Copy of: ' + project.title,
+                description:
+                  'This is a copy of ' +
+                  project.title +
+                  ' by ' +
+                  project.ownerName,
+                owner: user._id,
+                ownerName: user.username,
+                likes: [],
+              }
             : {
-              ...project,
-              owner: user._id,
-              ownerName: user.username,
-              likes: [],
-            }
+                ...project,
+                owner: user._id,
+                ownerName: user.username,
+                likes: [],
+              }
         )
         .then((res) => {
           return navigate('/Editor/' + res.data._id);
@@ -258,7 +258,7 @@ export default function Editor({ user, setUser }) {
   return (
     <div className='editor-page'>
       <Row>
-        <Col >
+        <Col>
           <div style={{ height: 'calc(100vh - 100px)', maxWidth: '38vw' }}>
             <EditorText
               project={project}
