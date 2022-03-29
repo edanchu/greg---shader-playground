@@ -57,7 +57,8 @@
       "target": "https://g-r-e-g.herokuapp.com",
       "pathRewrite": {
         "^/api": "/"
-      }
+      },
+      "changeOrigin": true
     }
   }
 }
