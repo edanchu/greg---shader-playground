@@ -32,7 +32,10 @@ userRouter.get(
     if (req.isAuthenticated()) {
       const { _id } = req.user;
       const token = signToken(_id);
-      res.redirect('http://localhost:3000/GoogleCB/' + token);
+      // res.redirect('http://localhost:3000/GoogleCB/' + token);
+      res.redirect(
+        'https://spontaneous-eclair-dda194.netlify.app/GoogleCB/' + token
+      );
     }
   }
 );
