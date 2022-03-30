@@ -14,7 +14,7 @@ app.use(
   cors({
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
-    origin: ['https://g-r-e-g.netlify.app/'],
+    origin: ['https://shadygreg.netlify.app/'],
   })
 );
 

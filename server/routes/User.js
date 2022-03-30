@@ -33,7 +33,7 @@ userRouter.get(
       const { _id } = req.user;
       const token = signToken(_id);
       // res.redirect('http://localhost:3000/GoogleCB/' + token);
-      res.redirect('https://g-r-e-g.netlify.app/GoogleCB/' + token);
+      res.redirect('https://shadygreg.netlify.app/GoogleCB/' + token);
     }
   }
 );
