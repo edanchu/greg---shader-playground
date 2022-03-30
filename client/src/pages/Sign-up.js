@@ -39,14 +39,14 @@ export default function SignUp({
     event.preventDefault();
     if (validateForm())
       axios
-        .post('/greg/api/user/register', {
+        .post('/api/user/register', {
           email: email,
           username: username,
           password: password,
         })
         .then((res) => {
           axios
-            .post('/greg/api/user/login', {
+            .post('/api/user/login', {
               email: email,
               password: password,
             })

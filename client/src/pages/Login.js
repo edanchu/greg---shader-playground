@@ -20,7 +20,7 @@ export default function Login({
     event.preventDefault();
     if (validateForm())
       axios
-        .post('/greg/api/user/login', {
+        .post('/api/user/login', {
           email: email,
           password: password,
         })

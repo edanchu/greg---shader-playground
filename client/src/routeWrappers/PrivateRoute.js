@@ -5,7 +5,7 @@ import axios from 'axios';
 const PrivateRoute = ({ user, setUser }) => {
   useEffect(() => {
     axios
-      .get('/greg/api/user/authenticated')
+      .get('/api/user/authenticated')
       .then((res) => {
         setUser(res.data.user);
       })

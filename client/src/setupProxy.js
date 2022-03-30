@@ -5,7 +5,7 @@ module.exports = function (app) {
     createProxyMiddleware('/api', {
       //target: 'http://localhost:8888',
       target: 'https://g-r-e-g.herokuapp.com',
-      changeOrigin: true,
+      //changeOrigin: true,
     })
   );
 };*/

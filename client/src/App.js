@@ -18,14 +18,14 @@ function App() {
 
   useEffect(() => {
     axios
-      .get('/greg/api/user/authenticated')
+      .get('/api/user/authenticated')
       .then((res) => setUser(res.data.user))
       .catch((err) => setUser(null));
   }, []);
 
   return (
     <>
-      <Router basename={'/greg'}>
+      <Router>
         <Navbar user={user} setUser={setUser} />
         <Routes>
           <Route path='/' element={<Home />} />

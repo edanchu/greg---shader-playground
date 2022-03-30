@@ -11,7 +11,7 @@ function Search() {
 
   useEffect(() => {
     axios
-      .post('/greg/api/user/search', { filter: projectName })
+      .post('/api/user/search', { filter: projectName })
       .then((res) => {
         setProjects(res.data);
       })
@@ -20,7 +20,7 @@ function Search() {
 
   function handleSubmit() {
     axios
-      .post('/greg/api/user/search', { filter: projectName })
+      .post('/api/user/search', { filter: projectName })
       .then((res) => {
         setProjects(res.data);
       })
