@@ -10,13 +10,13 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 app.use(cookieParser());
 app.use(express.json());
-//app.use(
-//cors({
-//credentials: true,
-//allowedHeaders: ['Content-Type', 'Authorization'],
-//origin: ['https://workout-builder.netlify.app'],
-//})
-//);
+app.use(
+  cors({
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    origin: ['https://spontaneous-eclair-dda194.netlify.app'],
+  })
+);
 
 var url = process.env.MONGO_URI;
 
