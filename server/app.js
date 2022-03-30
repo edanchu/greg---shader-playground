@@ -34,12 +34,7 @@ mongoose.connect(
 const PORT = process.env.PORT || 8888;
 
 const userRouter = require('./routes/User');
-app.use('/api/user', userRouter);
-// app.use('/user', userRouter);
-
-app.get('/test', (req, res) => {
-  res.send('test');
-});
+app.use('/user', userRouter);
 
 app.listen(PORT, function () {
   console.log(`Server started on port ${PORT}`);
