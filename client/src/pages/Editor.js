@@ -259,7 +259,7 @@ export default function Editor({ user, setUser }) {
     <div className='editor-page'>
       <Row>
         <Col >
-          <div style={{ height: 'calc(100vh - 100px)', maxWidth: '38vw' }}>
+          <div style={{ height: 'calc(100vh - 100px)', maxWidth: '35vw' }}>
             <EditorText
               project={project}
               bufferIdx={bufferIdx}
